@@ -20,7 +20,7 @@
     "hoek": "0.0.x"
   },
   "devDependencies": {
-    "hapi": "0.13.x",
+    "hapi": "0.14.x",
     "mocha": "1.x.x",
     "chai": "1.x.x"
   },
