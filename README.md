@@ -32,8 +32,8 @@ var options = {
         ext: true                   // Required
     },
     plugin: {
-        name: 'jar' ,               // Optional, overrides the cookie name used. Defaults to 'jar'. Doesn't affect 'api.jar'.
-        isSingleUse: false,         // Optional, clears the jar on each request, unless new jar is set. Defaults to false.
+        name: 'jar' ,               // Optional, overrides cookie name. Defaults to 'jar'. Doesn't affect 'api.jar'.
+        isSingleUse: false,         // Optional, clears jar after one request. Defaults to false.
         options: {
             password: 'password',   // Required
             isSecure: true          // Optional, any supported cookie options except `encoding`
