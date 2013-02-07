@@ -1,16 +1,17 @@
 {
-  "name": "stuponitron",
-  "description": "Old browser warning plugin",
+  "name": "hapi-jar",
+  "description": "Cookie jar plugin",
   "version": "0.0.1",
   "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
   "contributors": [],
-  "repository": "git://github.com/walmartlabs/stuponitron",
+  "repository": "git://github.com/walmartlabs/jar",
   "main": "index",
   "keywords": [
     "hapi",
     "plugin",
-    "browser",
-    "compatibility"
+    "cookies",
+    "jar",
+    "session"
   ],
   "engines": {
     "node": ">=0.8.0"
@@ -29,7 +30,7 @@
   "licenses": [
     {
       "type": "BSD",
-      "url": "http://github.com/hueniverse/stuponitron/raw/master/LICENSE"
+      "url": "http://github.com/hueniverse/jar/raw/master/LICENSE"
     }
   ],
   "hapi": {
