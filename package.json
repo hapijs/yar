@@ -1,7 +1,7 @@
 {
   "name": "hapi-jar",
   "description": "Cookie jar plugin",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
   "contributors": [],
   "repository": "git://github.com/walmartlabs/jar",
@@ -17,10 +17,10 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "hoek": "0.0.x"
+    "hoek": "0.4.x"
   },
   "devDependencies": {
-    "hapi": "0.14.x",
+    "hapi": "0.x.x",
     "mocha": "1.x.x",
     "chai": "1.x.x"
   },
