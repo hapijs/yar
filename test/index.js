@@ -28,7 +28,7 @@ describe('Jar', function () {
         register: Jar.register
     };
 
-    it('returns current version', function (done) {
+    it('sets jar then gets it back', function (done) {
 
         var options = {
             permissions: {
