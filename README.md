@@ -12,7 +12,7 @@ For example, the first handler sets the jar context and the second utilizes it:
 ```javascript
 var handler1 = function () {
 
-    this.api.jar = {
+    this.plugins.jar = {
         key: 'value'
     };
     
@@ -21,7 +21,7 @@ var handler1 = function () {
 
 var handler2 = function () {
 
-    this.reply(this.api.jar.key);     // Will send back 'value'
+    this.reply(this.plugins.jar.key);     // Will send back 'value'
 };
 ```
 
@@ -32,7 +32,7 @@ var options = {
         ext: true                   // Required
     },
     plugin: {
-        name: 'jar' ,               // Optional, overrides cookie name. Defaults to 'jar'. Doesn't affect 'api.jar'.
+        name: 'jar' ,               // Optional, overrides cookie name. Defaults to 'jar'. Doesn't affect 'plugins.jar'.
         isSingleUse: false,         // Optional, clears jar after one request. Defaults to false.
         options: {
             password: 'password',   // Required

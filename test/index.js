@@ -51,8 +51,8 @@ describe('Jar', function () {
                 method: 'GET', path: '/1', handler: function () {
 
                     expect(this.state.jarx).to.not.exist;
-                    expect(this.api.jar).to.deep.equal({});
-                    this.api.jar.some = { value: 123 };
+                    expect(this.plugins.jar).to.deep.equal({});
+                    this.plugins.jar.some = { value: 123 };
                     return this.reply('1');
                 }
             },
@@ -60,7 +60,7 @@ describe('Jar', function () {
                 method: 'GET', path: '/2', handler: function () {
 
                     expect(this.state.jarx).to.deep.equal({ some: { value: 123 } });
-                    expect(this.api.jar).to.deep.equal({});
+                    expect(this.plugins.jar).to.deep.equal({});
                     return this.reply('2');
                 }
             }
