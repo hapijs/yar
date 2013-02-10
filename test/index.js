@@ -83,7 +83,7 @@ describe('Jar', function () {
                     expect(res.result).to.equal('2');
                     var header = res.headers['Set-Cookie'];
                     expect(header.length).to.equal(1);
-                    expect(header[0]).to.equal('jarx=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure');
+                    expect(header[0]).to.equal('jarx=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; Path=/');
                     done();
                 });
             });
