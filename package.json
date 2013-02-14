@@ -1,10 +1,10 @@
 {
-  "name": "hapi-jar",
+  "name": "yar",
   "description": "Cookie jar plugin",
-  "version": "0.0.5",
+  "version": "0.0.1",
   "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
   "contributors": [],
-  "repository": "git://github.com/walmartlabs/jar",
+  "repository": "git://github.com/walmartlabs/yar",
   "main": "index",
   "keywords": [
     "hapi",
@@ -30,7 +30,7 @@
   "licenses": [
     {
       "type": "BSD",
-      "url": "http://github.com/hueniverse/jar/raw/master/LICENSE"
+      "url": "http://github.com/walmartlabs/yar/raw/master/LICENSE"
     }
   ],
   "hapi": {

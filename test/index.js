@@ -2,7 +2,7 @@
 
 var Chai = require('chai');
 var Hapi = require('hapi');
-var Jar = process.env.TEST_COV ? require('../lib-cov') : require('../lib');
+var Yar = process.env.TEST_COV ? require('../lib-cov') : require('../lib');
 
 
 // Declare internals
@@ -15,20 +15,20 @@ var internals = {};
 var expect = Chai.expect;
 
 
-describe('Jar', function () {
+describe('Yar', function () {
 
     // Wrapper is required for coverage
 
     var plugin = {
-        name: 'jar',
+        name: 'yar',
         version: Hapi.utils.loadPackage().version,
         hapi: {
             plugin: '1.x.x'
         },
-        register: Jar.register
+        register: Yar.register
     };
 
-    it('sets jar then gets it back', function (done) {
+    it('sets yar then gets it back', function (done) {
 
         var options = {
             permissions: {
@@ -51,8 +51,8 @@ describe('Jar', function () {
                 method: 'GET', path: '/1', handler: function () {
 
                     expect(this.state.jarx).to.not.exist;
-                    expect(this.plugins.jar).to.deep.equal({});
-                    this.plugins.jar.some = { value: 123 };
+                    expect(this.plugins.yar).to.deep.equal({});
+                    this.plugins.yar.some = { value: 123 };
                     return this.reply('1');
                 }
             },
@@ -60,7 +60,7 @@ describe('Jar', function () {
                 method: 'GET', path: '/2', handler: function () {
 
                     expect(this.state.jarx).to.deep.equal({ some: { value: 123 } });
-                    expect(this.plugins.jar).to.deep.equal({});
+                    expect(this.plugins.yar).to.deep.equal({});
                     return this.reply('2');
                 }
             }
