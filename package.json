@@ -19,6 +19,9 @@
   "dependencies": {
     "hoek": "0.4.x"
   },
+  "peerDependencies": {
+    "compatible": "1.0.0"
+  },
   "devDependencies": {
     "hapi": "0.x.x",
     "mocha": "1.x.x",
@@ -32,8 +35,5 @@
       "type": "BSD",
       "url": "http://github.com/walmartlabs/yar/raw/master/LICENSE"
     }
-  ],
-  "hapi": {
-    "plugin": "1.x.x"
-  }
+  ]
 }
