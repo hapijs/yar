@@ -2,7 +2,7 @@
 
 var Chai = require('chai');
 var Hapi = require('hapi');
-var Yar = process.env.TEST_COV ? require('../lib-cov') : require('../lib');
+var Yar = require('../lib');
 
 
 // Declare internals
@@ -16,17 +16,6 @@ var expect = Chai.expect;
 
 
 describe('Yar', function () {
-
-    // Wrapper is required for coverage
-
-    var plugin = {
-        name: 'yar',
-        version: Hapi.utils.loadPackage().version,
-        hapi: {
-            plugin: '1.x.x'
-        },
-        register: Yar.register
-    };
 
     it('sets yar then gets it back', function (done) {
 
@@ -66,7 +55,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.plugin().register(plugin, options, function (err) {
+        server.plugin().require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.inject({ method: 'GET', url: '/1' }, function (res) {
