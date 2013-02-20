@@ -2,7 +2,6 @@
 
 var Chai = require('chai');
 var Hapi = require('hapi');
-var Yar = require('../lib');
 
 
 // Declare internals
@@ -20,16 +19,11 @@ describe('Yar', function () {
     it('sets yar then gets it back', function (done) {
 
         var options = {
-            permissions: {
-                ext: true
-            },
-            plugin: {
-                name: 'jarx',
-                isSingleUse: true,
-                options: {
-                    password: 'password',
-                    isSecure: true
-                }
+            name: 'jarx',
+            isSingleUse: true,
+            cookieOptions: {
+                password: 'password',
+                isSecure: true
             }
         };
 
@@ -55,7 +49,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.plugin().require('../', options, function (err) {
+        server.plugin().allow({ ext: true }).require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.inject({ method: 'GET', url: '/1' }, function (res) {
