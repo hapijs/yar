@@ -45,7 +45,7 @@ server.route({
 
 server.route({
     method: 'GET',
-    path: '/set',
+    path: '/clear',
     config: {
         handler: function (request) {
 
