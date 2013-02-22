@@ -1,25 +1,19 @@
 var Hapi = require('hapi');
 
+
+var server = new Hapi.Server(process.env.PORT || 8000);
+
 var options = {
-    permissions: {
-        ext: true                   // Required
+    // name: 'yar' ,               // Optional, overrides cookie name. Defaults to 'yar'. Doesn't affect 'plugins.yar'.
+    // isSingleUse: false,         // Optional, clears jar after one request. Defaults to false.
+    options: {
+        password: 'password',   // Required
+        isSecure: true          // Optional, any supported cookie options except `encoding`
     },
-    plugin: {
-        // name: 'yar' ,               // Optional, overrides cookie name. Defaults to 'yar'. Doesn't affect 'plugins.yar'.
-        // isSingleUse: false,         // Optional, clears jar after one request. Defaults to false.
-        options: {
-            password: 'password',   // Required
-            isSecure: true          // Optional, any supported cookie options except `encoding`
-        },
-        session: {}
-    }
+    session: {}
 };
 
-var port = process.env.PORT || 8000;
-var server = new Hapi.Server('localhost', port);
-
-// something is wrong with this require, need to look up correct interface to test further
-server.plugin().allow({ext: true}).require('yar', options, function (err) {
+server.plugin().allow({ ext: true }).require('yar', options, function (err) {
 
     if (err) {
         throw err;

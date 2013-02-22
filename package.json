@@ -3,7 +3,9 @@
   "description": "Cookie jar plugin",
   "version": "0.0.4",
   "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
-  "contributors": [],
+  "contributors": [
+    "Van Nguyen <thegoleffect@gmail.com>"
+  ],
   "repository": "git://github.com/walmartlabs/yar",
   "main": "index",
   "keywords": [
@@ -18,7 +20,7 @@
   },
   "dependencies": {
     "hoek": "0.4.x",
-    "node-uuid": "~1.4.0"
+    "node-uuid": "1.4.x"
   },
   "peerDependencies": {
     "hapi": "0.14.x"
@@ -32,16 +34,8 @@
   },
   "scripts": {
     "test": "make test && make test-cov",
-    "blanket": {
-      "pattern": "//^((?!/node_modules/)(?!/test/).)*$/ig",
-      "onlyCwd": true,
-      "data-cover-flags": {
-        "branchTracking": true
-      }
-    },
-    "travis-cov": {
-      "threshold": 100
-    }
+    "blanket": { "pattern": "//^((?!\/node_modules\/)(?!\/test\/).)*$/ig", "onlyCwd": true, "data-cover-flags": { "branchTracking": true } },
+    "travis-cov": { "threshold": 100 }
   },
   "licenses": [
     {
