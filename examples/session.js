@@ -55,6 +55,17 @@ server.route({
     }
 });
 
+server.route({
+    method: 'GET',
+    path: '/control',
+    config: {
+        handler: function (request) {
+
+            request.reply('ohai');
+        }
+    }
+});
+
 server.start(function () {
 
     console.log('server started on port', port);
