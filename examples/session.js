@@ -10,7 +10,7 @@ var options = {
         password: 'password',   // Required
         isSecure: true          // Optional, any supported cookie options except `encoding`
     },
-    session: {}
+    session: true
 };
 
 server.plugin().allow({ ext: true }).require('yar', options, function (err) {
