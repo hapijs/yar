@@ -1,7 +1,7 @@
 var Hapi = require('hapi');
 
-
-var server = new Hapi.Server(process.env.PORT || 8000);
+var port = process.env.PORT || 8000; // port var used later in file
+var server = new Hapi.Server(port);
 
 var options = {
     // name: 'yar' ,               // Optional, overrides cookie name. Defaults to 'yar'. Doesn't affect 'plugins.yar'.
