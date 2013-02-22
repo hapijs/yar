@@ -16,6 +16,7 @@ var options = {
 server.plugin().allow({ ext: true }).require('yar', options, function (err) {
 
     if (err) {
+        console.log(err)
         throw err;
     }
 });
