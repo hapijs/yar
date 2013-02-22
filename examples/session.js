@@ -1,6 +1,5 @@
 var Hapi = require('hapi');
 
-
 var server = new Hapi.Server(process.env.PORT || 8000);
 
 var options = {
@@ -16,6 +15,7 @@ var options = {
 server.plugin().allow({ ext: true }).require('../', options, function (err) {
 
     if (err) {
+        console.log(err)
         throw err;
     }
 });
@@ -33,7 +33,7 @@ server.route({
 
 server.route({
     method: 'GET',
-    path: '/set1',
+    path: '/set',
     config: {
         handler: function (request) {
 
@@ -45,12 +45,23 @@ server.route({
 
 server.route({
     method: 'GET',
-    path: '/set2',
+    path: '/clear',
     config: {
         handler: function (request) {
 
             request.session = {};
             request.reply.redirect('/').send();
+        }
+    }
+});
+
+server.route({
+    method: 'GET',
+    path: '/control',
+    config: {
+        handler: function (request) {
+
+            request.reply('ohai');
         }
     }
 });
