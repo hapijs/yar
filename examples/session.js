@@ -19,7 +19,7 @@ var port = process.env.PORT || 8000;
 var server = new Hapi.Server('localhost', port);
 
 // something is wrong with this require, need to look up correct interface to test further
-server.plugin().require('yar', options, function (err) {
+server.plugin().allow({ext: true}).require('yar', options, function (err) {
 
     if (err) {
         throw err;
