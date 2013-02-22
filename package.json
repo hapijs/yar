@@ -17,7 +17,8 @@
     "node": "0.8.x"
   },
   "dependencies": {
-    "hoek": "0.4.x"
+    "hoek": "0.4.x",
+    "node-uuid": "~1.4.0"
   },
   "peerDependencies": {
     "hapi": "0.14.x"
@@ -31,8 +32,16 @@
   },
   "scripts": {
     "test": "make test && make test-cov",
-    "blanket": { "pattern": "//^((?!\/node_modules\/)(?!\/test\/).)*$/ig", "onlyCwd": true, "data-cover-flags": { "branchTracking": true } },
-    "travis-cov": { "threshold": 100 }
+    "blanket": {
+      "pattern": "//^((?!/node_modules/)(?!/test/).)*$/ig",
+      "onlyCwd": true,
+      "data-cover-flags": {
+        "branchTracking": true
+      }
+    },
+    "travis-cov": {
+      "threshold": 100
+    }
   },
   "licenses": [
     {
