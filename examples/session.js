@@ -6,14 +6,14 @@ var server = new Hapi.Server(process.env.PORT || 8000);
 var options = {
     // name: 'yar' ,               // Optional, overrides cookie name. Defaults to 'yar'. Doesn't affect 'plugins.yar'.
     // isSingleUse: false,         // Optional, clears jar after one request. Defaults to false.
-    options: {
+    cookieOptions: {
         password: 'password',   // Required
         isSecure: true          // Optional, any supported cookie options except `encoding`
     },
     session: true
 };
 
-server.plugin().allow({ ext: true }).require('yar', options, function (err) {
+server.plugin().allow({ ext: true }).require('../', options, function (err) {
 
     if (err) {
         throw err;
@@ -33,7 +33,7 @@ server.route({
 
 server.route({
     method: 'GET',
-    path: '/set',
+    path: '/set1',
     config: {
         handler: function (request) {
 
@@ -45,7 +45,7 @@ server.route({
 
 server.route({
     method: 'GET',
-    path: '/set',
+    path: '/set2',
     config: {
         handler: function (request) {
 
@@ -57,5 +57,5 @@ server.route({
 
 server.start(function () {
 
-    console.log('server started on port', port);
+    console.log('server started on port: ', server.settings.port);
 })
