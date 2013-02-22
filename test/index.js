@@ -33,7 +33,7 @@ describe('Yar', function () {
             {
                 method: 'GET', path: '/1', handler: function () {
 
-                    expect(this.state.jarx).to.not.exist;
+                    expect(this.state.jarx).to.deep.equal({});
                     expect(this.plugins.yar).to.deep.equal({});
                     this.plugins.yar.some = { value: 123 };
                     return this.reply('1');
