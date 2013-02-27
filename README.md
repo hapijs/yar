@@ -5,8 +5,8 @@ A [**hapi**](https://github.com/walmartlabs/hapi) cookie jar
 
 [![Build Status](https://secure.travis-ci.org/walmartlabs/yar.png)](http://travis-ci.org/walmartlabs/yar)
 
-The ***yar*** plugin adds a simple was to set a persistant state (using an [Iron](https://github.com/hueniverse/iron) encrypted cookie) across requests.
-It is not designed for session management but to supplement an active session with transactional information.
+The ***yar*** plugin adds a simple way to set a persistant state (using an [Iron](https://github.com/hueniverse/iron) encrypted cookie) across requests.
+It has support for session management - either stored on the client via cookie, in server memory, or using an external database (via custom storage code).
 
 For example, the first handler sets the jar content and the second utilizes it:
 ```javascript
@@ -45,3 +45,6 @@ var server = new Hapi.Server();
 
 server.plugin().require('yar', options, function (err) { });
 ```
+
+## Sessions
+
