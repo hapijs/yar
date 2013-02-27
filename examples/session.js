@@ -7,7 +7,7 @@ var options = {
     // isSingleUse: false,         // Optional, clears jar after one request. Defaults to false.
     cookieOptions: {
         password: 'password',   // Required
-        isSecure: true          // Optional, any supported cookie options except `encoding`
+        // isSecure: true          // Optional, any supported cookie options except `encoding`
     },
     session: true
 };
@@ -38,6 +38,18 @@ server.route({
         handler: function (request) {
 
             request.session.test = 1;
+            request.reply.redirect('/').send();
+        }
+    }
+});
+
+server.route({
+    method: 'GET',
+    path: '/set/{key}/{value}',
+    config: {
+        handler: function (request) {
+
+            request.session[request.params.key] = request.params.value;
             request.reply.redirect('/').send();
         }
     }
