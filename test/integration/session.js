@@ -164,6 +164,19 @@ describe('Session', function () {
 
             return callback(null, this._store[key]);
         };
+        
+        
+        extStore.prototype.delete = function (key, session, callback) {
+
+            if (typeof session == 'function') {
+                callback = session;
+                session = null;
+            }
+            
+            delete this._store[key];
+            
+            callback(null, {});
+        };
 
 
         describe('extStore', function () {
