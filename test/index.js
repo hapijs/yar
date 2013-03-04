@@ -49,7 +49,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.plugin().allow({ ext: true }).require('../', options, function (err) {
+        server.plugin.allow({ ext: true }).require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.inject({ method: 'GET', url: '/1' }, function (res) {

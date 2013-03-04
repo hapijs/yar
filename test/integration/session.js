@@ -52,7 +52,7 @@ describe('Session', function () {
                 }
             });
 
-            server.plugin().allow({ ext: true }).require('../../', options, function (err) {
+            server.plugin.allow({ ext: true }).require('../../', options, function (err) {
 
                 expect(err).to.not.exist;
                 server.inject({ method: 'GET', url: '/set' }, function (res) {
@@ -108,7 +108,7 @@ describe('Session', function () {
                 }
             });
 
-            server.plugin().allow({ ext: true }).require('../../', options, function (err) {
+            server.plugin.allow({ ext: true }).require('../../', options, function (err) {
 
                 expect(err).to.not.exist;
                 server.inject({ method: 'GET', url: '/set' }, function (res) {
@@ -226,7 +226,7 @@ describe('Session', function () {
                 }
             });
 
-            server.plugin().allow({ ext: true }).require('../../', options, function (err) {
+            server.plugin.allow({ ext: true }).require('../../', options, function (err) {
 
                 expect(err).to.not.exist;
                 server.inject({ method: 'GET', url: '/set' }, function (res) {
@@ -291,7 +291,7 @@ describe('Session', function () {
                 }
             });
 
-            server.plugin().allow({ ext: true }).require('../../', options, function (err) {
+            server.plugin.allow({ ext: true }).require('../../', options, function (err) {
 
                 expect(err).to.not.exist;
                 server.inject({ method: 'GET', url: '/set' }, function (res) {
@@ -347,7 +347,7 @@ describe('Session', function () {
                 }
             });
 
-            server.plugin().allow({ ext: true }).require('../../', options, function (err) {
+            server.plugin.allow({ ext: true }).require('../../', options, function (err) {
 
                 expect(err).to.not.exist;
                 server.inject({ method: 'GET', url: '/set' }, function (res) {
