@@ -120,7 +120,7 @@ server.addRoute({
 });
 ```
 
-##### request.flash
+##### request.flash(type, message)
 
 Session support will also enable the `flash` function. The flash function is used to store volatile data - data that should be deleted once read.
 
