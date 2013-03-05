@@ -1,5 +1,5 @@
-<a href="https://github.com/walmartlabs/blammo"><img src="https://raw.github.com/spumko/blammo/master/images/from.png" align="right" /></a>
-![yar Logo](https://raw.github.com/walmartlabs/yar/master/images/yar.png)
+<a href="https://github.com/walmartlabs/blammo"><img src="https://raw.github.com/walmartlabs/blammo/master/images/from.png" align="right" /></a>
+![yar Logo](https://raw.github.com/spumko/yar/master/images/yar.png)
 
 A [**hapi**](https://github.com/walmartlabs/hapi) cookie jar
 
