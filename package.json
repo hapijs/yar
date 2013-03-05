@@ -6,7 +6,7 @@
   "contributors": [
     "Van Nguyen <thegoleffect@gmail.com>"
   ],
-  "repository": "git://github.com/walmartlabs/yar",
+  "repository": "git://github.com/spumko/yar",
   "main": "index",
   "keywords": [
     "hapi",
@@ -40,7 +40,7 @@
   "licenses": [
     {
       "type": "BSD",
-      "url": "http://github.com/walmartlabs/yar/raw/master/LICENSE"
+      "url": "http://github.com/spumko/yar/raw/master/LICENSE"
     }
   ]
 }
