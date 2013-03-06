@@ -1,9 +1,9 @@
-<a href="https://github.com/walmartlabs/blammo"><img src="https://raw.github.com/walmartlabs/blammo/master/images/from.png" align="right" /></a>
+<a href="https://github.com/spumko"><img src="https://raw.github.com/spumko/spumko/master/images/from.png" align="right" /></a>
 ![yar Logo](https://raw.github.com/spumko/yar/master/images/yar.png)
 
-A [**hapi**](https://github.com/walmartlabs/hapi) cookie jar
+A [**hapi**](https://github.com/spumko/hapi) cookie jar
 
-[![Build Status](https://secure.travis-ci.org/walmartlabs/yar.png)](http://travis-ci.org/walmartlabs/yar)
+[![Build Status](https://secure.travis-ci.org/spumko/yar.png)](http://travis-ci.org/spumko/yar)
 
 
 ## Install
