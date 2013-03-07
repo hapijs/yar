@@ -12,7 +12,7 @@ var options = {
     session: true
 };
 
-server.plugin().allow({ ext: true }).require('../', options, function (err) {
+server.plugin().allow({ ext: true }).require('yar', options, function (err) {
 
     if (err) {
         console.log(err)
