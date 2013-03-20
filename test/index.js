@@ -1,6 +1,6 @@
 // Load modules
 
-var Chai = require('chai');
+var Lab = require('lab');
 var Hapi = require('hapi');
 
 
@@ -11,7 +11,11 @@ var internals = {};
 
 // Test shortcuts
 
-var expect = Chai.expect;
+var expect = Lab.expect;
+var before = Lab.before;
+var after = Lab.after;
+var describe = Lab.experiment;
+var it = Lab.test;
 
 
 describe('Yar', function () {
@@ -55,7 +59,7 @@ describe('Yar', function () {
             server.inject({ method: 'GET', url: '/1' }, function (res) {
 
                 expect(res.result).to.equal('1');
-                var header = res.headers['Set-Cookie'];
+                var header = res.headers['set-cookie'];
                 expect(header.length).to.equal(1);
                 expect(header[0]).to.contain('Secure');
 
@@ -64,7 +68,7 @@ describe('Yar', function () {
                 server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
 
                     expect(res.result).to.equal('2');
-                    var header = res.headers['Set-Cookie'];
+                    var header = res.headers['set-cookie'];
                     expect(header.length).to.equal(1);
                     expect(header[0]).to.equal('jarx=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; Path=/');
                     done();

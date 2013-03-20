@@ -1,6 +1,6 @@
 // Load modules
 
-var Chai = require('chai');
+var Lab = require('lab');
 var Hapi = require('hapi');
 
 
@@ -11,7 +11,11 @@ var internals = {};
 
 // Test shortcuts
 
-var expect = Chai.expect;
+var expect = Lab.expect;
+var before = Lab.before;
+var after = Lab.after;
+var describe = Lab.experiment;
+var it = Lab.test;
 
 
 describe('Request', function () {
@@ -66,7 +70,7 @@ describe('Request', function () {
                     expect(result.flash.error).to.exist;
                     expect(result.flash.error.length).to.be.above(0);
                     
-                    var header = res.headers['Set-Cookie'];
+                    var header = res.headers['set-cookie'];
                     expect(header.length).to.equal(1);
                     var cookie = header[0].match(/(yar=[^\x00-\x20\"\,\;\\\x7F]*)/);
                     
@@ -134,7 +138,7 @@ describe('Request', function () {
                     expect(result.flash.error).to.exist;
                     expect(result.flash.error.length).to.be.above(0);
                     
-                    var header = res.headers['Set-Cookie'];
+                    var header = res.headers['set-cookie'];
                     expect(header.length).to.equal(1);
                     var cookie = header[0].match(/(yar=[^\x00-\x20\"\,\;\\\x7F]*)/);
                     
