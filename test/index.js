@@ -20,35 +20,30 @@ var it = Lab.test;
 
 describe('Yar', function () {
 
-    it('sets yar then gets it back', function (done) {
+    it('sets session value then gets it back (store mode)', function (done) {
 
         var options = {
-            name: 'jarx',
-            isSingleUse: true,
+            maxCookieSize: 0,
             cookieOptions: {
                 password: 'password',
                 isSecure: true
             }
         };
 
-        var server = new Hapi.Server();
+        var server = new Hapi.Server(0);
 
         server.route([
             {
                 method: 'GET', path: '/1', handler: function () {
 
-                    expect(this.state.jarx).to.deep.equal({});
-                    expect(this.plugins.yar).to.deep.equal({});
-                    this.plugins.yar.some = { value: 123 };
+                    this.session.some = { value: '2' };
                     return this.reply('1');
                 }
             },
             {
                 method: 'GET', path: '/2', handler: function () {
 
-                    expect(this.state.jarx).to.deep.equal({ some: { value: 123 } });
-                    expect(this.plugins.yar).to.deep.equal({});
-                    return this.reply('2');
+                    return this.reply(this.session.some.value);
                 }
             }
         ]);
@@ -56,21 +51,204 @@ describe('Yar', function () {
         server.plugin.allow({ ext: true }).require('../', options, function (err) {
 
             expect(err).to.not.exist;
-            server.inject({ method: 'GET', url: '/1' }, function (res) {
+            server.start(function () {
+                
+                server.inject({ method: 'GET', url: '/1' }, function (res) {
 
-                expect(res.result).to.equal('1');
-                var header = res.headers['set-cookie'];
-                expect(header.length).to.equal(1);
-                expect(header[0]).to.contain('Secure');
-
-                var cookie = header[0].match(/(jarx=[^\x00-\x20\"\,\;\\\x7F]*)/);
-
-                server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
-
-                    expect(res.result).to.equal('2');
+                    expect(res.result).to.equal('1');
                     var header = res.headers['set-cookie'];
                     expect(header.length).to.equal(1);
-                    expect(header[0]).to.equal('jarx=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; Path=/');
+                    expect(header[0]).to.contain('Secure');
+                    var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                    server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
+
+                        expect(res.result).to.equal('2');
+                        var header = res.headers['set-cookie'];
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('sets session value then gets it back (cookie mode)', function (done) {
+
+        var options = {
+            cookieOptions: {
+                password: 'password',
+                isSecure: true
+            }
+        };
+
+        var server = new Hapi.Server(0);
+
+        server.route([
+            {
+                method: 'GET', path: '/1', handler: function () {
+
+                    this.session.some = { value: '2' };
+                    return this.reply('1');
+                }
+            },
+            {
+                method: 'GET', path: '/2', handler: function () {
+
+                    return this.reply(this.session.some.value);
+                }
+            }
+        ]);
+
+        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+                
+                server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                    expect(res.result).to.equal('1');
+                    var header = res.headers['set-cookie'];
+                    expect(header.length).to.equal(1);
+                    expect(header[0]).to.contain('Secure');
+                    var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                    server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
+
+                        expect(res.result).to.equal('2');
+                        var header = res.headers['set-cookie'];
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('sets session value then gets it back (hybrid mode)', function (done) {
+
+        var options = {
+            maxCookieSize: 10,
+            cookieOptions: {
+                password: 'password',
+                isSecure: true
+            }
+        };
+
+        var server = new Hapi.Server(0);
+
+        server.route([
+            {
+                method: 'GET', path: '/1', handler: function () {
+
+                    this.session.some = { value: 'abcdefghijklmnop' };
+                    return this.reply('1');
+                }
+            },
+            {
+                method: 'GET', path: '/2', handler: function () {
+
+                    return this.reply(this.session.some.value);
+                }
+            }
+        ]);
+
+        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+                
+                server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                    expect(res.result).to.equal('1');
+                    var header = res.headers['set-cookie'];
+                    expect(header.length).to.equal(1);
+                    expect(header[0]).to.contain('Secure');
+                    var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                    server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
+
+                        expect(res.result).to.equal('abcdefghijklmnop');
+                        var header = res.headers['set-cookie'];
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('fails to set cookie in invalid cache', function (done) {
+
+        var options = {
+            cookieOptions: {
+                password: 'password',
+                isSecure: true
+            }
+        };
+
+        var server = new Hapi.Server(0);
+
+        server.route([
+            {
+                method: 'GET', path: '/1', handler: function () {
+
+                    this.session.some = { value: '2' };
+                    return this.reply('1');
+                }
+            },
+            {
+                method: 'GET', path: '/2', handler: function () {
+
+                    return this.reply(this.session.some.value);
+                }
+            }
+        ]);
+
+        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+                
+                server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                    var header = res.headers['set-cookie'];
+                    var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                    server.plugin._cache.stop();
+                    server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
+
+                        expect(res.statusCode).to.equal(500);
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('fails generating session cookie header value (missing password)', function (done) {
+
+        var options = {
+            cookieOptions: {
+                isSecure: true
+            }
+        };
+
+        var server = new Hapi.Server(0);
+
+        server.route({
+            method: 'GET', path: '/1', handler: function () {
+
+                this.session.some = { value: '2' };
+                return this.reply('1');
+            }
+        });
+
+        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+                
+                server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                    expect(res.statusCode).to.equal(500);
                     done();
                 });
             });
