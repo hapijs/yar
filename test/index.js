@@ -287,7 +287,10 @@ describe('Yar', function () {
                 config: {
                     handler: function () {
 
-                        this.session.flash('error', 'test error');
+                        this.session.flash('error', 'test error 1');
+                        this.session.flash('error', 'test error 2');
+                        this.session.flash('test', 'test 1', true);
+                        this.session.flash('test', 'test 2', true);
                         this.reply(this.session._store);
                     }
                 }
@@ -315,8 +318,8 @@ describe('Yar', function () {
                     
                     server.inject({ method: 'GET', url: '/1' }, function (res) {
 
-                        expect(res.result._flash.error).to.exist;
-                        expect(res.result._flash.error.length).to.be.above(0);
+                        expect(res.result._flash.error).to.deep.equal(['test error 1', 'test error 2']);
+                        expect(res.result._flash.test).to.deep.equal('test 2');
                     
                         var header = res.headers['set-cookie'];
                         expect(header.length).to.equal(1);
