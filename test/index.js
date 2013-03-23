@@ -37,7 +37,9 @@ describe('Yar', function () {
                 method: 'GET', path: '/1', handler: function () {
 
                     this.session.set('some', { value: '2' });
-                    return this.reply('1');
+                    this.session.set('one', 'xyz');
+                    this.session.clear('one');
+                    return this.reply(Object.keys(this.session._store).length);
                 }
             },
             {
@@ -52,7 +54,9 @@ describe('Yar', function () {
             {
                 method: 'GET', path: '/3', handler: function () {
 
-                    return this.reply(this.session.get('some').raw);
+                    var raw = this.session.get('some').raw;
+                    this.session.reset();
+                    return this.reply(raw);
                 }
             }
         ]);
@@ -64,7 +68,7 @@ describe('Yar', function () {
                 
                 server.inject({ method: 'GET', url: '/1' }, function (res) {
 
-                    expect(res.result).to.equal('1');
+                    expect(res.result).to.equal(1);
                     var header = res.headers['set-cookie'];
                     expect(header.length).to.equal(1);
                     expect(header[0]).to.contain('Secure');
