@@ -35,8 +35,7 @@ The plugin requires a password for encryption, and the `ext` permission:
 ```javascript
 var options = {
     cookieOptions: {
-        password: 'password',
-        isSecure: true
+        password: 'password'
     }
 };
 
@@ -57,7 +56,7 @@ server.plugin.allow({ ext: true }).require('yar', options, function (err) { });
 - `cookieOptions` - the configuration for cookie-specific features:
     - `password` - (Required) used to encrypt and sign the cookie data.
     - `path` - determines the cookie path. Defaults to _'/'_.
-    - `isSecure` - determines whether or not to transfer using TLS/SSL. Defaults to _false_.
+    - `isSecure` - determines whether or not to transfer using TLS/SSL. Defaults to _true_.
 
 
 #### Methods
