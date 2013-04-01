@@ -26,7 +26,7 @@ describe('Yar', function () {
             maxCookieSize: 0,
             cookieOptions: {
                 password: 'password',
-                isSecure: true
+                isSecure: false
             }
         };
 
@@ -65,13 +65,13 @@ describe('Yar', function () {
 
             expect(err).to.not.exist;
             server.start(function () {
-                
+
                 server.inject({ method: 'GET', url: '/1' }, function (res) {
 
                     expect(res.result).to.equal(1);
                     var header = res.headers['set-cookie'];
                     expect(header.length).to.equal(1);
-                    expect(header[0]).to.contain('Secure');
+                    expect(header[0]).to.not.contain('Secure');
                     var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
 
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
@@ -90,13 +90,12 @@ describe('Yar', function () {
             });
         });
     });
-    
+
     it('sets session value then gets it back (cookie mode)', function (done) {
 
         var options = {
             cookieOptions: {
-                password: 'password',
-                isSecure: true
+                password: 'password'
             }
         };
 
@@ -122,7 +121,7 @@ describe('Yar', function () {
 
             expect(err).to.not.exist;
             server.start(function () {
-                
+
                 server.inject({ method: 'GET', url: '/1' }, function (res) {
 
                     expect(res.result).to.equal('1');
@@ -141,14 +140,13 @@ describe('Yar', function () {
             });
         });
     });
-    
+
     it('sets session value then gets it back (hybrid mode)', function (done) {
 
         var options = {
             maxCookieSize: 10,
             cookieOptions: {
-                password: 'password',
-                isSecure: true
+                password: 'password'
             }
         };
 
@@ -174,7 +172,7 @@ describe('Yar', function () {
 
             expect(err).to.not.exist;
             server.start(function () {
-                
+
                 server.inject({ method: 'GET', url: '/1' }, function (res) {
 
                     expect(res.result).to.equal('1');
@@ -198,8 +196,7 @@ describe('Yar', function () {
 
         var options = {
             cookieOptions: {
-                password: 'password',
-                isSecure: true
+                password: 'password'
             }
         };
 
@@ -251,8 +248,7 @@ describe('Yar', function () {
         var options = {
             maxCookieSize: 0,
             cookieOptions: {
-                password: 'password',
-                isSecure: true
+                password: 'password'
             }
         };
 
@@ -278,7 +274,7 @@ describe('Yar', function () {
 
             expect(err).to.not.exist;
             server.start(function () {
-                
+
                 server.inject({ method: 'GET', url: '/1' }, function (res) {
 
                     var header = res.headers['set-cookie'];
@@ -297,12 +293,6 @@ describe('Yar', function () {
 
     it('fails generating session cookie header value (missing password)', function (done) {
 
-        var options = {
-            cookieOptions: {
-                isSecure: true
-            }
-        };
-
         var server = new Hapi.Server(0);
 
         server.route({
@@ -313,11 +303,11 @@ describe('Yar', function () {
             }
         });
 
-        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+        server.plugin.allow({ ext: true }).require('../', function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
-                
+
                 server.inject({ method: 'GET', url: '/1' }, function (res) {
 
                     expect(res.statusCode).to.equal(500);
@@ -326,7 +316,7 @@ describe('Yar', function () {
             });
         });
     });
-    
+
     describe("#flash", function () {
 
         it('should get all flash messages when given no arguments', function (done) {
@@ -352,13 +342,13 @@ describe('Yar', function () {
                     }
                 }
             });
-            
+
             server.route({
                 method: 'GET',
                 path: '/2',
                 config: {
                     handler: function () {
-                        
+
                         var flashes = this.session.flash();
                         this.reply({
                             session: this.session._store,
@@ -372,16 +362,16 @@ describe('Yar', function () {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
-                    
+
                     server.inject({ method: 'GET', url: '/1' }, function (res) {
 
                         expect(res.result._flash.error).to.deep.equal(['test error 1', 'test error 2']);
                         expect(res.result._flash.test).to.deep.equal('test 2');
-                    
+
                         var header = res.headers['set-cookie'];
                         expect(header.length).to.equal(1);
                         var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
-                    
+
                         server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
 
                             expect(res.result.session._flash.error).to.not.exist;
@@ -413,13 +403,13 @@ describe('Yar', function () {
                     }
                 }
             });
-            
+
             server.route({
                 method: 'GET',
                 path: '/2',
                 config: {
                     handler: function () {
-                        
+
                         var errors = this.session.flash('error');
                         this.reply({
                             session: this.session._store,
@@ -433,16 +423,16 @@ describe('Yar', function () {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
-                    
+
                     server.inject({ method: 'GET', url: '/1' }, function (res) {
 
                         expect(res.result._flash.error).to.exist;
                         expect(res.result._flash.error.length).to.be.above(0);
-                    
+
                         var header = res.headers['set-cookie'];
                         expect(header.length).to.equal(1);
                         var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
-                    
+
                         server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
 
                             expect(res.result.session._flash.error).to.not.exist;
