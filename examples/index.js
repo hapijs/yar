@@ -5,6 +5,7 @@ var server = new Hapi.Server(process.env.PORT || 8080);
 var options = {
     cookieOptions: {
         password: 'password',   // Required
+        isSecure: false // Required if using http
     }
 };
 
