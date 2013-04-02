@@ -66,7 +66,7 @@ server.plugin.allow({ ext: true }).require('yar', options, function (err) { });
 - `reset()` - clears the session and assigns a new session id.
 - `set(key, value)` - assigns a value (string, object, etc) to a given key which will persist across requests.
 - `set(keysObject)` - assigns values to multiple keys using each 'keysObject' top-level property.
-- `get(key)` - retreive value using a key.
+- `get(key, clear)` - retreive value using a key. If 'clear' is 'true', key is cleared on return.
 - `clear(key)` - clears key.
 - `touch()` - Manually notify the session of changes (when using `get()` and changing the content of the returned reference directly without calling `set()`).
 - `flash(type, message, isOverride)` - stores volatile data - data that should be deleted once read. When given no arguments, it will return all of the flash messages and delete the originals. When given only a type, it will return all of the flash messages of that type and delete the originals. When given a type and a message, it will set or append that message to the given type. 'isOverride' used to indicate that the message provided should replace any existing value instead of being appended to it (defaults to false).

@@ -243,6 +243,70 @@ describe('Yar', function () {
         });
     });
 
+    it('sets session value then gets it back (clear)', function (done) {
+
+        var options = {
+            maxCookieSize: 0,
+            cookieOptions: {
+                password: 'password',
+                isSecure: false
+            }
+        };
+
+        var server = new Hapi.Server(0);
+
+        server.route([
+            {
+                method: 'GET', path: '/1', handler: function () {
+
+                    this.session.set('some', '2');
+                    return this.reply('1');
+                }
+            },
+            {
+                method: 'GET', path: '/2', handler: function () {
+
+                    var some = this.session.get('some', true);
+                    return this.reply(some);
+                }
+            },
+            {
+                method: 'GET', path: '/3', handler: function () {
+
+                    var some = this.session.get('some');
+                    return this.reply(some || '3');
+                }
+            }
+        ]);
+
+        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+
+                server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                    expect(res.result).to.equal('1');
+                    var header = res.headers['set-cookie'];
+                    var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                    server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
+
+                        expect(res.result).to.equal('2');
+                        var header = res.headers['set-cookie'];
+                        var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                        server.inject({ method: 'GET', url: '/3', headers: { cookie: cookie[1] } }, function (res) {
+
+                            expect(res.result).to.equal('3');
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+    });
+
     it('fails to set cookie in invalid cache', function (done) {
 
         var options = {
