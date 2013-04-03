@@ -3,16 +3,13 @@ var Hapi = require('hapi');
 var server = new Hapi.Server(process.env.PORT || 8080);
 
 var options = {
-    // name: 'yar' ,               // Optional, overrides cookie name. Defaults to 'yar'. Doesn't affect 'plugins.yar'.
-    // isSingleUse: false,         // Optional, clears jar after one request. Defaults to false.
     cookieOptions: {
         password: 'password',   // Required
-        // isSecure: true          // Optional, any supported cookie options except `encoding`
-    },
-    session: true
+        isSecure: false // Required if using http
+    }
 };
 
-server.plugin().allow({ ext: true }).require('yar', options, function (err) {
+server.plugin.allow({ ext: true }).require('../', options, function (err) {
 
     if (err) {
         console.log(err)
@@ -26,7 +23,7 @@ server.route({
     config: {
         handler: function (request) {
 
-            request.reply(request.session)
+            request.reply(request.session._store)
         }
     }
 });
@@ -37,7 +34,7 @@ server.route({
     config: {
         handler: function (request) {
 
-            request.session.test = 1;
+            request.session.set('test', 1);
             request.reply.redirect('/').send();
         }
     }
@@ -49,7 +46,7 @@ server.route({
     config: {
         handler: function (request) {
 
-            request.session[request.params.key] = request.params.value;
+            request.session.set(request.params.key, request.params.value);
             request.reply.redirect('/').send();
         }
     }
@@ -61,7 +58,7 @@ server.route({
     config: {
         handler: function (request) {
 
-            request.session = {};
+            request.session.reset();
             request.reply.redirect('/').send();
         }
     }
