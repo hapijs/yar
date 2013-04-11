@@ -4,7 +4,8 @@
   "version": "0.2.0",
   "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
   "contributors": [
-    "Van Nguyen <thegoleffect@gmail.com>"
+    "Van Nguyen <thegoleffect@gmail.com>",
+    "Wyatt Preul <wpreul@gmail.com>"
   ],
   "repository": "git://github.com/spumko/yar",
   "main": "index",
@@ -16,18 +17,18 @@
     "session"
   ],
   "engines": {
-    "node": "0.8.x"
+    "node": "0.10.x"
   },
   "dependencies": {
-    "hoek": "0.7.x",
+    "hoek": "0.8.x",
     "node-uuid": "1.4.x"
   },
   "peerDependencies": {
-    "hapi": "0.16.x"
+    "hapi": "1.0.x"
   },
   "devDependencies": {
-    "hapi": "0.16.x",
-    "lab": "0.0.x",
+    "hapi": "1.0.x",
+    "lab": "0.1.x",
     "complexity-report": "0.x.x"
   },
   "scripts": {
