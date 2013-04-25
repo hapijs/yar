@@ -61,7 +61,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.allow({ ext: true }).require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -117,7 +117,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.allow({ ext: true }).require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -168,7 +168,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.allow({ ext: true }).require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -219,7 +219,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.allow({ ext: true }).require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -279,7 +279,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.allow({ ext: true }).require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -334,7 +334,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.plugin.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.allow({ ext: true }).require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -344,7 +344,7 @@ describe('Yar', function () {
                     var header = res.headers['set-cookie'];
                     var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
 
-                    server.plugin._cache.stop();
+                    server.pack._cache.stop();
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
 
                         expect(res.statusCode).to.equal(500);
@@ -367,7 +367,7 @@ describe('Yar', function () {
             }
         });
 
-        server.plugin.allow({ ext: true }).require('../', function (err) {
+        server.pack.allow({ ext: true }).require('../', function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -422,7 +422,7 @@ describe('Yar', function () {
                 }
             });
 
-            server.plugin.allow({ ext: true }).require('../', options, function (err) {
+            server.pack.allow({ ext: true }).require('../', options, function (err) {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
@@ -483,7 +483,7 @@ describe('Yar', function () {
                 }
             });
 
-            server.plugin.allow({ ext: true }).require('../', options, function (err) {
+            server.pack.allow({ ext: true }).require('../', options, function (err) {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
