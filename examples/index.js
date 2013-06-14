@@ -9,7 +9,7 @@ var options = {
     }
 };
 
-server.plugin.allow({ ext: true }).require('../', options, function (err) {
+server.pack.allow({ ext: true }).require('../', options, function (err) {
 
     if (err) {
         console.log(err)
@@ -35,7 +35,7 @@ server.route({
         handler: function (request) {
 
             request.session.set('test', 1);
-            request.reply.redirect('/').send();
+            request.reply.redirect('/');
         }
     }
 });
@@ -47,7 +47,7 @@ server.route({
         handler: function (request) {
 
             request.session.set(request.params.key, request.params.value);
-            request.reply.redirect('/').send();
+            request.reply.redirect('/');
         }
     }
 });
@@ -59,7 +59,7 @@ server.route({
         handler: function (request) {
 
             request.session.reset();
-            request.reply.redirect('/').send();
+            request.reply.redirect('/');
         }
     }
 });
@@ -77,5 +77,5 @@ server.route({
 
 server.start(function () {
 
-    console.log('server started on port: ', server.settings.port);
-})
+    console.log('server started on port: ', server.info.port);
+});
