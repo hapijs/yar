@@ -20,7 +20,7 @@ For example, the first handler sets a session key and the second gets it:
 ```javascript
 var handler1 = function () {
 
-    this.session.set('example', { key: 'value' };
+    this.session.set('example', { key: 'value' });
     return this.reply();
 };
 
@@ -41,7 +41,7 @@ var options = {
 
 var server = new Hapi.Server();
 
-server.plugin.allow({ ext: true }).require('yar', options, function (err) { });
+server.pack.allow({ ext: true }).require('yar', options, function (err) { });
 ```
 
 
