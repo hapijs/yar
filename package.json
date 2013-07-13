@@ -1,7 +1,7 @@
 {
   "name": "yar",
   "description": "Cookie jar plugin",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
   "contributors": [
     "Van Nguyen <thegoleffect@gmail.com>",
@@ -20,7 +20,6 @@
     "node": "0.10.x"
   },
   "dependencies": {
-    "hoek": "0.8.x",
     "node-uuid": "1.4.x"
   },
   "peerDependencies": {
