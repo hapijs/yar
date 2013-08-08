@@ -57,6 +57,7 @@ server.pack.allow({ ext: true }).require('yar', options, function (err) { });
     - `password` - (Required) used to encrypt and sign the cookie data.
     - `path` - determines the cookie path. Defaults to _'/'_.
     - `isSecure` - determines whether or not to transfer using TLS/SSL. Defaults to _true_.
+    - `isHttpOnly` - determines whether or not to set HttpOnly option in cookie. Defaults to _false_.
 
 
 #### Methods
