@@ -52,7 +52,7 @@ server.pack.allow({ ext: true }).require('yar', options, function (err) { });
 - `name` - determines the name of the cookie used to store session information. Defaults to _session_.
 - `ttl` - server-side storage expiration (defaults to 1 day). Not used with custom storage.
 - `maxCookieSize` - maximum cookie size before using server-side storage. Defaults to 1K. Set to zero to always use server-side storage.
-- `storage` - Catbox-compatible storage to be used instead of the hapi internal cache.
+- `store` - Catbox-compatible storage to be used instead of the hapi internal cache.
 - `cookieOptions` - the configuration for cookie-specific features:
     - `password` - (Required) used to encrypt and sign the cookie data.
     - `path` - determines the cookie path. Defaults to _'/'_.
