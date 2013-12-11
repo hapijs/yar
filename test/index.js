@@ -344,7 +344,7 @@ describe('Yar', function () {
                     var header = res.headers['set-cookie'];
                     var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
 
-                    server.pack._cache.stop();
+                    server.pack._caches._default.client.stop();
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
 
                         expect(res.statusCode).to.equal(500);
