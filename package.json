@@ -1,12 +1,7 @@
 {
   "name": "yar",
   "description": "Cookie jar plugin",
-  "version": "0.4.0",
-  "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
-  "contributors": [
-    "Van Nguyen <thegoleffect@gmail.com>",
-    "Wyatt Preul <wpreul@gmail.com>"
-  ],
+  "version": "0.4.1",
   "repository": "git://github.com/spumko/yar",
   "main": "index",
   "keywords": [
@@ -27,8 +22,7 @@
   },
   "devDependencies": {
     "hapi": "1.x.x",
-    "lab": "0.1.x",
-    "complexity-report": "0.x.x"
+    "lab": "1.x.x"
   },
   "scripts": {
     "test": "make test-cov"
