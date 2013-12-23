@@ -35,7 +35,8 @@ The plugin requires a password for encryption, and the `ext` permission:
 ```javascript
 var options = {
     cookieOptions: {
-        password: 'password'
+        password: 'password', // Required
+        isSecure: false // Required if using http
     }
 };
 
