@@ -34,34 +34,34 @@ describe('Yar', function () {
 
         server.route([
             {
-                method: 'GET', path: '/1', handler: function () {
+                method: 'GET', path: '/1', handler: function (request, reply) {
 
-                    this.session.set('some', { value: '2' });
-                    this.session.set('one', 'xyz');
-                    this.session.clear('one');
-                    return this.reply(Object.keys(this.session._store).length);
+                    request.session.set('some', { value: '2' });
+                    request.session.set('one', 'xyz');
+                    request.session.clear('one');
+                    return reply(Object.keys(request.session._store).length);
                 }
             },
             {
-                method: 'GET', path: '/2', handler: function () {
+                method: 'GET', path: '/2', handler: function (request, reply) {
 
-                    var some = this.session.get('some');
+                    var some = request.session.get('some');
                     some.raw = 'access';
-                    this.session.touch();
-                    return this.reply(some.value);
+                    request.session.touch();
+                    return reply(some.value);
                 }
             },
             {
-                method: 'GET', path: '/3', handler: function () {
+                method: 'GET', path: '/3', handler: function (request, reply) {
 
-                    var raw = this.session.get('some').raw;
-                    this.session.reset();
-                    return this.reply(raw);
+                    var raw = request.session.get('some').raw;
+                    request.session.reset();
+                    return reply(raw);
                 }
             }
         ]);
 
-        server.pack.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -103,21 +103,21 @@ describe('Yar', function () {
 
         server.route([
             {
-                method: 'GET', path: '/1', handler: function () {
+                method: 'GET', path: '/1', handler: function (request, reply) {
 
-                    this.session.set('some', { value: '2' });
-                    return this.reply('1');
+                    request.session.set('some', { value: '2' });
+                    return reply('1');
                 }
             },
             {
-                method: 'GET', path: '/2', handler: function () {
+                method: 'GET', path: '/2', handler: function (request, reply) {
 
-                    return this.reply(this.session.get('some').value);
+                    return reply(request.session.get('some').value);
                 }
             }
         ]);
 
-        server.pack.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -154,21 +154,21 @@ describe('Yar', function () {
 
         server.route([
             {
-                method: 'GET', path: '/1', handler: function () {
+                method: 'GET', path: '/1', handler: function (request, reply) {
 
-                    this.session.set('some', { value: '12345678901234567890' });
-                    return this.reply('1');
+                    request.session.set('some', { value: '12345678901234567890' });
+                    return reply('1');
                 }
             },
             {
-                method: 'GET', path: '/2', handler: function () {
+                method: 'GET', path: '/2', handler: function (request, reply) {
 
-                    return this.reply(this.session.get('some').value);
+                    return reply(request.session.get('some').value);
                 }
             }
         ]);
 
-        server.pack.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -204,22 +204,22 @@ describe('Yar', function () {
 
         server.route([
             {
-                method: 'GET', path: '/1', handler: function () {
+                method: 'GET', path: '/1', handler: function (request, reply) {
 
-                    this.session.lazy(true);
-                    this.session.some = { value: '2' };
-                    return this.reply('1');
+                    request.session.lazy(true);
+                    request.session.some = { value: '2' };
+                    return reply('1');
                 }
             },
             {
-                method: 'GET', path: '/2', handler: function () {
+                method: 'GET', path: '/2', handler: function (request, reply) {
 
-                    return this.reply(this.session.some.value);
+                    return reply(request.session.some.value);
                 }
             }
         ]);
 
-        server.pack.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -257,29 +257,29 @@ describe('Yar', function () {
 
         server.route([
             {
-                method: 'GET', path: '/1', handler: function () {
+                method: 'GET', path: '/1', handler: function (request, reply) {
 
-                    this.session.set('some', '2');
-                    return this.reply('1');
+                    request.session.set('some', '2');
+                    return reply('1');
                 }
             },
             {
-                method: 'GET', path: '/2', handler: function () {
+                method: 'GET', path: '/2', handler: function (request, reply) {
 
-                    var some = this.session.get('some', true);
-                    return this.reply(some);
+                    var some = request.session.get('some', true);
+                    return reply(some);
                 }
             },
             {
-                method: 'GET', path: '/3', handler: function () {
+                method: 'GET', path: '/3', handler: function (request, reply) {
 
-                    var some = this.session.get('some');
-                    return this.reply(some || '3');
+                    var some = request.session.get('some');
+                    return reply(some || '3');
                 }
             }
         ]);
 
-        server.pack.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -320,21 +320,21 @@ describe('Yar', function () {
 
         server.route([
             {
-                method: 'GET', path: '/1', handler: function () {
+                method: 'GET', path: '/1', handler: function (request, reply) {
 
-                    this.session.set('some', { value: '2' });
-                    return this.reply('1');
+                    request.session.set('some', { value: '2' });
+                    return reply('1');
                 }
             },
             {
-                method: 'GET', path: '/2', handler: function () {
+                method: 'GET', path: '/2', handler: function (request, reply) {
 
-                    return this.reply(this.session.get('some').value);
+                    return reply(request.session.get('some').value);
                 }
             }
         ]);
 
-        server.pack.allow({ ext: true }).require('../', options, function (err) {
+        server.pack.require('../', options, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -357,17 +357,17 @@ describe('Yar', function () {
 
     it('fails generating session cookie header value (missing password)', function (done) {
 
-        var server = new Hapi.Server(0);
+        var server = new Hapi.Server(0, { debug: false });
 
         server.route({
-            method: 'GET', path: '/1', handler: function () {
+            method: 'GET', path: '/1', handler: function (request, reply) {
 
-                this.session.set('some', { value: '2' });
-                return this.reply('1');
+                request.session.set('some', { value: '2' });
+                return reply('1');
             }
         });
 
-        server.pack.allow({ ext: true }).require('../', function (err) {
+        server.pack.require('../', function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -396,13 +396,13 @@ describe('Yar', function () {
                 method: 'GET',
                 path: '/1',
                 config: {
-                    handler: function () {
+                    handler: function (request, reply) {
 
-                        this.session.flash('error', 'test error 1');
-                        this.session.flash('error', 'test error 2');
-                        this.session.flash('test', 'test 1', true);
-                        this.session.flash('test', 'test 2', true);
-                        this.reply(this.session._store);
+                        request.session.flash('error', 'test error 1');
+                        request.session.flash('error', 'test error 2');
+                        request.session.flash('test', 'test 1', true);
+                        request.session.flash('test', 'test 2', true);
+                        reply(request.session._store);
                     }
                 }
             });
@@ -411,18 +411,18 @@ describe('Yar', function () {
                 method: 'GET',
                 path: '/2',
                 config: {
-                    handler: function () {
+                    handler: function (request, reply) {
 
-                        var flashes = this.session.flash();
-                        this.reply({
-                            session: this.session._store,
+                        var flashes = request.session.flash();
+                        reply({
+                            session: request.session._store,
                             flashes: flashes
                         });
                     }
                 }
             });
 
-            server.pack.allow({ ext: true }).require('../', options, function (err) {
+            server.pack.require('../', options, function (err) {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
@@ -460,10 +460,10 @@ describe('Yar', function () {
                 method: 'GET',
                 path: '/1',
                 config: {
-                    handler: function () {
+                    handler: function (request, reply) {
 
-                        this.session.flash('error', 'test error');
-                        this.reply(this.session._store);
+                        request.session.flash('error', 'test error');
+                        reply(request.session._store);
                     }
                 }
             });
@@ -472,18 +472,18 @@ describe('Yar', function () {
                 method: 'GET',
                 path: '/2',
                 config: {
-                    handler: function () {
+                    handler: function (request, reply) {
 
-                        var errors = this.session.flash('error');
-                        this.reply({
-                            session: this.session._store,
+                        var errors = request.session.flash('error');
+                        reply({
+                            session: request.session._store,
                             errors: errors
                         });
                     }
                 }
             });
 
-            server.pack.allow({ ext: true }).require('../', options, function (err) {
+            server.pack.require('../', options, function (err) {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
