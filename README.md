@@ -44,6 +44,8 @@ var server = new Hapi.Server();
 server.pack.allow({ ext: true }).require('yar', options, function (err) { });
 ```
 
+Note: Add `isSecure: false` to the `cookieOptions` if using standard http. Take care to do this in development mode only though. You don't want to use cookies sent over insecure channels for session management. 
+
 
 ## API Reference
 
