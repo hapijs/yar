@@ -18,10 +18,10 @@
     "node-uuid": "1.4.x"
   },
   "peerDependencies": {
-    "hapi": "2.x.x"
+    "hapi": ">=2 <4"
   },
   "devDependencies": {
-    "hapi": "2.x.x",
+    "hapi": "3.x",
     "lab": "1.x.x"
   },
   "scripts": {
