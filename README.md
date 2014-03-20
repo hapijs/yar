@@ -14,7 +14,10 @@ A [**hapi**](https://github.com/spumko/hapi) session plugin and cookie jar
 
 ## Usage
 
-The ***yar*** [hapi](https://github.com/spumko/hapi) plugin adds session support - a persistant state across multiple browser requests using an [iron](https://github.com/hueniverse/iron) encrypted cookie and server-side storage. **yar** tries to fit session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses local storage via the hapi cache interface (or a [catbox](https://github.com/spumko/catbox) compatible store).
+The ***yar*** [hapi](https://github.com/spumko/hapi) plugin adds session support - a persistant state across multiple browser
+requests using an [iron](https://github.com/hueniverse/iron) encrypted cookie and server-side storage. **yar** tries to fit
+session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses local storage
+via the hapi plugin cache interface.
 
 For example, the first handler sets a session key and the second gets it:
 ```javascript
@@ -52,9 +55,10 @@ Note: Add `isSecure: false` to the `cookieOptions` if using standard http. Take 
 ### Options
 
 - `name` - determines the name of the cookie used to store session information. Defaults to _session_.
-- `ttl` - server-side storage expiration (defaults to 1 day). Not used with custom storage.
 - `maxCookieSize` - maximum cookie size before using server-side storage. Defaults to 1K. Set to zero to always use server-side storage.
-- `store` - Catbox-compatible storage to be used instead of the hapi internal cache.
+- `cache` - **hapi** [cache options](https://github.com/spumko/hapi/blob/master/docs/Reference.md#plugincacheoptions) which includes
+  (among other options):
+    - `expiresIn` - server-side storage expiration (defaults to 1 day).
 - `cookieOptions` - the configuration for cookie-specific features:
     - `password` - (Required) used to encrypt and sign the cookie data.
     - `path` - determines the cookie path. Defaults to _'/'_.

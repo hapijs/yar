@@ -1,7 +1,7 @@
 {
   "name": "yar",
   "description": "Cookie jar plugin",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "repository": "git://github.com/spumko/yar",
   "main": "index",
   "keywords": [
@@ -12,16 +12,16 @@
     "session"
   ],
   "engines": {
-    "node": "0.10.x"
+    "node": ">=0.10.22"
   },
   "dependencies": {
     "node-uuid": "1.4.x"
   },
   "peerDependencies": {
-    "hapi": "2.x.x"
+    "hapi": ">=2.x.x"
   },
   "devDependencies": {
-    "hapi": "2.x.x",
+    "hapi": "3.x.x",
     "lab": "1.x.x"
   },
   "scripts": {
