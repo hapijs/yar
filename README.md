@@ -21,16 +21,16 @@ via the hapi plugin cache interface.
 
 For example, the first handler sets a session key and the second gets it:
 ```javascript
-var handler1 = function () {
+var handler1 = function (request, reply) {
 
-    this.session.set('example', { key: 'value' });
-    return this.reply();
+    request.session.set('example', { key: 'value' });
+    return reply();
 };
 
-var handler2 = function () {
+var handler2 = function (request, reply) {
 
-    var example = this.session.get('example');
-    this.reply(example.key);     // Will send back 'value'
+    var example = request.session.get('example');
+    reply(example.key);     // Will send back 'value'
 };
 ```
 
@@ -44,7 +44,7 @@ var options = {
 
 var server = new Hapi.Server();
 
-server.pack.allow({ ext: true }).require('yar', options, function (err) { });
+server.pack.require('yar', options, function (err) { });
 ```
 
 Note: Add `isSecure: false` to the `cookieOptions` if using standard http. Take care to do this in development mode only though. You don't want to use cookies sent over insecure channels for session management. 
