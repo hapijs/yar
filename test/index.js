@@ -91,6 +91,65 @@ describe('Yar', function () {
         });
     });
 
+    it('sets session value and wait till cache expires then fail to get it back', function (done) {
+
+        var options = {
+            maxCookieSize: 0,
+            cookieOptions: {
+                password: 'password',
+                isSecure: false
+            },
+            cache: {
+                expiresIn: 1
+            }
+        };
+
+        var server = new Hapi.Server(0);
+
+        server.route([
+            {
+                method: 'GET', path: '/1', handler: function (request, reply) {
+
+                    request.session.set('some', { value: '2' });
+                    request.session.set('one', 'xyz');
+                    request.session.clear('one');
+                    return reply(Object.keys(request.session._store).length);
+                }
+            },
+            {
+                method: 'GET', path: '/2', handler: function (request, reply) {
+
+                    var some = request.session.get('some');
+                    return reply(some);
+                }
+            }
+        ]);
+
+        server.pack.require('../', options, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+
+                server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                    expect(res.result).to.equal(1);
+                    var header = res.headers['set-cookie'];
+                    expect(header.length).to.equal(1);
+                    expect(header[0]).to.not.contain('Secure');
+                    var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                    setTimeout(function() {
+                        server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
+
+                            expect(res.result).to.equal(null);
+                            done();
+                        });
+                    }, 10);
+                });
+            });
+        });
+    });
+
     it('sets session value then gets it back (cookie mode)', function (done) {
 
         var options = {
