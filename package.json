@@ -15,14 +15,15 @@
     "node": ">=0.10.22"
   },
   "dependencies": {
-    "node-uuid": "1.4.x"
+    "node-uuid": "1.4.x",
+    "hoek": "2.x.x"
   },
   "peerDependencies": {
     "hapi": ">=2.x.x"
   },
   "devDependencies": {
-    "hapi": "3.x.x",
     "lab": "1.x.x"
+    "hapi": "4.x.x",
   },
   "scripts": {
     "test": "make test-cov"
