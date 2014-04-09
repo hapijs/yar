@@ -91,6 +91,65 @@ describe('Yar', function () {
         });
     });
 
+    it('sets session value and wait till cache expires then fail to get it back', function (done) {
+
+        var options = {
+            maxCookieSize: 0,
+            cookieOptions: {
+                password: 'password',
+                isSecure: false
+            },
+            cache: {
+                expiresIn: 1
+            }
+        };
+
+        var server = new Hapi.Server(0);
+
+        server.route([
+            {
+                method: 'GET', path: '/1', handler: function (request, reply) {
+
+                    request.session.set('some', { value: '2' });
+                    request.session.set('one', 'xyz');
+                    request.session.clear('one');
+                    return reply(Object.keys(request.session._store).length);
+                }
+            },
+            {
+                method: 'GET', path: '/2', handler: function (request, reply) {
+
+                    var some = request.session.get('some');
+                    return reply(some);
+                }
+            }
+        ]);
+
+        server.pack.require('../', options, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+
+                server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                    expect(res.result).to.equal(1);
+                    var header = res.headers['set-cookie'];
+                    expect(header.length).to.equal(1);
+                    expect(header[0]).to.not.contain('Secure');
+                    var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                    setTimeout(function() {
+                        server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
+
+                            expect(res.result).to.equal(null);
+                            done();
+                        });
+                    }, 10);
+                });
+            });
+        });
+    });
+
     it('sets session value then gets it back (cookie mode)', function (done) {
 
         var options = {
@@ -208,6 +267,7 @@ describe('Yar', function () {
 
                     request.session.lazy(true);
                     request.session.some = { value: '2' };
+                    request.session._test = { value: '3' };
                     return reply('1');
                 }
             },
@@ -215,6 +275,11 @@ describe('Yar', function () {
                 method: 'GET', path: '/2', handler: function (request, reply) {
 
                     return reply(request.session.some.value);
+                }
+            },
+            { 
+                method: 'GET', path: '/3', handler: function(request, reply) {
+                    return reply(request.session._test);
                 }
             }
         ]);
@@ -236,6 +301,58 @@ describe('Yar', function () {
 
                         expect(res.result).to.equal('2');
                         var header = res.headers['set-cookie'];
+                        var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                        server.inject({method: 'GET', url: '/3', headers: { cookie: cookie[1] } }, function(res) {
+                            expect(res.result).to.be.a('null');
+                        });
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('no keys when in session (lazy mode)', function(done) {
+        var options = {
+            cookieOptions: {
+                password: 'password'
+            }
+        };
+
+        var server = new Hapi.Server(0);
+
+        server.route([
+            {
+                method: 'GET', path: '/1', handler: function (request, reply) {
+
+                    request.session.lazy(true);
+                    return reply('1');
+                }
+            },
+            {
+                method: 'GET', path: '/2', handler: function (request, reply) {
+                    return reply(request.session._store);
+                }
+            }
+        ]);
+
+        server.pack.require('../', options, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+
+                server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                    expect(res.result).to.equal('1');
+                    var header = res.headers['set-cookie'];
+                    expect(header.length).to.equal(1);
+                    expect(header[0]).to.contain('Secure');
+                    var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                    server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
+
+                        expect(res.result).to.be.empty;
                         done();
                     });
                 });
@@ -259,7 +376,7 @@ describe('Yar', function () {
             {
                 method: 'GET', path: '/1', handler: function (request, reply) {
 
-                    request.session.set('some', '2');
+                    request.session.set({'some': '2'});
                     return reply('1');
                 }
             },
@@ -346,6 +463,52 @@ describe('Yar', function () {
 
                     server.pack._caches._default.client.stop();
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
+
+                        expect(res.statusCode).to.equal(500);
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('fails setting session key/value because of bad key/value arguments', function (done) {
+        var options = {
+            maxCookieSize: 0,
+            cookieOptions: {
+                password: 'password',
+                isSecure: false
+            }
+        };
+
+        var server = new Hapi.Server(0, { debug: false });
+
+        server.route([
+            {
+                method: 'GET', path: '/1', handler: function (request, reply) {
+
+                    request.session.set({ 'some': '2' }, '2');
+                    return reply('1');
+                }
+            },
+            {
+                method: 'GET', path: '/2', handler: function (request, reply) {
+
+                    request.session.set(45.68, '2');
+                    return reply('1');
+                }
+            }
+        ]);
+
+        server.pack.require('../', options, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+
+                server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                    expect(res.statusCode).to.equal(500);
+                    server.inject({ method: 'GET', url: '/2' }, function (res) {
 
                         expect(res.statusCode).to.equal(500);
                         done();
@@ -475,9 +638,11 @@ describe('Yar', function () {
                     handler: function (request, reply) {
 
                         var errors = request.session.flash('error');
+                        var nomsg = request.session.flash('nomsg');
                         reply({
                             session: request.session._store,
-                            errors: errors
+                            errors: errors,
+                            nomsg: nomsg
                         });
                     }
                 }
@@ -501,6 +666,7 @@ describe('Yar', function () {
 
                             expect(res.result.session._flash.error).to.not.exist;
                             expect(res.result.errors).to.exist;
+                            expect(res.result.nomsg).to.exist;
                             done();
                         });
                     });
