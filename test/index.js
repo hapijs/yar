@@ -544,6 +544,36 @@ describe('Yar', function () {
         });
     });
 
+    it('fails to store session because of state error', function (done) {
+
+        var options = {
+            maxCookieSize: 0,
+            cookieOptions: {
+                password: 'password',
+                isSecure: false
+            }
+        };
+
+        var headers = {
+            Cookie: 'session=Fe26.2**deadcafe' // bad session value
+        };
+
+        var server = new Hapi.Server(0, { debug: false });
+
+        server.pack.require('../', options, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+
+                server.inject({ method: 'GET', url: '/1', headers: headers }, function (res) {
+
+                    expect(res.statusCode).to.equal(400);
+                    done();
+                });
+            });
+        });
+    });
+
     describe("#flash", function () {
 
         it('should get all flash messages when given no arguments', function (done) {
