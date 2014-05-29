@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "hapi": "6.x.x",
+    "boom": "2.x.x",
     "lab": "3.x.x"
   },
   "scripts": {
