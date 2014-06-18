@@ -560,7 +560,7 @@ describe('Yar', function () {
 
         var server = new Hapi.Server(0, { debug: false });
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
