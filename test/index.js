@@ -61,7 +61,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -125,7 +125,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -176,7 +176,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -227,7 +227,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -284,7 +284,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -337,7 +337,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -396,7 +396,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -451,7 +451,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -500,7 +500,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -530,7 +530,7 @@ describe('Yar', function () {
             }
         });
 
-        server.pack.require('../', function (err) {
+        server.pack.register({ plugin: require('../') }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -560,7 +560,7 @@ describe('Yar', function () {
 
         var server = new Hapi.Server(0, { debug: false });
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -615,7 +615,7 @@ describe('Yar', function () {
                 }
             });
 
-            server.pack.require('../', options, function (err) {
+            server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
@@ -678,7 +678,7 @@ describe('Yar', function () {
                 }
             });
 
-            server.pack.require('../', options, function (err) {
+            server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
