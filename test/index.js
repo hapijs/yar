@@ -546,7 +546,11 @@ describe('Yar', function () {
         });
     });
 
+<<<<<<< HEAD
     it('ignores requests when session is not set (error)', function (done) {
+=======
+    it('fails to store session because of state error', function (done) {
+>>>>>>> d926c635458ba91be1cd486160406b05601565f6
 
         var options = {
             maxCookieSize: 0,
@@ -556,6 +560,7 @@ describe('Yar', function () {
             }
         };
 
+<<<<<<< HEAD
         var server = new Hapi.Server(0);
         server.route({ method: 'GET', path: '/', handler: function (request, reply) { reply('ok'); } });
 
@@ -565,14 +570,29 @@ describe('Yar', function () {
         });
 
         server.pack.register({ plugin: require('../'), options: options }, function (err) {
+=======
+        var headers = {
+            Cookie: 'session=Fe26.2**deadcafe' // bad session value
+        };
+
+        var server = new Hapi.Server(0, { debug: false });
+
+        server.pack.require('../', options, function (err) {
+>>>>>>> d926c635458ba91be1cd486160406b05601565f6
 
             expect(err).to.not.exist;
             server.start(function () {
 
+<<<<<<< HEAD
                 server.inject({ method: 'GET', url: '/' }, function (res) {
 
                     expect(res.statusCode).to.equal(400);
                     expect(res.result.message).to.equal('handler error');
+=======
+                server.inject({ method: 'GET', url: '/1', headers: headers }, function (res) {
+
+                    expect(res.statusCode).to.equal(400);
+>>>>>>> d926c635458ba91be1cd486160406b05601565f6
                     done();
                 });
             });

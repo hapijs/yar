@@ -1,7 +1,7 @@
 {
   "name": "yar",
   "description": "Cookie jar plugin",
-  "version": "2.1.0",
+  "version": "2.3.2",
   "repository": "git://github.com/spumko/yar",
   "main": "index",
   "keywords": [
