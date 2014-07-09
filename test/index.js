@@ -2,7 +2,7 @@
 
 var Lab = require('lab');
 var Hapi = require('hapi');
-
+var Yar = require('../');
 
 // Declare internals
 
@@ -61,7 +61,10 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({
+            plugin: Yar,
+            options: options
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -125,7 +128,10 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({
+            plugin: Yar,
+            options: options
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -176,7 +182,10 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({
+            plugin: Yar,
+            options: options
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -227,7 +236,10 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({
+            plugin: Yar,
+            options: options
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -277,14 +289,17 @@ describe('Yar', function () {
                     return reply(request.session.some.value);
                 }
             },
-            { 
+            {
                 method: 'GET', path: '/3', handler: function(request, reply) {
                     return reply(request.session._test);
                 }
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({
+            plugin: Yar,
+            options: options
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -337,7 +352,10 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({
+            plugin: Yar,
+            options: options
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -396,7 +414,10 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({
+            plugin: Yar,
+            options: options
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -451,7 +472,10 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({
+            plugin: Yar,
+            options: options
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -500,7 +524,10 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({
+            plugin: Yar,
+            options: options
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -530,7 +557,9 @@ describe('Yar', function () {
             }
         });
 
-        server.pack.require('../', function (err) {
+        server.pack.register({
+            plugin: Yar,
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -560,7 +589,10 @@ describe('Yar', function () {
 
         var server = new Hapi.Server(0, { debug: false });
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({
+            plugin: Yar,
+            options: options
+        }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -615,7 +647,10 @@ describe('Yar', function () {
                 }
             });
 
-            server.pack.require('../', options, function (err) {
+            server.pack.register({
+                plugin: Yar,
+                options: options
+            }, function (err) {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
@@ -678,7 +713,10 @@ describe('Yar', function () {
                 }
             });
 
-            server.pack.require('../', options, function (err) {
+            server.pack.register({
+                plugin: Yar,
+                options: options
+            }, function (err) {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
