@@ -2,6 +2,7 @@
 
 var Lab = require('lab');
 var Hapi = require('hapi');
+var Boom = require('boom');
 
 
 // Declare internals
@@ -61,7 +62,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -125,7 +126,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -176,7 +177,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -227,7 +228,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -284,7 +285,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -337,7 +338,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -396,7 +397,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -451,7 +452,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -473,6 +474,7 @@ describe('Yar', function () {
     });
 
     it('fails setting session key/value because of bad key/value arguments', function (done) {
+
         var options = {
             maxCookieSize: 0,
             cookieOptions: {
@@ -500,7 +502,7 @@ describe('Yar', function () {
             }
         ]);
 
-        server.pack.require('../', options, function (err) {
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -530,7 +532,7 @@ describe('Yar', function () {
             }
         });
 
-        server.pack.require('../', function (err) {
+        server.pack.register(require('../'), function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -560,7 +562,7 @@ describe('Yar', function () {
 
         var server = new Hapi.Server(0, { debug: false });
 
-        server.pack.require('../', options, function (err) {
+       server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
             expect(err).to.not.exist;
             server.start(function () {
@@ -568,6 +570,39 @@ describe('Yar', function () {
                 server.inject({ method: 'GET', url: '/1', headers: headers }, function (res) {
 
                     expect(res.statusCode).to.equal(400);
+                    done();
+                });
+            });
+        });
+    });
+
+    it('ignores requests when session is not set (error)', function (done) {
+
+        var options = {
+            maxCookieSize: 0,
+            cookieOptions: {
+                password: 'password',
+                isSecure: false
+            }
+        };
+
+        var server = new Hapi.Server(0);
+        server.route({ method: 'GET', path: '/', handler: function (request, reply) { reply('ok'); } });
+
+        server.ext('onRequest', function (request, reply) {
+
+            reply(Boom.badRequest('handler error'));
+        });
+
+        server.pack.register({ plugin: require('../'), options: options }, function (err) {
+
+            expect(err).to.not.exist;
+            server.start(function () {
+
+                server.inject('/', function (res) {
+
+                    expect(res.statusCode).to.equal(400);
+                    expect(res.result.message).to.equal('handler error');
                     done();
                 });
             });
@@ -615,7 +650,7 @@ describe('Yar', function () {
                 }
             });
 
-            server.pack.require('../', options, function (err) {
+            server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
@@ -678,7 +713,7 @@ describe('Yar', function () {
                 }
             });
 
-            server.pack.require('../', options, function (err) {
+            server.pack.register({ plugin: require('../'), options: options }, function (err) {
 
                 expect(err).to.not.exist;
                 server.start(function (err) {
