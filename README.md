@@ -44,10 +44,13 @@ var options = {
 
 var server = new Hapi.Server();
 
-server.pack.require('yar', options, function (err) { });
+server.pack.register({
+    plugin: require('yar'),
+    options: options
+}, function (err) { });
 ```
 
-Note: Add `isSecure: false` to the `cookieOptions` if using standard http. Take care to do this in development mode only though. You don't want to use cookies sent over insecure channels for session management. 
+Note: Add `isSecure: false` to the `cookieOptions` if using standard http. Take care to do this in development mode only though. You don't want to use cookies sent over insecure channels for session management.
 
 
 ## API Reference
