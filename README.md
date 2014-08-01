@@ -1,9 +1,9 @@
-<a href="https://github.com/spumko"><img src="https://raw.github.com/spumko/spumko/master/images/from.png" align="right" /></a>
-![yar Logo](https://raw.github.com/spumko/yar/master/images/yar.png)
+<a href="https://github.com/hapijs"><img src="https://raw.github.com/hapijs/spumko/master/images/from.png" align="right" /></a>
+![yar Logo](https://raw.github.com/hapijs/yar/master/images/yar.png)
 
-A [**hapi**](https://github.com/spumko/hapi) session plugin and cookie jar
+A [**hapi**](https://github.com/hapijs/hapi) session plugin and cookie jar
 
-[![Build Status](https://secure.travis-ci.org/spumko/yar.png)](http://travis-ci.org/spumko/yar)
+[![Build Status](https://secure.travis-ci.org/hapijs/yar.png)](http://travis-ci.org/hapijs/yar)
 
 Lead Maintainer: [Jeffrey White](https://github.com/OmniJeff)
 
@@ -15,7 +15,7 @@ Lead Maintainer: [Jeffrey White](https://github.com/OmniJeff)
 
 ## Usage
 
-The ***yar*** [hapi](https://github.com/spumko/hapi) plugin adds session support - a persistant state across multiple browser
+The ***yar*** [hapi](https://github.com/hapijs/hapi) plugin adds session support - a persistant state across multiple browser
 requests using an [iron](https://github.com/hueniverse/iron) encrypted cookie and server-side storage. **yar** tries to fit
 session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses local storage
 via the hapi plugin cache interface.
@@ -60,7 +60,7 @@ Note: Add `isSecure: false` to the `cookieOptions` if using standard http. Take 
 
 - `name` - determines the name of the cookie used to store session information. Defaults to _session_.
 - `maxCookieSize` - maximum cookie size before using server-side storage. Defaults to 1K. Set to zero to always use server-side storage.
-- `cache` - **hapi** [cache options](https://github.com/spumko/hapi/blob/master/docs/Reference.md#plugincacheoptions) which includes
+- `cache` - **hapi** [cache options](https://github.com/hapijs/hapi/blob/master/docs/Reference.md#plugincacheoptions) which includes
   (among other options):
     - `expiresIn` - server-side storage expiration (defaults to 1 day).
 - `cookieOptions` - the configuration for cookie-specific features:

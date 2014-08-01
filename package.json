@@ -2,7 +2,7 @@
   "name": "yar",
   "description": "Cookie jar plugin",
   "version": "2.4.0",
-  "repository": "git://github.com/spumko/yar",
+  "repository": "git://github.com/hapijs/yar",
   "main": "index",
   "keywords": [
     "hapi",
@@ -32,7 +32,7 @@
   "licenses": [
     {
       "type": "BSD",
-      "url": "http://github.com/spumko/yar/raw/master/LICENSE"
+      "url": "http://github.com/hapijs/yar/raw/master/LICENSE"
     }
   ]
 }
