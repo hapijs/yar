@@ -1,6 +1,8 @@
 <a href="https://github.com/spumko"><img src="https://raw.github.com/spumko/spumko/master/images/from.png" align="right" /></a>
 ![yar Logo](https://raw.github.com/spumko/yar/master/images/yar.png)
 
+A [**hapi**](https://github.com/spumko/hapi) session plugin and cookie jar
+
 [![Build Status](https://secure.travis-ci.org/spumko/yar.png)](http://travis-ci.org/spumko/yar)
 
 Lead Maintainer: [Jeffrey White](https://github.com/OmniJeff)
