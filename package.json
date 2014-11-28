@@ -1,7 +1,7 @@
 {
   "name": "yar",
   "description": "Cookie jar plugin",
-  "version": "2.4.0",
+  "version": "3.0.0-rc1",
   "repository": "git://github.com/hapijs/yar",
   "main": "index",
   "keywords": [
@@ -12,19 +12,21 @@
     "session"
   ],
   "engines": {
-    "node": ">=0.10.22"
+    "node": ">=0.10.32"
   },
   "dependencies": {
+    "hoek": "2.x.x",
     "node-uuid": "1.4.x",
-    "hoek": "2.x.x"
+    "statehood": "2.0.0-rc1"
   },
   "peerDependencies": {
-    "hapi": ">=2.x.x"
+    "hapi": ">=8.x.x"
   },
   "devDependencies": {
-    "hapi": "6.x.x",
     "boom": "2.x.x",
-    "lab": "3.x.x"
+    "code": "1.x.x",
+    "hapi": "8.x.x",
+    "lab": "5.x.x"
   },
   "scripts": {
     "test": "make test-cov"

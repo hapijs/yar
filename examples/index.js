@@ -1,7 +1,8 @@
 var Hapi = require('hapi');
 var Yar = require('../');
 
-var server = new Hapi.Server(process.env.PORT || 8080);
+var server = new Hapi.Server();
+server.connection({ port: process.env.PORT || 8080 });
 
 var options = {
     cookieOptions: {
@@ -10,13 +11,13 @@ var options = {
     }
 };
 
-server.pack.register({
-    plugin: Yar,
+server.register({
+    register: Yar,
     options: options
 }, function (err) {
 
     if (err) {
-        console.log(err)
+        console.log(err);
         throw err;
     }
 });
@@ -27,7 +28,7 @@ server.route({
     config: {
         handler: function (request, reply) {
 
-            reply(request.session._store)
+            return reply(request.session._store);
         }
     }
 });
@@ -39,7 +40,7 @@ server.route({
         handler: function (request, reply) {
 
             request.session.set('test', 1);
-            reply.redirect('/');
+            return reply.redirect('/');
         }
     }
 });
@@ -51,7 +52,7 @@ server.route({
         handler: function (request, reply) {
 
             request.session.set(request.params.key, request.params.value);
-            reply.redirect('/');
+            return reply.redirect('/');
         }
     }
 });
@@ -63,7 +64,7 @@ server.route({
         handler: function (request, reply) {
 
             request.session.reset();
-            reply.redirect('/');
+            return reply.redirect('/');
         }
     }
 });
@@ -74,7 +75,7 @@ server.route({
     config: {
         handler: function (request, reply) {
 
-            reply('ohai');
+            return reply('ohai');
         }
     }
 });
