@@ -1,8 +1,9 @@
 // Load modules
 
-var Lab = require('lab');
-var Hapi = require('hapi');
 var Boom = require('boom');
+var Code = require('code');
+var Hapi = require('hapi');
+var Lab = require('lab');
 
 
 // Declare internals
@@ -12,9 +13,10 @@ var internals = {};
 
 // Test shortcuts
 
-var expect = Lab.expect;
-var describe = Lab.experiment;
-var it = Lab.test;
+var lab = exports.lab = Lab.script();
+var describe = lab.describe;
+var it = lab.it;
+var expect = Code.expect;
 
 
 it('sets session value then gets it back (store mode)', function (done) {
@@ -27,7 +29,8 @@ it('sets session value then gets it back (store mode)', function (done) {
         }
     };
 
-    var server = new Hapi.Server(0);
+    var server = new Hapi.Server();
+    server.connection();
 
     server.route([
         {
@@ -58,9 +61,9 @@ it('sets session value then gets it back (store mode)', function (done) {
         }
     ]);
 
-    server.pack.register({ plugin: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -101,7 +104,8 @@ it('sets session value and wait till cache expires then fail to get it back', fu
         }
     };
 
-    var server = new Hapi.Server(0);
+    var server = new Hapi.Server();
+    server.connection();
 
     server.route([
         {
@@ -122,9 +126,9 @@ it('sets session value and wait till cache expires then fail to get it back', fu
         }
     ]);
 
-    server.pack.register({ plugin: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -155,7 +159,8 @@ it('sets session value then gets it back (cookie mode)', function (done) {
         }
     };
 
-    var server = new Hapi.Server(0);
+    var server = new Hapi.Server();
+    server.connection();
 
     server.route([
         {
@@ -173,9 +178,9 @@ it('sets session value then gets it back (cookie mode)', function (done) {
         }
     ]);
 
-    server.pack.register({ plugin: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -206,7 +211,8 @@ it('sets session value then gets it back (hybrid mode)', function (done) {
         }
     };
 
-    var server = new Hapi.Server(0);
+    var server = new Hapi.Server();
+    server.connection();
 
     server.route([
         {
@@ -224,9 +230,9 @@ it('sets session value then gets it back (hybrid mode)', function (done) {
         }
     ]);
 
-    server.pack.register({ plugin: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -256,7 +262,8 @@ it('sets session value then gets it back (lazy mode)', function (done) {
         }
     };
 
-    var server = new Hapi.Server(0);
+    var server = new Hapi.Server();
+    server.connection();
 
     server.route([
         {
@@ -281,9 +288,9 @@ it('sets session value then gets it back (lazy mode)', function (done) {
         }
     ]);
 
-    server.pack.register({ plugin: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -301,7 +308,7 @@ it('sets session value then gets it back (lazy mode)', function (done) {
                     var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
 
                     server.inject({method: 'GET', url: '/3', headers: { cookie: cookie[1] } }, function(res) {
-                        expect(res.result).to.be.a('null');
+                        expect(res.result).to.be.null();
                     });
                     done();
                 });
@@ -317,7 +324,8 @@ it('no keys when in session (lazy mode)', function(done) {
         }
     };
 
-    var server = new Hapi.Server(0);
+    var server = new Hapi.Server();
+    server.connection();
 
     server.route([
         {
@@ -334,9 +342,9 @@ it('no keys when in session (lazy mode)', function(done) {
         }
     ]);
 
-    server.pack.register({ plugin: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -349,7 +357,7 @@ it('no keys when in session (lazy mode)', function(done) {
 
                 server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
 
-                    expect(res.result).to.be.empty;
+                    expect(res.result).to.be.empty();
                     done();
                 });
             });
@@ -367,7 +375,8 @@ it('sets session value then gets it back (clear)', function (done) {
         }
     };
 
-    var server = new Hapi.Server(0);
+    var server = new Hapi.Server();
+    server.connection();
 
     server.route([
         {
@@ -393,9 +402,9 @@ it('sets session value then gets it back (clear)', function (done) {
         }
     ]);
 
-    server.pack.register({ plugin: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -430,7 +439,8 @@ it('fails to set cookie in invalid cache', function (done) {
         }
     };
 
-    var server = new Hapi.Server(0);
+    var server = new Hapi.Server();
+    server.connection();
 
     server.route([
         {
@@ -448,9 +458,9 @@ it('fails to set cookie in invalid cache', function (done) {
         }
     ]);
 
-    server.pack.register({ plugin: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -458,7 +468,7 @@ it('fails to set cookie in invalid cache', function (done) {
                 var header = res.headers['set-cookie'];
                 var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
 
-                server.pack._caches._default.client.stop();
+                server._caches._default.client.stop();
                 server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
 
                     expect(res.statusCode).to.equal(500);
@@ -479,7 +489,8 @@ it('fails setting session key/value because of bad key/value arguments', functio
         }
     };
 
-    var server = new Hapi.Server(0, { debug: false });
+    var server = new Hapi.Server({ debug: false });
+    server.connection();
 
     server.route([
         {
@@ -498,9 +509,9 @@ it('fails setting session key/value because of bad key/value arguments', functio
         }
     ]);
 
-    server.pack.register({ plugin: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -516,9 +527,48 @@ it('fails setting session key/value because of bad key/value arguments', functio
     });
 });
 
+it('fails setting session key/value because of failed cache set', { parallel: false }, function (done) {
+
+    var options = {
+        maxCookieSize: 0,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    var server = new Hapi.Server({ debug: false });
+    server.connection();
+
+    var handler = function (request, reply) {
+
+        request.session.set('some', 'value');
+        server.stop(function () {                       // Cause cache.set() to fail
+
+            return reply();
+        });
+    };
+
+    server.route({ method: 'GET', path: '/', handler: handler });
+
+    server.register({ register: require('../'), options: options }, function (err) {
+
+        expect(err).to.not.exist();
+        server.start(function () {
+
+            server.inject({ method: 'GET', url: '/' }, function (res) {
+
+                expect(res.statusCode).to.equal(500);
+                done();
+            });
+        });
+    });
+});
+
 it('fails generating session cookie header value (missing password)', function (done) {
 
-    var server = new Hapi.Server(0, { debug: false });
+    var server = new Hapi.Server({ debug: false });
+    server.connection();
 
     server.route({
         method: 'GET', path: '/1', handler: function (request, reply) {
@@ -528,9 +578,9 @@ it('fails generating session cookie header value (missing password)', function (
         }
     });
 
-    server.pack.register(require('../'), function (err) {
+    server.register(require('../'), function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -556,11 +606,12 @@ it('fails to store session because of state error', function (done) {
         Cookie: 'session=Fe26.2**deadcafe' // bad session value
     };
 
-    var server = new Hapi.Server(0, { debug: false });
+    var server = new Hapi.Server({ debug: false });
+    server.connection();
 
-   server.pack.register({ plugin: require('../'), options: options }, function (err) {
+   server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject({ method: 'GET', url: '/1', headers: headers }, function (res) {
@@ -582,7 +633,8 @@ it('ignores requests when session is not set (error)', function (done) {
         }
     };
 
-    var server = new Hapi.Server(0);
+    var server = new Hapi.Server();
+    server.connection();
     server.route({ method: 'GET', path: '/', handler: function (request, reply) { reply('ok'); } });
 
     server.ext('onRequest', function (request, reply) {
@@ -590,9 +642,9 @@ it('ignores requests when session is not set (error)', function (done) {
         reply(Boom.badRequest('handler error'));
     });
 
-    server.pack.register({ plugin: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
-        expect(err).to.not.exist;
+        expect(err).to.not.exist();
         server.start(function () {
 
             server.inject('/', function (res) {
@@ -614,7 +666,8 @@ describe('flash()', function () {
                 password: 'password'
             }
         };
-        var server = new Hapi.Server(0);
+        var server = new Hapi.Server();
+        server.connection();
 
         server.route({
             method: 'GET',
@@ -646,9 +699,9 @@ describe('flash()', function () {
             }
         });
 
-        server.pack.register({ plugin: require('../'), options: options }, function (err) {
+        server.register({ register: require('../'), options: options }, function (err) {
 
-            expect(err).to.not.exist;
+            expect(err).to.not.exist();
             server.start(function (err) {
 
                 server.inject({ method: 'GET', url: '/1' }, function (res) {
@@ -662,8 +715,8 @@ describe('flash()', function () {
 
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
 
-                        expect(res.result.session._flash.error).to.not.exist;
-                        expect(res.result.flashes).to.exist;
+                        expect(res.result.session._flash.error).to.not.exist();
+                        expect(res.result.flashes).to.exist();
                         done();
                     });
                 });
@@ -678,7 +731,8 @@ describe('flash()', function () {
                 password: 'password'
             }
         };
-        var server = new Hapi.Server(0);
+        var server = new Hapi.Server();
+        server.connection();
 
         server.route({
             method: 'GET',
@@ -709,14 +763,14 @@ describe('flash()', function () {
             }
         });
 
-        server.pack.register({ plugin: require('../'), options: options }, function (err) {
+        server.register({ register: require('../'), options: options }, function (err) {
 
-            expect(err).to.not.exist;
+            expect(err).to.not.exist();
             server.start(function (err) {
 
                 server.inject({ method: 'GET', url: '/1' }, function (res) {
 
-                    expect(res.result._flash.error).to.exist;
+                    expect(res.result._flash.error).to.exist();
                     expect(res.result._flash.error.length).to.be.above(0);
 
                     var header = res.headers['set-cookie'];
@@ -725,9 +779,9 @@ describe('flash()', function () {
 
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
 
-                        expect(res.result.session._flash.error).to.not.exist;
-                        expect(res.result.errors).to.exist;
-                        expect(res.result.nomsg).to.exist;
+                        expect(res.result.session._flash.error).to.not.exist();
+                        expect(res.result.errors).to.exist();
+                        expect(res.result.nomsg).to.exist();
                         done();
                     });
                 });
@@ -735,5 +789,3 @@ describe('flash()', function () {
         });
     });
 });
-
-
