@@ -17,7 +17,7 @@
   "dependencies": {
     "hoek": "2.x.x",
     "node-uuid": "1.4.x",
-    "statehood": "2.0.0-rc1"
+    "statehood": "2.x.x"
   },
   "peerDependencies": {
     "hapi": ">=8.x.x"
