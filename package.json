@@ -1,7 +1,7 @@
 {
   "name": "yar",
   "description": "Cookie jar plugin",
-  "version": "3.0.0-rc1",
+  "version": "3.0.0",
   "repository": "git://github.com/hapijs/yar",
   "main": "index",
   "keywords": [
@@ -17,7 +17,7 @@
   "dependencies": {
     "hoek": "2.x.x",
     "node-uuid": "1.4.x",
-    "statehood": "2.0.0-rc1"
+    "statehood": "2.0.0"
   },
   "peerDependencies": {
     "hapi": ">=8.x.x"
