@@ -6,7 +6,7 @@
   "author": "Van Nguyen <thegoleffect@gmail.com>",
   "license": "BSD",
   "dependencies": {
-    "yar": "2.3.x",
-    "hapi": "6.x.x"
+    "yar": "3.x.x",
+    "hapi": "8.x.x"
   }
 }
