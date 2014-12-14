@@ -60,7 +60,7 @@ Note: Add `isSecure: false` to the `cookieOptions` if using standard http. Take 
 
 - `name` - determines the name of the cookie used to store session information. Defaults to _session_.
 - `maxCookieSize` - maximum cookie size before using server-side storage. Defaults to 1K. Set to zero to always use server-side storage.
-- `cache` - **hapi** [cache options](https://github.com/hapijs/hapi/blob/master/docs/Reference.md#plugincacheoptions) which includes
+- `cache` - **hapi** [cache options](https://github.com/hapijs/hapi/blob/master/API.md#servercacheoptions) which includes
   (among other options):
     - `expiresIn` - server-side storage expiration (defaults to 1 day).
 - `cookieOptions` - the configuration for cookie-specific features:
