@@ -657,6 +657,40 @@ it('ignores requests when session is not set (error)', function (done) {
     });
 });
 
+it('ignores requests when the skip function returns true', function (done) {
+
+    var options = {
+        skip: function(request, reply) {
+            return true;
+        }
+    };
+
+    var server = new Hapi.Server();
+    server.connection();
+
+    server.route([
+        {
+            method: 'GET', path: '/', handler: function (request, reply) {
+                return reply('1');
+            }
+        }
+    ]);
+
+    server.register({ register: require('../'), options: options }, function (err) {
+
+        expect(err).to.not.exist();
+        server.start(function () {
+
+            server.inject({ method: 'GET', url: '/' }, function (res) {
+
+                var header = res.headers['set-cookie'];
+                expect(header).to.be.undefined();
+                done();
+            });
+        });
+    });
+});
+
 describe('flash()', function () {
 
     it('should get all flash messages when given no arguments', function (done) {
