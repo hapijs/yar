@@ -68,6 +68,7 @@ Note: Add `isSecure: false` to the `cookieOptions` if using standard http. Take 
     - `path` - determines the cookie path. Defaults to _'/'_.
     - `isSecure` - determines whether or not to transfer using TLS/SSL. Defaults to _true_.
     - `isHttpOnly` - determines whether or not to set HttpOnly option in cookie. Defaults to _false_.
+- 'skip' - a function with the signature of `function (request reply) {}`, which when provided, is called for every request. If the provided function returns true no session with be attached to the request (defaults to false).
 
 
 #### Methods
