@@ -45,7 +45,7 @@ var options = {
 
 var server = new Hapi.Server();
 
-server.pack.register({
+server.register({
     plugin: require('yar'),
     options: options
 }, function (err) { });
@@ -53,6 +53,7 @@ server.pack.register({
 
 Note: Add `isSecure: false` to the `cookieOptions` if using standard http. Take care to do this in development mode only though. You don't want to use cookies sent over insecure channels for session management.
 
+Hapi 7.x or below: You must use `server.pack.register`
 
 ## API Reference
 
