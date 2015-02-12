@@ -46,7 +46,7 @@ var options = {
 var server = new Hapi.Server();
 
 server.register({
-    plugin: require('yar'),
+    register: require('yar'),
     options: options
 }, function (err) { });
 ```
