@@ -139,7 +139,8 @@ it('sets session value and wait till cache expires then fail to get it back', fu
                 expect(header[0]).to.not.contain('Secure');
                 var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
 
-                setTimeout(function() {
+                setTimeout(function () {
+
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res) {
 
                         expect(res.result).to.equal(null);
@@ -282,7 +283,8 @@ it('sets session value then gets it back (lazy mode)', function (done) {
             }
         },
         {
-            method: 'GET', path: '/3', handler: function(request, reply) {
+            method: 'GET', path: '/3', handler: function (request, reply) {
+
                 return reply(request.session._test);
             }
         }
@@ -307,7 +309,8 @@ it('sets session value then gets it back (lazy mode)', function (done) {
                     var header = res.headers['set-cookie'];
                     var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
 
-                    server.inject({method: 'GET', url: '/3', headers: { cookie: cookie[1] } }, function(res) {
+                    server.inject({method: 'GET', url: '/3', headers: { cookie: cookie[1] } }, function (res) {
+
                         expect(res.result).to.be.null();
                     });
                     done();
@@ -317,7 +320,8 @@ it('sets session value then gets it back (lazy mode)', function (done) {
     });
 });
 
-it('no keys when in session (lazy mode)', function(done) {
+it('no keys when in session (lazy mode)', function (done) {
+
     var options = {
         cookieOptions: {
             password: 'password'
@@ -337,6 +341,7 @@ it('no keys when in session (lazy mode)', function(done) {
         },
         {
             method: 'GET', path: '/2', handler: function (request, reply) {
+
                 return reply(request.session._store);
             }
         }
@@ -609,7 +614,7 @@ it('fails to store session because of state error', function (done) {
     var server = new Hapi.Server({ debug: false });
     server.connection();
 
-   server.register({ register: require('../'), options: options }, function (err) {
+    server.register({ register: require('../'), options: options }, function (err) {
 
         expect(err).to.not.exist();
         server.start(function () {
@@ -635,7 +640,10 @@ it('ignores requests when session is not set (error)', function (done) {
 
     var server = new Hapi.Server();
     server.connection();
-    server.route({ method: 'GET', path: '/', handler: function (request, reply) { reply('ok'); } });
+    server.route({ method: 'GET', path: '/', handler: function (request, reply) {
+
+        reply('ok');
+    }});
 
     server.ext('onRequest', function (request, reply) {
 
@@ -789,3 +797,4 @@ describe('flash()', function () {
         });
     });
 });
+
