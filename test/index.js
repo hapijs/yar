@@ -798,7 +798,52 @@ describe('flash()', function () {
     });
 });
 
-it('works correctly when storeBlank is false', function (done) {
+it('stores blank sessions when storeBlank is not given', function (done) {
+
+    var options = {
+        maxCookieSize: 0,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    var server = new Hapi.Server();
+    server.connection();
+
+    server.route([
+        {
+            method: 'GET', path: '/1', handler: function (request, reply) {
+
+                return reply('heyo!');
+            }
+        }
+    ]);
+
+    server.register({ register: require('../'), options: options }, function (err) {
+
+        expect(err).to.not.exist();
+        server.start(function () {
+
+            var stores = 0;
+            var fn = server._caches._default.client.set;
+            server._caches._default.client.set = function () {
+
+                stores++;
+                fn.apply(this, arguments);
+            };
+
+            server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                expect(stores).to.equal(1);
+                expect(res.headers['set-cookie'].length).to.equal(1);
+                done();
+            });
+        });
+    });
+});
+
+it('does not store blank sessions when storeBlank is false', function (done) {
 
     var options = {
         storeBlank: false,
