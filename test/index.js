@@ -798,3 +798,61 @@ describe('flash()', function () {
     });
 });
 
+it('works correctly when storeBlank is false', function (done) {
+
+    var options = {
+        storeBlank: false,
+        maxCookieSize: 0,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    var server = new Hapi.Server();
+    server.connection();
+
+    server.route([
+        {
+            method: 'GET', path: '/1', handler: function (request, reply) {
+
+                return reply('heyo!');
+            }
+        },
+        {
+            method: 'GET', path: '/2', handler: function (request, reply) {
+
+                request.session.set('hello', 'world');
+                return reply('should be set now');
+            }
+        }
+    ]);
+
+    server.register({ register: require('../'), options: options }, function (err) {
+
+        expect(err).to.not.exist();
+        server.start(function () {
+
+            var stores = 0;
+            var fn = server._caches._default.client.set;
+            server._caches._default.client.set = function () {
+
+                stores++;
+                fn.apply(this, arguments);
+            };
+
+            server.inject({ method: 'GET', url: '/1' }, function (res) {
+
+                expect(stores).to.equal(0);
+                expect(res.headers['set-cookie']).to.be.undefined();
+
+                server.inject({ method: 'GET', url: '/2' }, function (res) {
+
+                    expect(stores).to.equal(1);
+                    expect(res.headers['set-cookie'].length).to.equal(1);
+                    done();
+                });
+            });
+        });
+    });
+});
