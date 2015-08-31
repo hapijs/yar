@@ -69,6 +69,7 @@ Hapi 7.x or below: You must use `server.pack.register`
     - `path` - determines the cookie path. Defaults to _'/'_.
     - `isSecure` - determines whether or not to transfer using TLS/SSL. Defaults to _true_.
     - `isHttpOnly` - determines whether or not to set HttpOnly option in cookie. Defaults to _false_.
+    - `ttl` - sets the time for the cookie to live in the browser, in milliseconds.  Defaults to null (session time-life - cookies are deleted when the browser is closed).
 
 
 #### Methods
