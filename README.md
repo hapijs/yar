@@ -37,7 +37,7 @@ var handler2 = function (request, reply) {
 };
 ```
 
-The plugin requires a password for encryption, and the `ext` permission:
+The plugin requires a password for encryption:
 ```javascript
 
 /*
