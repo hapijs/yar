@@ -5,7 +5,7 @@ A [**hapi**](https://github.com/hapijs/hapi) session plugin and cookie jar
 
 [![Build Status](https://secure.travis-ci.org/hapijs/yar.png)](http://travis-ci.org/hapijs/yar)
 
-Lead Maintainer: [Jeffrey White](https://github.com/OmniJeff)
+Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
 ## Install
 
