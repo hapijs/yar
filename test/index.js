@@ -612,6 +612,15 @@ it('fails to store session because of state error', function (done) {
     var server = new Hapi.Server({ debug: false });
     server.connection();
 
+    server.route([
+        {
+            method: 'GET', path: '/1', handler: function (request, reply) {
+
+                return reply(Object.keys(request.session._store).length);
+            }
+        }
+    ]);
+
     server.register({ register: require('../'), options: options }, function (err) {
 
         expect(err).to.not.exist();
@@ -619,7 +628,7 @@ it('fails to store session because of state error', function (done) {
 
             server.inject({ method: 'GET', url: '/1', headers: headers }, function (res) {
 
-                expect(res.statusCode).to.equal(400);
+                expect(res.result).to.equal(0);
                 done();
             });
         });
