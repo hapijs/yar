@@ -63,6 +63,8 @@ server.register({
 
 ## Cookie Options
 
+You can read about more cookie options in the [Api](API).
+
 ### isSecure
 
 Set `isSecure` (default `true`) to `false` if you are using standard http. Take care to do this in development mode only though. You don't want to use cookies sent over insecure channels for session management.  One way to take care of this is to use the `NODE_ENV` environment variable like this:
