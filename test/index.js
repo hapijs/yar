@@ -595,6 +595,38 @@ it('fails generating session cookie header value (missing password)', function (
     });
 });
 
+it('sends back a 400 if not ignoring errors on bad session cookie', function (done) {
+
+    var options = {
+        maxCookieSize: 0,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false,
+            ignoreErrors: false
+        }
+    };
+
+    var headers = {
+        Cookie: 'session=Fe26.2**deadcafe' // bad session value
+    };
+
+    var server = new Hapi.Server({ debug: false });
+    server.connection();
+
+    server.register({ register: require('../'), options: options }, function (err) {
+
+        expect(err).to.not.exist();
+        server.start(function () {
+
+            server.inject({ method: 'GET', url: '/1', headers: headers }, function (res) {
+
+                expect(res.statusCode).to.equal(400);
+                done();
+            });
+        });
+    });
+});
+
 it('fails to store session because of state error', function (done) {
 
     var options = {
