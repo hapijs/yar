@@ -2,7 +2,11 @@
 
 A [**hapi**](https://github.com/hapijs/hapi) session plugin and cookie jar
 
+[![npm version](https://badge.fury.io/js/yar.svg)](http://badge.fury.io/js/yar)
 [![Build Status](https://secure.travis-ci.org/hapijs/yar.png)](http://travis-ci.org/hapijs/yar)
+[![Dependency Status](https://david-dm.org/hapijs/yar.svg)](https://david-dm.org/hapijs/yar)
+
+[![Join the chat at https://gitter.im/hapijs/yar](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/hapijs/yar?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
