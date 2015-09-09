@@ -22,8 +22,8 @@
 **yar** adds the `session` property to every request object and initializes the `session.id` on the first request from each browser. The `request.session` interface provides the following methods:
 
 - `reset()` - clears the session and assigns a new session id.
-- `set(key, value)` - assigns a value (string, object, etc) to a given key which will persist across requests.  returns the value.
-- `set(keysObject)` - assigns values to multiple keys using each 'keysObject' top-level property.
+- `set(key, value)` - assigns a value (string, object, etc) to a given key which will persist across requests.  Returns the value.
+- `set(keysObject)` - assigns values to multiple keys using each 'keysObject' top-level property. Returns the keysObject.
 - `get(key, clear)` - retreive value using a key. If 'clear' is 'true', key is cleared on return.
 - `clear(key)` - clears key.
 - `touch()` - Manually notify the session of changes (when using `get()` and changing the content of the returned reference directly without calling `set()`).
