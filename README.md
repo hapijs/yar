@@ -10,6 +10,10 @@ Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
     $ npm install yar
 
+## Upgrading
+
+Please note that version 4.x has a small breaking change.  This probably doesn't affect most people, but it's worth noting.  In version 3.x if a cookie was invalid, either due to corruption or change in encryption password, the server would respond with a HTTP 400 error.  Starting in 4.x the default settings avoid this and instead silently drop the invalid cookie.  This is probably the desired behavior, but since it's different you should be aware of it when upgrading.
+
 
 ## Usage
 
@@ -35,14 +39,19 @@ var handler2 = function (request, reply) {
 
 The plugin requires a password for encryption, and the `ext` permission:
 ```javascript
+
+/*
+Please note that there are other default cookie options that can impact your security.
+Please look at the description of the cookie options below to make sure this is doing
+what you expect.
+*/
 var options = {
     cookieOptions: {
         password: 'password',
-        isSecure: true,
-        ignoreErrors: true, // Please see the explanation below for consequences
-        clearInvalid: true // Please see the explanation below for consequences
+        isSecure: true
     }
 };
+
 
 var server = new Hapi.Server();
 
@@ -69,7 +78,7 @@ var options = {
 
 ### ignoreErrors
 
-`ignoreErrors` (default `true`) tells Hapi that it should not respond with a HTTP 400 error if the session cookie cannot decrypt.  This could happen if the cookie is changed on the client, or more likely, if you change the cookie password in your settings.  If you want to make this condition send an error, change this to `false`, but be aware that if you change your cookie password you will cause 400 errors to be returned to end users.  You should probably change this back to true for a short time to allow session cookies to get reset for the best user experience.
+`ignoreErrors` (default `true`) tells Hapi that it should not respond with a HTTP 400 error if the session cookie cannot decrypt.  This could happen if the cookie is changed on the client, or more likely, if you change the cookie password in your settings.  If you want to make this condition send an error like it did in prior versions, change this to `false`, but be aware that if you change your cookie password you will cause 400 errors to be returned to end users.  In that case you should probably change this back to true for a short time to allow session cookies to get reset for the best user experience.
 
 You may turn this off, `false`, and try to use the Hapi route state config option of `failAction` to instead get an event whenever a bad session cookie is encountered.  This can allow more sophisticated handling strategies or even allow for mitigation of brute force attacks on your cookie password.  See [server.state](http://hapijs.com/api#serverstatename-options) documentation for more details.
 
