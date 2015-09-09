@@ -36,8 +36,10 @@ it('sets session value then gets it back (store mode)', function (done) {
         {
             method: 'GET', path: '/1', handler: function (request, reply) {
 
-                request.session.set('some', { value: '2' });
-                request.session.set('one', 'xyz');
+                var returnValue = request.session.set('some', { value: '2' });
+                expect(returnValue.value).to.equal('2');
+                returnValue = request.session.set('one', 'xyz');
+                expect(returnValue).to.equal('xyz');
                 request.session.clear('one');
                 return reply(Object.keys(request.session._store).length);
             }
