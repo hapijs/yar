@@ -60,6 +60,14 @@ server.register({
 }, function (err) { });
 ```
 
+## Password considerations
+
+Keep in mind some things in regard to your password:
+
+1. It should never be committed to the repository or hard coded in your code.  Instead pass the password via environment variables or some other server configuration management option.
+1. It is possible that your password can be brute force hacked remotely, so choose something that is randomly generated.  Use a random password generator to create something rather than creating your own.
+1. Consider rotating your cookie session password on a regular basis.
+
 ## Cookie Options
 
 You can read about more cookie options in the [Api](API.md).
