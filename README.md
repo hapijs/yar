@@ -1,4 +1,3 @@
-<a href="https://github.com/hapijs"><img src="https://raw.github.com/hapijs/spumko/master/images/from.png" align="right" /></a>
 ![yar Logo](https://raw.github.com/hapijs/yar/master/images/yar.png)
 
 A [**hapi**](https://github.com/hapijs/hapi) session plugin and cookie jar
