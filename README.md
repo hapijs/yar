@@ -52,6 +52,10 @@ server.register({
 
 Note: Add `isSecure: false` to the `cookieOptions` if using standard http. Take care to do this in development mode only though. You don't want to use cookies sent over insecure channels for session management.
 
+### Hapi-Auth-Cookie
+
+There's a similar project called [Hapi-Auth-Cookie](https://github.com/hapijs/hapi-auth-cookie) that achieves similar ends to *yar*.  If you want some additional options around authentication then you should take a look there.
+
 ## API Reference
 
 ### Options
