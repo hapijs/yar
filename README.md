@@ -46,6 +46,7 @@ Please look at the description of the cookie options below to make sure this is 
 what you expect.
 */
 var options = {
+    storeBlank: false,
     cookieOptions: {
         password: 'password',
         isSecure: true
