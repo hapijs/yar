@@ -12,6 +12,8 @@ Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
 ## Install
 
+[![Join the chat at https://gitter.im/hapijs/yar](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/hapijs/yar?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
     $ npm install yar
 
 ## Upgrading to 4.x
