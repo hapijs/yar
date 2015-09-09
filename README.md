@@ -39,12 +39,6 @@ var handler2 = function (request, reply) {
 
 The plugin requires a password for encryption:
 ```javascript
-
-/*
-Please note that there are other default cookie options that can impact your security.
-Please look at the description of the cookie options below to make sure this is doing
-what you expect.
-*/
 var options = {
     storeBlank: false,
     cookieOptions: {
@@ -52,7 +46,11 @@ var options = {
         isSecure: true
     }
 };
-
+/*
+Please note that there are other default cookie options that can impact your security.
+Please look at the description of the cookie options below to make sure this is doing
+what you expect.
+*/
 
 var server = new Hapi.Server();
 
