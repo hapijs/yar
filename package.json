@@ -1,6 +1,6 @@
 {
   "name": "yar",
-  "description": "Cookie jar plugin",
+  "description": "Cookie jar plugin for Hapi",
   "version": "3.0.4",
   "repository": "git://github.com/hapijs/yar",
   "main": "lib/index",
