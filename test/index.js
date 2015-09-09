@@ -387,7 +387,12 @@ it('sets session value then gets it back (clear)', function (done) {
         {
             method: 'GET', path: '/1', handler: function (request, reply) {
 
-                request.session.set({ 'some': '2' });
+                var returnValue = request.session.set({
+                    some: '2',
+                    and: 'thensome'
+                });
+                expect(returnValue.some).to.equal('2');
+                expect(returnValue.and).to.equal('thensome');
                 return reply('1');
             }
         },
