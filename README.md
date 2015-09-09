@@ -62,7 +62,7 @@ server.register({
 
 ## Cookie Options
 
-You can read about more cookie options in the [Api](API).
+You can read about more cookie options in the [Api](API.md).
 
 ### isSecure
 
