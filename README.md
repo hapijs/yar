@@ -10,7 +10,7 @@ Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
     $ npm install yar
 
-## Upgrading
+## Upgrading to 4.x
 
 Please note that version 4.x has a small breaking change.  This probably doesn't affect most people, but it's worth noting.  In version 3.x if a cookie was invalid, either due to corruption or change in encryption password, the server would respond with a HTTP 400 error.  Starting in 4.x the default settings avoid this and instead silently drop the invalid cookie.  This is probably the desired behavior, but since it's different you should be aware of it when upgrading.
 
