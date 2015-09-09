@@ -3,7 +3,7 @@
   "description": "Cookie jar plugin",
   "version": "3.0.4",
   "repository": "git://github.com/hapijs/yar",
-  "main": "index",
+  "main": "lib/index",
   "keywords": [
     "hapi",
     "plugin",
@@ -19,22 +19,14 @@
     "node-uuid": "1.4.x",
     "statehood": "2.x.x"
   },
-  "peerDependencies": {
-    "hapi": ">=8.x.x"
-  },
   "devDependencies": {
     "boom": "2.x.x",
     "code": "1.x.x",
-    "hapi": "8.x.x",
+    "hapi": "9.x.x",
     "lab": "5.x.x"
   },
   "scripts": {
     "test": "make test-cov"
   },
-  "licenses": [
-    {
-      "type": "BSD",
-      "url": "http://github.com/hapijs/yar/raw/master/LICENSE"
-    }
-  ]
+  "license": "BSD-3-Clause"
 }
