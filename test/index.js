@@ -578,6 +578,69 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
     });
 });
 
+it('cache failure does not cause 500 response when errorOnCacheDisconnect option set to false', { parallel: false }, function (done) {
+
+    var options = {
+        maxCookieSize: 0,
+        errorOnCacheDisconnect: false,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    var cache = require('./failing-cache');
+    sinon.stub(cache.prototype, 'get', function(callback){callback(new Error('Error getting cache'))});
+    sinon.stub(cache.prototype, "isReady", function(){return false});
+
+    var hapiOptions = {
+        cache: {
+            engine: cache
+        },
+        debug: false
+    };
+    var server = new Hapi.Server(hapiOptions);
+    server.connection();
+
+    var preHandler = function (request, reply) {
+
+        request.session.set('some', 'value');
+        return reply();
+    };
+
+    var handler = function (request, reply) {
+
+        var some = request.session.get('some');
+        return reply(some);
+    };
+
+    server.route({
+        method: 'GET',
+        path: '/',
+        config: {
+            pre: [
+                {method: preHandler}
+            ],
+            handler: handler
+        }
+    });
+
+    server.register({ register: require('../'), options: options }, function (err) {
+
+        expect(err).to.not.exist();
+        server.start(function () {
+
+            server.inject({ method: 'GET', url: '/' }, function (res) {
+                expect(res.statusCode).to.equal(200);
+                expect(res.result).to.equal('value');
+                cache.prototype.get.restore();
+                cache.prototype.isReady.restore();
+                done();
+            });
+        });
+    });
+});
+
 
 it('fails generating session cookie header value (missing password)', function (done) {
 
