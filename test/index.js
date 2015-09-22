@@ -4,7 +4,7 @@ var Boom = require('boom');
 var Code = require('code');
 var Hapi = require('hapi');
 var Lab = require('lab');
-
+var sinon = require('sinon');
 
 // Declare internals
 
@@ -556,8 +556,8 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
     var server = new Hapi.Server(hapiOptions);
     server.connection();
 
-    var handler = function (request, reply) {
 
+    var handler = function (request, reply) {
         request.session.set('some', 'value');
         return reply();
     };
@@ -578,46 +578,6 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
     });
 });
 
-it('fails if cache not available', { parallel: false }, function (done) {
-
-    var options = {
-        maxCookieSize: 0,
-        cookieOptions: {
-            password: 'password',
-            isSecure: false
-        }
-    };
-
-    var cache = require('./failing-cache');
-
-    var hapiOptions = {
-        cache: {
-            engine: cache
-        },
-        debug: false
-    };
-    var server = new Hapi.Server(hapiOptions);
-    server.connection();
-
-    var handler = function (request, reply) {
-        request.session.set('some', 'value');
-        return reply();
-    };
-
-    server.route({ method: 'GET', path: '/', handler: handler });
-
-    server.register({ register: require('../'), options: options }, function (err) {
-
-        expect(err).to.not.exist();
-        server.start(function () {
-
-            server.inject({ method: 'GET', url: '/' }, function (res) {
-                expect(res.statusCode).to.equal(500);
-                done();
-            });
-        });
-    });
-});
 
 it('fails generating session cookie header value (missing password)', function (done) {
 
