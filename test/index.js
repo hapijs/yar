@@ -579,7 +579,7 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
     });
 });
 
-it('preAuth returns 500 error if cache not ready and errorOnCacheDisconnect set to default', { parallel: false }, function (done) {
+it('preAuth returns 500 error if cache not ready and errorOnCacheNotReady set to default', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 0,
@@ -662,11 +662,11 @@ it('preAuth returns 500 error if cache not ready and errorOnCacheDisconnect set 
     });
 });
 
-it('cache failure does not cause 500 response when errorOnCacheDisconnect option set to false', { parallel: false }, function (done) {
+it('cache failure does not cause 500 response when errorOnCacheNotReady option set to false', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 0,
-        errorOnCacheDisconnect: false,
+        errorOnCacheNotReady: false,
         cookieOptions: {
             password: 'password',
             isSecure: false
