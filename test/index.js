@@ -805,7 +805,7 @@ it('skips load from cache when errorOnCacheNotReady option set to false and cach
 it('cookie session still works when errorOnCacheNotReady option set to false and cache is not ready', { parallel: false }, function (done) {
 
     var options = {
-        maxCookieSize: 2050,
+        maxCookieSize: 500,
         errorOnCacheNotReady: false,
         cookieOptions: {
             password: 'password',
