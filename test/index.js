@@ -732,7 +732,6 @@ it('cache failure does not cause 500 response when errorOnCacheDisconnect option
     });
 });
 
-
 it('fails generating session cookie header value (missing password)', function (done) {
 
     var server = new Hapi.Server({ debug: false });
@@ -777,6 +776,14 @@ it('sends back a 400 if not ignoring errors on bad session cookie', function (do
 
     var server = new Hapi.Server({ debug: false });
     server.connection();
+
+    server.route({
+        method: 'GET', path: '/1', handler: function (request, reply) {
+
+            request.session.set('some', { value: '2' });
+            return reply('1');
+        }
+    });
 
     server.register({ register: require('../'), options: options }, function (err) {
 
