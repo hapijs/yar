@@ -732,6 +732,146 @@ it('cache failure does not cause 500 response when errorOnCacheNotReady option s
     });
 });
 
+it('skips load from cache when errorOnCacheNotReady option set to false and cache is not ready and user has valid session cookie', { parallel: false }, function (done) {
+
+    var options = {
+        maxCookieSize: 0,
+        errorOnCacheNotReady: false,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    var cache = require('./failing-cache');
+
+    sinon.stub(cache.prototype, 'set', function (key, value, ttl, callback) {
+
+        return callback();
+    });
+
+    var hapiOptions = {
+        cache: {
+            engine: cache
+        },
+        debug: false
+    };
+    var server = new Hapi.Server(hapiOptions);
+    server.connection();
+
+
+    server.route([{
+        method: 'GET', path: '/', handler: function (request, reply) {
+
+            request.session.set('some', 'value');
+            return reply();
+        }
+    },
+    {
+        method: 'GET', path: '/2', handler: function (request, reply) {
+
+            var value = request.session.get('some');
+            return reply(value || '2');
+        }
+    }]);
+
+    server.register({ register: require('../'), options: options }, function (err) {
+
+        expect(err).to.not.exist();
+        server.start(function () {
+
+            server.inject({ method: 'GET', url: '/' }, function (res) {
+
+                var header = res.headers['set-cookie'];
+                var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+                sinon.stub(cache.prototype, 'isReady', function () {
+
+                    return false;
+                });
+
+                server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res2) {
+
+                    expect(res2.statusCode).to.equal(200);
+                    expect(res2.result).to.equal('2');
+                    cache.prototype.set.restore();
+                    cache.prototype.isReady.restore();
+                    done();
+                });
+            });
+        });
+    });
+});
+
+it('cookie session still works when errorOnCacheNotReady option set to false and cache is not ready', { parallel: false }, function (done) {
+
+    var options = {
+        maxCookieSize: 2050,
+        errorOnCacheNotReady: false,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    var cache = require('./failing-cache');
+
+    sinon.stub(cache.prototype, 'set', function (key, value, ttl, callback) {
+
+        return callback();
+    });
+
+    var hapiOptions = {
+        cache: {
+            engine: cache
+        },
+        debug: false
+    };
+    var server = new Hapi.Server(hapiOptions);
+    server.connection();
+
+
+    server.route([{
+        method: 'GET', path: '/', handler: function (request, reply) {
+
+            request.session.set('some', 'value');
+            return reply();
+        }
+    },
+    {
+        method: 'GET', path: '/2', handler: function (request, reply) {
+
+            var value = request.session.get('some');
+            return reply(value || '2');
+        }
+    }]);
+
+    server.register({ register: require('../'), options: options }, function (err) {
+
+        expect(err).to.not.exist();
+        server.start(function () {
+
+            server.inject({ method: 'GET', url: '/' }, function (res) {
+
+                var header = res.headers['set-cookie'];
+                var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+                sinon.stub(cache.prototype, 'isReady', function () {
+
+                    return false;
+                });
+
+                server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res2) {
+
+                    expect(res2.statusCode).to.equal(200);
+                    expect(res2.result).to.equal('value');
+                    cache.prototype.set.restore();
+                    cache.prototype.isReady.restore();
+                    done();
+                });
+            });
+        });
+    });
+});
+
 it('fails generating session cookie header value (missing password)', function (done) {
 
     var server = new Hapi.Server({ debug: false });
