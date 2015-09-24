@@ -4,7 +4,6 @@ var Boom = require('boom');
 var Code = require('code');
 var Hapi = require('hapi');
 var Lab = require('lab');
-var sinon = require('sinon');
 
 // Declare internals
 
@@ -547,9 +546,15 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
         }
     };
 
+    var cache = require('./test-cache.js');
+    var setRestore = cache.prototype.set;
+    cache.prototype.set = function (key, value, ttl, callback) {
+
+        return callback(new Error('Error setting cache'));
+    };
     var hapiOptions = {
         cache: {
-            engine: require('./failing-cache.js')
+            engine: require('./test-cache.js')
         },
         debug: false
     };
@@ -573,6 +578,7 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
             server.inject({ method: 'GET', url: '/' }, function (res) {
 
                 expect(res.statusCode).to.equal(500);
+                cache.prototype.set = setRestore;
                 done();
             });
         });
@@ -589,11 +595,7 @@ it('preAuth returns 500 error if cache not ready and errorOnCacheNotReady set to
         }
     };
 
-    var cache = require('./failing-cache.js');
-    sinon.stub(cache.prototype, 'set', function (key, value, ttl, callback) {
-
-        return callback();
-    });
+    var cache = require('./test-cache.js');
 
     var hapiOptions = {
         cache: {
@@ -604,14 +606,13 @@ it('preAuth returns 500 error if cache not ready and errorOnCacheNotReady set to
     var server = new Hapi.Server(hapiOptions);
     server.connection();
 
-    var handlerSpy = sinon.spy();
+
     server.route([
         {
             method: 'GET', path: '/', handler: function (request, reply) {
 
-                handlerSpy();
                 request.session.set('some', 'value');
-                return reply();
+                return reply('1');
             }
         },
         {
@@ -635,26 +636,26 @@ it('preAuth returns 500 error if cache not ready and errorOnCacheNotReady set to
                 var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
 
                 expect(res.statusCode).to.equal(200);
-                expect(handlerSpy.calledOnce).to.equal(true);
+                expect(res.result).to.equal('1');
 
-                cache.prototype.set.restore();
-                sinon.stub(cache.prototype, 'get', function (callback){
+                var getRestore = cache.prototype.get;
+                var isReadyRestore = cache.prototype.isReady;
+
+                cache.prototype.get = function (callback){
 
                     callback(new Error('Error getting cache'));
-                });
+                };
 
-                sinon.stub(cache.prototype, 'isReady', function (){
+                cache.prototype.isReady = function (){
 
                     return false;
-                });
+                };
 
                 server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res2) {
 
                     expect(res2.statusCode).to.equal(500);
-                    expect(handlerSpy.calledTwice).to.equal(false);
-                    cache.prototype.get.restore();
-                    cache.prototype.isReady.restore();
-
+                    cache.prototype.get = getRestore;
+                    cache.prototype.isReady = isReadyRestore;
                     done();
                 });
             });
@@ -673,15 +674,19 @@ it('cache failure does not cause 500 response when errorOnCacheNotReady option s
         }
     };
 
-    var cache = require('./failing-cache');
-    sinon.stub(cache.prototype, 'get', function (callback){
+    var cache = require('./test-cache');
+    var getRestore = cache.prototype.get;
+    var isReadyRestore = cache.prototype.isReady;
+
+    cache.prototype.get = function (callback){
 
         callback(new Error('Error getting cache'));
-    });
-    sinon.stub(cache.prototype, 'isReady', function () {
+    };
+
+    cache.prototype.isReady = function (){
 
         return false;
-    });
+    };
 
     var hapiOptions = {
         cache: {
@@ -724,8 +729,8 @@ it('cache failure does not cause 500 response when errorOnCacheNotReady option s
 
                 expect(res.statusCode).to.equal(200);
                 expect(res.result).to.equal('value');
-                cache.prototype.get.restore();
-                cache.prototype.isReady.restore();
+                cache.prototype.get = getRestore;
+                cache.prototype.isReady = isReadyRestore;
                 done();
             });
         });
@@ -743,12 +748,7 @@ it('skips load from cache when errorOnCacheNotReady option set to false and cach
         }
     };
 
-    var cache = require('./failing-cache');
-
-    sinon.stub(cache.prototype, 'set', function (key, value, ttl, callback) {
-
-        return callback();
-    });
+    var cache = require('./test-cache');
 
     var hapiOptions = {
         cache: {
@@ -784,17 +784,18 @@ it('skips load from cache when errorOnCacheNotReady option set to false and cach
 
                 var header = res.headers['set-cookie'];
                 var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
-                sinon.stub(cache.prototype, 'isReady', function () {
+                var isReadyRestore = cache.prototype.isReady;
+
+                cache.prototype.isReady = function (){
 
                     return false;
-                });
+                };
 
                 server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res2) {
 
                     expect(res2.statusCode).to.equal(200);
                     expect(res2.result).to.equal('2');
-                    cache.prototype.set.restore();
-                    cache.prototype.isReady.restore();
+                    cache.prototype.isReady = isReadyRestore;
                     done();
                 });
             });
@@ -813,12 +814,7 @@ it('cookie session still works when errorOnCacheNotReady option set to false and
         }
     };
 
-    var cache = require('./failing-cache');
-
-    sinon.stub(cache.prototype, 'set', function (key, value, ttl, callback) {
-
-        return callback();
-    });
+    var cache = require('./test-cache');
 
     var hapiOptions = {
         cache: {
@@ -826,10 +822,9 @@ it('cookie session still works when errorOnCacheNotReady option set to false and
         },
         debug: false
     };
+
     var server = new Hapi.Server(hapiOptions);
     server.connection();
-
-
     server.route([{
         method: 'GET', path: '/', handler: function (request, reply) {
 
@@ -854,17 +849,18 @@ it('cookie session still works when errorOnCacheNotReady option set to false and
 
                 var header = res.headers['set-cookie'];
                 var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
-                sinon.stub(cache.prototype, 'isReady', function () {
+                var isReadyRestore = cache.prototype.isReady;
+
+                cache.prototype.isReady = function (){
 
                     return false;
-                });
+                };
 
                 server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res2) {
 
                     expect(res2.statusCode).to.equal(200);
                     expect(res2.result).to.equal('value');
-                    cache.prototype.set.restore();
-                    cache.prototype.isReady.restore();
+                    cache.prototype.isReady = isReadyRestore;
                     done();
                 });
             });

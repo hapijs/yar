@@ -64,7 +64,7 @@ internals.Connection.prototype.get = function (key, callback) {
 
 internals.Connection.prototype.set = function (key, value, ttl, callback) {
 
-    return callback(new Error('Error setting cache'));
+    return callback();
 };
 
 
