@@ -22,8 +22,7 @@
 #### Methods
 
 **yar** adds the `session` property to every request object and initializes the `session.id` on the first request from each browser. The `request.session` interface provides the following methods:
-true_.
-- `cache` - **hapi** [cache options](https://github.com/hapijs/hapi/blob/master/API.md#servercacheoptions) which includes
+
 - `reset()` - clears the session and assigns a new session id.
 - `set(key, value)` - assigns a value (string, object, etc) to a given key which will persist across requests.  Returns the value.
 - `set(keysObject)` - assigns values to multiple keys using each 'keysObject' top-level property. Returns the keysObject.
