@@ -7,7 +7,7 @@
 - `name` - determines the name of the cookie used to store session information. Defaults to _session_.
 - `maxCookieSize` - maximum cookie size before using server-side storage. Defaults to 1K. Set to zero to always use server-side storage.
 - `storeBlank` - determines whether to store empty session before they've been modified. Defaults to _true_.
-- `errorOnCacheNotReady` - will cause yar to throw exception if trying to persist to cache when cache is unavailable. Setting to false will allow application using yar to run uninterrupted if cache is not ready (however sessions will not be saving). Defaults to _true_.
+- `errorOnCacheNotReady` - will cause yar to throw exception if trying to persist to cache when cache is unavailable. Setting to false will allow application using yar to run uninterrupted if cache is not ready (however sessions will not be saving). Defaults to _false_.
 - `cache` - **hapi** [cache options](https://github.com/hapijs/hapi/blob/master/API.md#servercacheoptions) which includes
   (among other options):
     - `expiresIn` - server-side storage expiration (defaults to 1 day).
@@ -22,7 +22,8 @@
 #### Methods
 
 **yar** adds the `session` property to every request object and initializes the `session.id` on the first request from each browser. The `request.session` interface provides the following methods:
-
+true_.
+- `cache` - **hapi** [cache options](https://github.com/hapijs/hapi/blob/master/API.md#servercacheoptions) which includes
 - `reset()` - clears the session and assigns a new session id.
 - `set(key, value)` - assigns a value (string, object, etc) to a given key which will persist across requests.  Returns the value.
 - `set(keysObject)` - assigns values to multiple keys using each 'keysObject' top-level property. Returns the keysObject.
