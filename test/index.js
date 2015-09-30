@@ -439,7 +439,7 @@ it('sets session value then gets it back (clear)', function (done) {
     });
 });
 
-it('returns 500 when storing cookie in invalid cache and errorOnCacheNotReady set to true', function (done) {
+it('returns 500 when storing cookie in invalid cache by default', function (done) {
 
     var options = {
         maxCookieSize: 0,
@@ -462,7 +462,7 @@ it('returns 500 when storing cookie in invalid cache and errorOnCacheNotReady se
         {
             method: 'GET', path: '/2', handler: function (request, reply) {
 
-                return reply(request.session.get('some') || 'empty');
+                return reply(request.session.get('some'));
             }
         }
     ]);
@@ -481,57 +481,6 @@ it('returns 500 when storing cookie in invalid cache and errorOnCacheNotReady se
                 server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res2) {
 
                     expect(res2.statusCode).to.equal(500);
-                    done();
-                });
-            });
-        });
-    });
-});
-
-it('fails to set cookie in invalid cache', function (done) {
-
-    var options = {
-        maxCookieSize: 0,
-        errorOnCacheNotReady: false,
-        cookieOptions: {
-            password: 'password'
-        }
-    };
-
-    var server = new Hapi.Server();
-    server.connection();
-
-    server.route([
-        {
-            method: 'GET', path: '/1', handler: function (request, reply) {
-
-                request.session.set('some', { value: '2' });
-                return reply('1');
-            }
-        },
-        {
-            method: 'GET', path: '/2', handler: function (request, reply) {
-
-                return reply(request.session.get('some') || 'empty');
-            }
-        }
-    ]);
-
-    server.register({ register: require('../'), options: options }, function (err) {
-
-        expect(err).to.not.exist();
-        server.start(function () {
-
-            server.inject({ method: 'GET', url: '/1' }, function (res) {
-
-                var header = res.headers['set-cookie'];
-                var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
-
-                server._caches._default.client.stop();
-                server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res2) {
-                    
-                    expect(res2.result).to.equal('empty');
-                    expect(res2.statusCode).to.equal(200);
                     done();
                 });
             });
