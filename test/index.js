@@ -585,7 +585,81 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
     });
 });
 
-it('preAuth returns 500 error if cache not ready and errorOnCacheNotReady set to default', { parallel: false }, function (done) {
+it('does not try to store session not ready if errorOnCacheNotReady set to false', { parallel: false }, function (done) {
+
+    var options = {
+        maxCookieSize: 0,
+        errorOnCacheNotReady: false,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    var cache = require('./test-cache');
+    var getRestore = cache.prototype.get;
+    var isReadyRestore = cache.prototype.isReady;
+
+    cache.prototype.get = function (callback){
+
+        callback(new Error('Error getting cache'));
+    };
+
+    cache.prototype.isReady = function (){
+
+        return false;
+    };
+
+    var hapiOptions = {
+        cache: {
+            engine: cache
+        },
+        debug: false
+    };
+    var server = new Hapi.Server(hapiOptions);
+    server.connection();
+
+    var preHandler = function (request, reply) {
+
+        request.session.set('some', 'value');
+        return reply();
+    };
+
+    var handler = function (request, reply) {
+
+        var some = request.session.get('some');
+        return reply(some);
+    };
+
+    server.route({
+        method: 'GET',
+        path: '/',
+        config: {
+            pre: [
+                { method: preHandler }
+            ],
+            handler: handler
+        }
+    });
+
+    server.register({ register: require('../'), options: options }, function (err) {
+
+        expect(err).to.not.exist();
+        server.start(function () {
+
+            server.inject({ method: 'GET', url: '/' }, function (res) {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result).to.equal('value');
+                cache.prototype.get = getRestore;
+                cache.prototype.isReady = isReadyRestore;
+                done();
+            });
+        });
+    });
+});
+
+it('fails loading session from invalid cache and returns 500', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 0,
@@ -663,81 +737,7 @@ it('preAuth returns 500 error if cache not ready and errorOnCacheNotReady set to
     });
 });
 
-it('cache failure does not cause 500 response when errorOnCacheNotReady option set to false', { parallel: false }, function (done) {
-
-    var options = {
-        maxCookieSize: 0,
-        errorOnCacheNotReady: false,
-        cookieOptions: {
-            password: 'password',
-            isSecure: false
-        }
-    };
-
-    var cache = require('./test-cache');
-    var getRestore = cache.prototype.get;
-    var isReadyRestore = cache.prototype.isReady;
-
-    cache.prototype.get = function (callback){
-
-        callback(new Error('Error getting cache'));
-    };
-
-    cache.prototype.isReady = function (){
-
-        return false;
-    };
-
-    var hapiOptions = {
-        cache: {
-            engine: cache
-        },
-        debug: false
-    };
-    var server = new Hapi.Server(hapiOptions);
-    server.connection();
-
-    var preHandler = function (request, reply) {
-
-        request.session.set('some', 'value');
-        return reply();
-    };
-
-    var handler = function (request, reply) {
-
-        var some = request.session.get('some');
-        return reply(some);
-    };
-
-    server.route({
-        method: 'GET',
-        path: '/',
-        config: {
-            pre: [
-                { method: preHandler }
-            ],
-            handler: handler
-        }
-    });
-
-    server.register({ register: require('../'), options: options }, function (err) {
-
-        expect(err).to.not.exist();
-        server.start(function () {
-
-            server.inject({ method: 'GET', url: '/' }, function (res) {
-
-                expect(res.statusCode).to.equal(200);
-                expect(res.result).to.equal('value');
-                cache.prototype.get = getRestore;
-                cache.prototype.isReady = isReadyRestore;
-                done();
-            });
-        });
-    });
-});
-
-it('still uses cookie when cache is not ready if user has valid session cookie', { parallel: false }, function (done) {
+it('does not load from cache if cache is not ready if user and errorOnCacheNotReady set to false', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 0,
@@ -803,7 +803,7 @@ it('still uses cookie when cache is not ready if user has valid session cookie',
     });
 });
 
-it('still loads from cache when errorOnCacheNotReady option set to false but cache is ready and no cookie', { parallel: false }, function (done) {
+it('still loads from cache when errorOnCacheNotReady option set to false but cache is ready', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 0,
