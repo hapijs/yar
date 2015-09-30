@@ -439,61 +439,10 @@ it('sets session value then gets it back (clear)', function (done) {
     });
 });
 
-it('does not store cookie in invalid cache', function (done) {
+it('fails to set cookie in invalid cache', function (done) {
 
     var options = {
         maxCookieSize: 0,
-        cookieOptions: {
-            password: 'password'
-        }
-    };
-
-    var server = new Hapi.Server();
-    server.connection();
-
-    server.route([
-        {
-            method: 'GET', path: '/1', handler: function (request, reply) {
-
-                request.session.set('some', { value: '2' });
-                return reply('1');
-            }
-        },
-        {
-            method: 'GET', path: '/2', handler: function (request, reply) {
-
-                return reply(request.session.get('some') || 'empty');
-            }
-        }
-    ]);
-
-    server.register({ register: require('../'), options: options }, function (err) {
-
-        expect(err).to.not.exist();
-        server.start(function () {
-
-            server.inject({ method: 'GET', url: '/1' }, function (res) {
-
-                var header = res.headers['set-cookie'];
-                var cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
-
-                server._caches._default.client.stop();
-                server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, function (res2) {
-
-                    expect(res2.statusCode).to.equal(200);
-                    expect(res2.result).to.equal('empty');
-                    done();
-                });
-            });
-        });
-    });
-});
-
-it('returns 500 when storing cookie in invalid cache and errorOnCacheNotReady set to true', function (done) {
-
-    var options = {
-        maxCookieSize: 0,
-        errorOnCacheNotReady: true,
         cookieOptions: {
             password: 'password'
         }
@@ -636,11 +585,10 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
     });
 });
 
-it('fails loading session from invalid cache and returns 500 if errorOnCacheNotReady set to true', { parallel: false }, function (done) {
+it('preAuth returns 500 error if cache not ready and errorOnCacheNotReady set to default', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 0,
-        errorOnCacheNotReady: true,
         cookieOptions: {
             password: 'password',
             isSecure: false
@@ -715,7 +663,7 @@ it('fails loading session from invalid cache and returns 500 if errorOnCacheNotR
     });
 });
 
-it('does not try to load session from cache when cache not ready by default', { parallel: false }, function (done) {
+it('cache failure does not cause 500 response when errorOnCacheNotReady option set to false', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 0,
@@ -789,7 +737,7 @@ it('does not try to load session from cache when cache not ready by default', { 
     });
 });
 
-it('still uses cookie when cache is not ready if user has valid session cookie', { parallel: false }, function (done) {
+it('skips load from cache when errorOnCacheNotReady option set to false and cache is not ready and user has valid session cookie', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 0,
@@ -855,7 +803,7 @@ it('still uses cookie when cache is not ready if user has valid session cookie',
     });
 });
 
-it('still saves session as cookie when cache is not ready if maxCookieSize is big enough', { parallel: false }, function (done) {
+it('cookie session still works when errorOnCacheNotReady option set to false and cache is not ready', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 500,
