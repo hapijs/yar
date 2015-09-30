@@ -585,7 +585,7 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
     });
 });
 
-it('does not try to store session not ready if errorOnCacheNotReady set to false', { parallel: false }, function (done) {
+it('does not try to store session when cache not ready if errorOnCacheNotReady set to false', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 0,
@@ -737,7 +737,7 @@ it('fails loading session from invalid cache and returns 500', { parallel: false
     });
 });
 
-it('does not load from cache if cache is not ready if user and errorOnCacheNotReady set to false', { parallel: false }, function (done) {
+it('does not load from cache if cache is not ready and errorOnCacheNotReady set to false', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 0,
@@ -862,7 +862,7 @@ it('still loads from cache when errorOnCacheNotReady option set to false but cac
     });
 });
 
-it('still saves session as cookie when cache is not ready if maxCookieSize is big enough', { parallel: false }, function (done) {
+it('still saves session as cookie when cache is not ready if maxCookieSize is set and big enough', { parallel: false }, function (done) {
 
     var options = {
         maxCookieSize: 500,
