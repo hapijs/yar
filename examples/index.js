@@ -1,10 +1,12 @@
-var Hapi = require('hapi');
-var Yar = require('../');
+'use strict';
 
-var server = new Hapi.Server();
+const Hapi = require('hapi');
+const Yar = require('../');
+
+const server = new Hapi.Server();
 server.connection({ port: process.env.PORT || 8080 });
 
-var options = {
+const options = {
     cookieOptions: {
         password: 'password',   // Required
         isSecure: false // Required if using http
@@ -14,7 +16,7 @@ var options = {
 server.register({
     register: Yar,
     options: options
-}, function (err) {
+}, (err) => {
 
     if (err) {
         console.log(err);
@@ -26,10 +28,7 @@ server.route({
     method: 'GET',
     path: '/',
     config: {
-        handler: function (request, reply) {
-
-            return reply(request.session._store);
-        }
+        handler: (request, reply) => reply(request.session._store)
     }
 });
 
@@ -37,7 +36,7 @@ server.route({
     method: 'GET',
     path: '/set',
     config: {
-        handler: function (request, reply) {
+        handler: (request, reply) => {
 
             request.session.set('test', 1);
             return reply.redirect('/');
@@ -49,7 +48,7 @@ server.route({
     method: 'GET',
     path: '/set/{key}/{value}',
     config: {
-        handler: function (request, reply) {
+        handler: (request, reply) => {
 
             request.session.set(request.params.key, request.params.value);
             return reply.redirect('/');
@@ -61,7 +60,7 @@ server.route({
     method: 'GET',
     path: '/clear',
     config: {
-        handler: function (request, reply) {
+        handler: (request, reply) => {
 
             request.session.reset();
             return reply.redirect('/');
@@ -73,14 +72,8 @@ server.route({
     method: 'GET',
     path: '/control',
     config: {
-        handler: function (request, reply) {
-
-            return reply('ohai');
-        }
+        handler: (request, reply) => reply('ohai')
     }
 });
 
-server.start(function () {
-
-    console.log('server started on port: ', server.info.port);
-});
+server.start(() => console.log('server started on port: ', server.info.port));
