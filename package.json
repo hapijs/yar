@@ -12,18 +12,18 @@
     "session"
   ],
   "engines": {
-    "node": ">=0.10.40"
+    "node": ">=4.0.0"
   },
   "dependencies": {
-    "hoek": "2.x.x",
-    "node-uuid": "1.4.x",
-    "statehood": "2.x.x"
+    "hoek": "^3.0.1",
+    "node-uuid": "^1.4.3",
+    "statehood": "^3.0.0"
   },
   "devDependencies": {
-    "boom": "2.x.x",
-    "code": "1.x.x",
-    "hapi": "9.x.x",
-    "lab": "5.x.x"
+    "boom": "^3.0.0",
+    "code": "^2.0.1",
+    "hapi": "^11.0.3",
+    "lab": "^7.1.0"
   },
   "scripts": {
     "test": "lab -a code -t 100 -L",

@@ -1,4 +1,6 @@
-var internals = {};
+'use strict';
+
+const internals = {};
 
 
 exports = module.exports = internals.Connection = function () {
