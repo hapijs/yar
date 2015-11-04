@@ -7,7 +7,6 @@ const Code = require('code');
 const Hapi = require('hapi');
 const Lab = require('lab');
 
-
 // Declare internals
 
 const internals = {};
@@ -442,7 +441,7 @@ it('sets session value then gets it back (clear)', (done) => {
     });
 });
 
-it('fails to set cookie in invalid cache', (done) => {
+it('returns 500 when storing cookie in invalid cache by default', (done) => {
 
     const options = {
         maxCookieSize: 0,
@@ -465,7 +464,7 @@ it('fails to set cookie in invalid cache', (done) => {
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                return reply(request.session.get('some').value);
+                return reply(request.session.get('some'));
             }
         }
     ]);
@@ -549,16 +548,25 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
         }
     };
 
-    const server = new Hapi.Server({ debug: false });
+    const cache = require('./test-cache.js');
+    const setRestore = cache.prototype.set;
+    cache.prototype.set = (key, value, ttl, callback) => {
+
+        return callback(new Error('Error setting cache'));
+    };
+    const hapiOptions = {
+        cache: {
+            engine: require('./test-cache.js')
+        },
+        debug: false
+    };
+    const server = new Hapi.Server(hapiOptions);
     server.connection();
 
     const handler = (request, reply) => {
 
         request.session.set('some', 'value');
-        server.stop(() => {                       // Cause cache.set() to fail
-
-            return reply();
-        });
+        return reply();
     };
 
     server.route({ method: 'GET', path: '/', handler: handler });
@@ -571,7 +579,349 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
             server.inject({ method: 'GET', url: '/' }, (res) => {
 
                 expect(res.statusCode).to.equal(500);
+                cache.prototype.set = setRestore;
                 done();
+            });
+        });
+    });
+});
+
+it('does not try to store session when cache not ready if errorOnCacheNotReady set to false', { parallel: false }, (done) => {
+
+    const options = {
+        maxCookieSize: 0,
+        errorOnCacheNotReady: false,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    const cache = require('./test-cache');
+    const getRestore = cache.prototype.get;
+    const isReadyRestore = cache.prototype.isReady;
+
+    cache.prototype.get = (callback) => {
+
+        callback(new Error('Error getting cache'));
+    };
+
+    cache.prototype.isReady = () => {
+
+        return false;
+    };
+
+    const hapiOptions = {
+        cache: {
+            engine: cache
+        },
+        debug: false
+    };
+    const server = new Hapi.Server(hapiOptions);
+    server.connection();
+
+    const preHandler = (request, reply) => {
+
+        request.session.set('some', 'value');
+        return reply();
+    };
+
+    const handler = (request, reply) => {
+
+        const some = request.session.get('some');
+        return reply(some);
+    };
+
+    server.route({
+        method: 'GET',
+        path: '/',
+        config: {
+            pre: [
+                { method: preHandler }
+            ],
+            handler: handler
+        }
+    });
+
+    server.register({ register: require('../'), options: options }, (err) => {
+
+        expect(err).to.not.exist();
+        server.start(() => {
+
+            server.inject({ method: 'GET', url: '/' }, (res) => {
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result).to.equal('value');
+                cache.prototype.get = getRestore;
+                cache.prototype.isReady = isReadyRestore;
+                done();
+            });
+        });
+    });
+});
+
+it('fails loading session from invalid cache and returns 500', { parallel: false }, (done) => {
+
+    const options = {
+        maxCookieSize: 0,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    const cache = require('./test-cache.js');
+
+    const hapiOptions = {
+        cache: {
+            engine: cache
+        },
+        debug: false
+    };
+    const server = new Hapi.Server(hapiOptions);
+    server.connection();
+
+    server.route([
+        {
+            method: 'GET', path: '/', handler: (request, reply) => {
+
+                request.session.set('some', 'value');
+                return reply('1');
+            }
+        },
+        {
+            method: 'GET', path: '/2', handler: (request, reply) => {
+
+                handlerSpy();
+                request.session.set(45.68, '2');
+                return reply('1');
+            }
+        }
+    ]);
+
+    server.register({ register: require('../'), options: options }, (err) => {
+
+        expect(err).to.not.exist();
+        server.start(() => {
+
+            server.inject({ method: 'GET', url: '/' }, (res) => {
+
+                const header = res.headers['set-cookie'];
+                const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                expect(res.statusCode).to.equal(200);
+                expect(res.result).to.equal('1');
+
+                const getRestore = cache.prototype.get;
+                const isReadyRestore = cache.prototype.isReady;
+
+                cache.prototype.get = (callback) => {
+
+                    callback(new Error('Error getting cache'));
+                };
+
+                cache.prototype.isReady = () => {
+
+                    return false;
+                };
+
+                server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, (res2) => {
+
+                    expect(res2.statusCode).to.equal(500);
+                    cache.prototype.get = getRestore;
+                    cache.prototype.isReady = isReadyRestore;
+                    done();
+                });
+            });
+        });
+    });
+});
+
+it('does not load from cache if cache is not ready and errorOnCacheNotReady set to false', { parallel: false }, (done) => {
+
+    const options = {
+        maxCookieSize: 0,
+        errorOnCacheNotReady: false,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    const cache = require('./test-cache');
+
+    const hapiOptions = {
+        cache: {
+            engine: cache
+        },
+        debug: false
+    };
+    const server = new Hapi.Server(hapiOptions);
+    server.connection();
+
+
+    server.route([{
+        method: 'GET', path: '/', handler: (request, reply) => {
+
+            request.session.set('some', 'value');
+            return reply();
+        }
+    },
+    {
+        method: 'GET', path: '/2', handler: (request, reply) => {
+
+            const value = request.session.get('some');
+            return reply(value || '2');
+        }
+    }]);
+
+    server.register({ register: require('../'), options: options }, (err) => {
+
+        expect(err).to.not.exist();
+        server.start(() => {
+
+            server.inject({ method: 'GET', url: '/' }, (res) => {
+
+                const header = res.headers['set-cookie'];
+                const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+                const isReadyRestore = cache.prototype.isReady;
+
+                cache.prototype.isReady = () => {
+
+                    return false;
+                };
+
+                server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, (res2) => {
+
+                    expect(res2.statusCode).to.equal(200);
+                    expect(res2.result).to.equal('2');
+                    cache.prototype.isReady = isReadyRestore;
+                    done();
+                });
+            });
+        });
+    });
+});
+
+it('still loads from cache when errorOnCacheNotReady option set to false but cache is ready', { parallel: false }, (done) => {
+
+    const options = {
+        maxCookieSize: 0,
+        errorOnCacheNotReady: false,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    const cache = require('./test-cache');
+
+    const hapiOptions = {
+        cache: {
+            engine: cache
+        },
+        debug: false
+    };
+    const server = new Hapi.Server(hapiOptions);
+    server.connection();
+
+
+    server.route([{
+        method: 'GET', path: '/', handler: (request, reply) => {
+
+            request.session.set('some', 'value');
+            return reply();
+        }
+    },
+    {
+        method: 'GET', path: '/2', handler: (request, reply) => {
+
+            const value = request.session.get('some');
+            return reply(value || '2');
+        }
+    }]);
+
+    server.register({ register: require('../'), options: options }, (err) => {
+
+        expect(err).to.not.exist();
+        server.start(() => {
+
+            server.inject({ method: 'GET', url: '/' }, (res) => {
+
+                const header = res.headers['set-cookie'];
+                const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, (res2) => {
+
+                    expect(res2.statusCode).to.equal(200);
+                    expect(res2.result).to.equal('2');
+                    done();
+                });
+            });
+        });
+    });
+});
+
+it('still saves session as cookie when cache is not ready if maxCookieSize is set and big enough', { parallel: false }, (done) => {
+
+    const options = {
+        maxCookieSize: 500,
+        errorOnCacheNotReady: false,
+        cookieOptions: {
+            password: 'password',
+            isSecure: false
+        }
+    };
+
+    const cache = require('./test-cache');
+
+    const hapiOptions = {
+        cache: {
+            engine: cache
+        },
+        debug: false
+    };
+
+    const server = new Hapi.Server(hapiOptions);
+    server.connection();
+    server.route([{
+        method: 'GET', path: '/', handler: (request, reply) => {
+
+            request.session.set('some', 'value');
+            return reply();
+        }
+    },
+    {
+        method: 'GET', path: '/2', handler: (request, reply) => {
+
+            const value = request.session.get('some');
+            return reply(value || '2');
+        }
+    }]);
+
+    server.register({ register: require('../'), options: options }, (err) => {
+
+        expect(err).to.not.exist();
+        server.start(() => {
+
+            server.inject({ method: 'GET', url: '/' }, (res) => {
+
+                const header = res.headers['set-cookie'];
+                const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+                const isReadyRestore = cache.prototype.isReady;
+
+                cache.prototype.isReady = () => {
+
+                    return false;
+                };
+
+                server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, (res2) => {
+
+                    expect(res2.statusCode).to.equal(200);
+                    expect(res2.result).to.equal('value');
+                    cache.prototype.isReady = isReadyRestore;
+                    done();
+                });
             });
         });
     });
