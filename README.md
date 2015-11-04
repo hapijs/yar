@@ -83,7 +83,7 @@ Set `isSecure` (default `true`) to `false` if you are using standard http. Take 
 ```javascript
 var options = {
     cookieOptions: {
-        isSecure: process.env.NODE_ENV === 'development' ? false : true,
+        isSecure: process.env.NODE_ENV !== 'development',
         ...
     }
 };
