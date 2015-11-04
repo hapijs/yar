@@ -622,6 +622,14 @@ it('sends back a 400 if not ignoring errors on bad session cookie', (done) => {
     const server = new Hapi.Server({ debug: false });
     server.connection();
 
+    server.route({
+        method: 'GET', path: '/1', handler: (request, reply) => {
+
+            request.session.set('some', { value: '2' });
+            return reply('1');
+        }
+    });
+
     server.register({ register: require('../'), options: options }, (err) => {
 
         expect(err).to.not.exist();
@@ -878,8 +886,9 @@ it('stores blank sessions when storeBlank is not given', (done) => {
         server.start(() => {
 
             let stores = 0;
+
             const fn = server._caches._default.client.set;
-            server._caches._default.client.set = () => {
+            server._caches._default.client.set = function () { // Don't use arrow function here.
 
                 stores++;
                 fn.apply(this, arguments);
@@ -932,7 +941,7 @@ it('does not store blank sessions when storeBlank is false', (done) => {
 
             let stores = 0;
             const fn = server._caches._default.client.set;
-            server._caches._default.client.set = () => {
+            server._caches._default.client.set = function () { // Don't use arrow function here.
 
                 stores++;
                 fn.apply(this, arguments);
