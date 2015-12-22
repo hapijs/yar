@@ -20,10 +20,10 @@
     "statehood": "3.x.x"
   },
   "devDependencies": {
-    "boom": "^3.0.0",
-    "code": "^2.0.1",
-    "hapi": "^11.0.3",
-    "lab": "^7.1.0"
+    "boom": "3.x.x",
+    "code": "2.x.x",
+    "hapi": "11.x.x",
+    "lab": "8.x.x"
   },
   "scripts": {
     "test": "lab -a code -t 100 -L",

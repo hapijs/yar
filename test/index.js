@@ -1120,7 +1120,7 @@ describe('flash()', () => {
         server.register({ register: require('../'), options: options }, (err) => {
 
             expect(err).to.not.exist();
-            server.start((err) => {
+            server.start(() => {
 
                 server.inject({ method: 'GET', url: '/1' }, (res) => {
 
@@ -1184,7 +1184,7 @@ describe('flash()', () => {
         server.register({ register: require('../'), options: options }, (err) => {
 
             expect(err).to.not.exist();
-            server.start((err) => {
+            server.start(() => {
 
                 server.inject({ method: 'GET', url: '/1' }, (res) => {
 
