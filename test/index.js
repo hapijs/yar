@@ -1110,7 +1110,7 @@ describe('flash()', () => {
 
                     const flashes = request.yar.flash();
                     reply({
-                        session: request.yar._store,
+                        yar: request.yar._store,
                         flashes: flashes
                     });
                 }
@@ -1133,7 +1133,7 @@ describe('flash()', () => {
 
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, (res2) => {
 
-                        expect(res2.result._flash).to.not.exist();
+                        expect(res2.result.yar._flash.error).to.not.exist();
                         expect(res2.result.flashes).to.exist();
                         done();
                     });
@@ -1173,7 +1173,7 @@ describe('flash()', () => {
                     const errors = request.yar.flash('error');
                     const nomsg = request.yar.flash('nomsg');
                     reply({
-                        session: request.yar._store,
+                        yar: request.yar._store,
                         errors: errors,
                         nomsg: nomsg
                     });
@@ -1197,7 +1197,7 @@ describe('flash()', () => {
 
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, (res2) => {
 
-                        expect(res2.result._flash).to.not.exist();
+                        expect(res2.result.yar._flash.error).to.not.exist();
                         expect(res2.result.errors).to.exist();
                         expect(res2.result.nomsg).to.exist();
                         done();
