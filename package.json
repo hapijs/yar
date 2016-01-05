@@ -1,7 +1,7 @@
 {
   "name": "yar",
   "description": "Cookie jar plugin for Hapi",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "repository": "git://github.com/hapijs/yar",
   "main": "lib/index",
   "keywords": [
