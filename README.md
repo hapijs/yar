@@ -31,13 +31,13 @@ For example, the first handler sets a session key and the second gets it:
 ```javascript
 var handler1 = function (request, reply) {
 
-    request.session.set('example', { key: 'value' });
+    request.yar.set('example', { key: 'value' });
     return reply();
 };
 
 var handler2 = function (request, reply) {
 
-    var example = request.session.get('example');
+    var example = request.yar.get('example');
     reply(example.key);     // Will send back 'value'
 };
 ```
