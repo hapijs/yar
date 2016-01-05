@@ -1075,6 +1075,48 @@ it('ignores requests when session is not set (error)', (done) => {
     });
 });
 
+it('ignores requests when the skip route config value is true', (done) => {
+
+    const options = {
+        cookieOptions: {
+            password: 'password'
+        }
+    };
+    const server = new Hapi.Server();
+    server.connection();
+
+    server.route([
+        {
+            method: 'GET', path: '/',
+            handler: (request, reply) => {
+
+                return reply('1');
+            },
+            config: {
+                plugins: {
+                    yar: {
+                        skip: true
+                    }
+                }
+            }
+        }
+    ]);
+
+    server.register({ register: require('../'), options }, (err) => {
+
+        expect(err).to.not.exist();
+        server.start(() => {
+
+            server.inject({ method: 'GET', url: '/' }, (res) => {
+
+                const header = res.headers['set-cookie'];
+                expect(header).to.be.undefined();
+                done();
+            });
+        });
+    });
+});
+
 describe('flash()', () => {
 
     it('should get all flash messages when given no arguments', (done) => {
