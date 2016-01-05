@@ -6,18 +6,19 @@ A [**hapi**](https://github.com/hapijs/hapi) session plugin and cookie jar
 [![Build Status](https://secure.travis-ci.org/hapijs/yar.png)](http://travis-ci.org/hapijs/yar)
 [![Dependency Status](https://david-dm.org/hapijs/yar.svg)](https://david-dm.org/hapijs/yar)
 
-[![Join the chat at https://gitter.im/hapijs/yar](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/hapijs/yar?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
 ## Install
 
     $ npm install yar
 
-## Upgrading to 4.x and greater
+## Upgrading to 4.x.x and greater
 
 Please note that version 4.x has a small breaking change.  This probably doesn't affect most people, but it's worth noting.  In version 3.x if a cookie was invalid, either due to corruption or change in encryption password, the server would respond with a HTTP 400 error.  Starting in 4.x the default settings avoid this and instead silently drop the invalid cookie.  This is probably the desired behavior, but since it's different you should be aware of it when upgrading.
 
+## Upgrading to 6.x.x and greater
+
+Starting with Hapi 12 the `request.session` placeholder was removed.  The guidance from Hapi maintainer Eran Hammer was for this and similar modules to move data storage away from request.session and use a more unique location.  So, starting in 6.x.x the yar storage has been moved to `request.yar`.  All the functionality remains the same, but it just lives in a different location.  I apologize in advance for the inconvenience this may cause but updating your code should be fairly straight forward.
 
 ## Usage
 
@@ -30,13 +31,13 @@ For example, the first handler sets a session key and the second gets it:
 ```javascript
 var handler1 = function (request, reply) {
 
-    request.session.set('example', { key: 'value' });
+    request.yar.set('example', { key: 'value' });
     return reply();
 };
 
 var handler2 = function (request, reply) {
 
-    var example = request.session.get('example');
+    var example = request.yar.get('example');
     reply(example.key);     // Will send back 'value'
 };
 ```

@@ -37,28 +37,28 @@ it('sets session value then gets it back (store mode)', (done) => {
         {
             method: 'GET', path: '/1', handler: (request, reply) => {
 
-                let returnValue = request.session.set('some', { value: '2' });
+                let returnValue = request.yar.set('some', { value: '2' });
                 expect(returnValue.value).to.equal('2');
-                returnValue = request.session.set('one', 'xyz');
+                returnValue = request.yar.set('one', 'xyz');
                 expect(returnValue).to.equal('xyz');
-                request.session.clear('one');
-                return reply(Object.keys(request.session._store).length);
+                request.yar.clear('one');
+                return reply(Object.keys(request.yar._store).length);
             }
         },
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                const some = request.session.get('some');
+                const some = request.yar.get('some');
                 some.raw = 'access';
-                request.session.touch();
+                request.yar.touch();
                 return reply(some.value);
             }
         },
         {
             method: 'GET', path: '/3', handler: (request, reply) => {
 
-                const raw = request.session.get('some').raw;
-                request.session.reset();
+                const raw = request.yar.get('some').raw;
+                request.yar.reset();
                 return reply(raw);
             }
         }
@@ -114,16 +114,16 @@ it('sets session value and wait till cache expires then fail to get it back', (d
         {
             method: 'GET', path: '/1', handler: (request, reply) => {
 
-                request.session.set('some', { value: '2' });
-                request.session.set('one', 'xyz');
-                request.session.clear('one');
-                return reply(Object.keys(request.session._store).length);
+                request.yar.set('some', { value: '2' });
+                request.yar.set('one', 'xyz');
+                request.yar.clear('one');
+                return reply(Object.keys(request.yar._store).length);
             }
         },
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                const some = request.session.get('some');
+                const some = request.yar.get('some');
                 return reply(some);
             }
         }
@@ -170,14 +170,14 @@ it('sets session value then gets it back (cookie mode)', (done) => {
         {
             method: 'GET', path: '/1', handler: (request, reply) => {
 
-                request.session.set('some', { value: '2' });
+                request.yar.set('some', { value: '2' });
                 return reply('1');
             }
         },
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                return reply(request.session.get('some').value);
+                return reply(request.yar.get('some').value);
             }
         }
     ]);
@@ -221,14 +221,14 @@ it('sets session value then gets it back (hybrid mode)', (done) => {
         {
             method: 'GET', path: '/1', handler: (request, reply) => {
 
-                request.session.set('some', { value: '12345678901234567890' });
+                request.yar.set('some', { value: '12345678901234567890' });
                 return reply('1');
             }
         },
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                return reply(request.session.get('some').value);
+                return reply(request.yar.get('some').value);
             }
         }
     ]);
@@ -271,22 +271,22 @@ it('sets session value then gets it back (lazy mode)', (done) => {
         {
             method: 'GET', path: '/1', handler: (request, reply) => {
 
-                request.session.lazy(true);
-                request.session.some = { value: '2' };
-                request.session._test = { value: '3' };
+                request.yar.lazy(true);
+                request.yar.some = { value: '2' };
+                request.yar._test = { value: '3' };
                 return reply('1');
             }
         },
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                return reply(request.session.some.value);
+                return reply(request.yar.some.value);
             }
         },
         {
             method: 'GET', path: '/3', handler: (request, reply) => {
 
-                return reply(request.session._test);
+                return reply(request.yar._test);
             }
         }
     ]);
@@ -336,14 +336,14 @@ it('no keys when in session (lazy mode)', (done) => {
         {
             method: 'GET', path: '/1', handler: (request, reply) => {
 
-                request.session.lazy(true);
+                request.yar.lazy(true);
                 return reply('1');
             }
         },
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                return reply(request.session._store);
+                return reply(request.yar._store);
             }
         }
     ]);
@@ -388,7 +388,7 @@ it('sets session value then gets it back (clear)', (done) => {
         {
             method: 'GET', path: '/1', handler: (request, reply) => {
 
-                const returnValue = request.session.set({
+                const returnValue = request.yar.set({
                     some: '2',
                     and: 'thensome'
                 });
@@ -400,14 +400,14 @@ it('sets session value then gets it back (clear)', (done) => {
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                const some = request.session.get('some', true);
+                const some = request.yar.get('some', true);
                 return reply(some);
             }
         },
         {
             method: 'GET', path: '/3', handler: (request, reply) => {
 
-                const some = request.session.get('some');
+                const some = request.yar.get('some');
                 return reply(some || '3');
             }
         }
@@ -457,14 +457,14 @@ it('returns 500 when storing cookie in invalid cache by default', (done) => {
         {
             method: 'GET', path: '/1', handler: (request, reply) => {
 
-                request.session.set('some', { value: '2' });
+                request.yar.set('some', { value: '2' });
                 return reply('1');
             }
         },
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                return reply(request.session.get('some'));
+                return reply(request.yar.get('some'));
             }
         }
     ]);
@@ -507,14 +507,14 @@ it('fails setting session key/value because of bad key/value arguments', (done) 
         {
             method: 'GET', path: '/1', handler: (request, reply) => {
 
-                request.session.set({ 'some': '2' }, '2');
+                request.yar.set({ 'some': '2' }, '2');
                 return reply('1');
             }
         },
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                request.session.set(45.68, '2');
+                request.yar.set(45.68, '2');
                 return reply('1');
             }
         }
@@ -565,7 +565,7 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
 
     const handler = (request, reply) => {
 
-        request.session.set('some', 'value');
+        request.yar.set('some', 'value');
         return reply();
     };
 
@@ -622,13 +622,13 @@ it('does not try to store session when cache not ready if errorOnCacheNotReady s
 
     const preHandler = (request, reply) => {
 
-        request.session.set('some', 'value');
+        request.yar.set('some', 'value');
         return reply();
     };
 
     const handler = (request, reply) => {
 
-        const some = request.session.get('some');
+        const some = request.yar.get('some');
         return reply(some);
     };
 
@@ -685,7 +685,7 @@ it('fails loading session from invalid cache and returns 500', { parallel: false
         {
             method: 'GET', path: '/', handler: (request, reply) => {
 
-                request.session.set('some', 'value');
+                request.yar.set('some', 'value');
                 return reply('1');
             }
         },
@@ -693,7 +693,7 @@ it('fails loading session from invalid cache and returns 500', { parallel: false
             method: 'GET', path: '/2', handler: (request, reply) => {
 
                 handlerSpy();
-                request.session.set(45.68, '2');
+                request.yar.set(45.68, '2');
                 return reply('1');
             }
         }
@@ -763,14 +763,14 @@ it('does not load from cache if cache is not ready and errorOnCacheNotReady set 
     server.route([{
         method: 'GET', path: '/', handler: (request, reply) => {
 
-            request.session.set('some', 'value');
+            request.yar.set('some', 'value');
             return reply();
         }
     },
     {
         method: 'GET', path: '/2', handler: (request, reply) => {
 
-            const value = request.session.get('some');
+            const value = request.yar.get('some');
             return reply(value || '2');
         }
     }]);
@@ -829,14 +829,14 @@ it('still loads from cache when errorOnCacheNotReady option set to false but cac
     server.route([{
         method: 'GET', path: '/', handler: (request, reply) => {
 
-            request.session.set('some', 'value');
+            request.yar.set('some', 'value');
             return reply();
         }
     },
     {
         method: 'GET', path: '/2', handler: (request, reply) => {
 
-            const value = request.session.get('some');
+            const value = request.yar.get('some');
             return reply(value || '2');
         }
     }]);
@@ -887,14 +887,14 @@ it('still saves session as cookie when cache is not ready if maxCookieSize is se
     server.route([{
         method: 'GET', path: '/', handler: (request, reply) => {
 
-            request.session.set('some', 'value');
+            request.yar.set('some', 'value');
             return reply();
         }
     },
     {
         method: 'GET', path: '/2', handler: (request, reply) => {
 
-            const value = request.session.get('some');
+            const value = request.yar.get('some');
             return reply(value || '2');
         }
     }]);
@@ -935,7 +935,7 @@ it('fails generating session cookie header value (missing password)', (done) => 
     server.route({
         method: 'GET', path: '/1', handler: (request, reply) => {
 
-            request.session.set('some', { value: '2' });
+            request.yar.set('some', { value: '2' });
             return reply('1');
         }
     });
@@ -975,7 +975,7 @@ it('sends back a 400 if not ignoring errors on bad session cookie', (done) => {
     server.route({
         method: 'GET', path: '/1', handler: (request, reply) => {
 
-            request.session.set('some', { value: '2' });
+            request.yar.set('some', { value: '2' });
             return reply('1');
         }
     });
@@ -1015,7 +1015,7 @@ it('fails to store session because of state error', (done) => {
         {
             method: 'GET', path: '/1', handler: (request, reply) => {
 
-                return reply(Object.keys(request.session._store).length);
+                return reply(Object.keys(request.yar._store).length);
             }
         }
     ]);
@@ -1135,11 +1135,11 @@ describe('flash()', () => {
             config: {
                 handler: (request, reply) => {
 
-                    request.session.flash('error', 'test error 1');
-                    request.session.flash('error', 'test error 2');
-                    request.session.flash('test', 'test 1', true);
-                    request.session.flash('test', 'test 2', true);
-                    reply(request.session._store);
+                    request.yar.flash('error', 'test error 1');
+                    request.yar.flash('error', 'test error 2');
+                    request.yar.flash('test', 'test 1', true);
+                    request.yar.flash('test', 'test 2', true);
+                    reply(request.yar._store);
                 }
             }
         });
@@ -1150,9 +1150,9 @@ describe('flash()', () => {
             config: {
                 handler: (request, reply) => {
 
-                    const flashes = request.session.flash();
+                    const flashes = request.yar.flash();
                     reply({
-                        session: request.session._store,
+                        yar: request.yar._store,
                         flashes: flashes
                     });
                 }
@@ -1175,7 +1175,7 @@ describe('flash()', () => {
 
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, (res2) => {
 
-                        expect(res2.result.session._flash.error).to.not.exist();
+                        expect(res2.result.yar._flash.error).to.not.exist();
                         expect(res2.result.flashes).to.exist();
                         done();
                     });
@@ -1200,8 +1200,8 @@ describe('flash()', () => {
             config: {
                 handler: (request, reply) => {
 
-                    request.session.flash('error', 'test error');
-                    reply(request.session._store);
+                    request.yar.flash('error', 'test error');
+                    reply(request.yar._store);
                 }
             }
         });
@@ -1212,10 +1212,10 @@ describe('flash()', () => {
             config: {
                 handler: (request, reply) => {
 
-                    const errors = request.session.flash('error');
-                    const nomsg = request.session.flash('nomsg');
+                    const errors = request.yar.flash('error');
+                    const nomsg = request.yar.flash('nomsg');
                     reply({
-                        session: request.session._store,
+                        yar: request.yar._store,
                         errors: errors,
                         nomsg: nomsg
                     });
@@ -1239,7 +1239,7 @@ describe('flash()', () => {
 
                     server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, (res2) => {
 
-                        expect(res2.result.session._flash.error).to.not.exist();
+                        expect(res2.result.yar._flash.error).to.not.exist();
                         expect(res2.result.errors).to.exist();
                         expect(res2.result.nomsg).to.exist();
                         done();
@@ -1320,7 +1320,7 @@ it('does not store blank sessions when storeBlank is false', (done) => {
         {
             method: 'GET', path: '/2', handler: (request, reply) => {
 
-                request.session.set('hello', 'world');
+                request.yar.set('hello', 'world');
                 return reply('should be set now');
             }
         }

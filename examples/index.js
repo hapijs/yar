@@ -28,7 +28,7 @@ server.route({
     method: 'GET',
     path: '/',
     config: {
-        handler: (request, reply) => reply(request.session._store)
+        handler: (request, reply) => reply(request.yar._store)
     }
 });
 
@@ -38,7 +38,7 @@ server.route({
     config: {
         handler: (request, reply) => {
 
-            request.session.set('test', 1);
+            request.yar.set('test', 1);
             return reply.redirect('/');
         }
     }
@@ -50,7 +50,7 @@ server.route({
     config: {
         handler: (request, reply) => {
 
-            request.session.set(request.params.key, request.params.value);
+            request.yar.set(request.params.key, request.params.value);
             return reply.redirect('/');
         }
     }
@@ -62,7 +62,7 @@ server.route({
     config: {
         handler: (request, reply) => {
 
-            request.session.reset();
+            request.yar.reset();
             return reply.redirect('/');
         }
     }
