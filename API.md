@@ -18,6 +18,10 @@
     - `isHttpOnly` - determines whether or not to set HttpOnly option in cookie. Defaults to _false_.
     - `ttl` - sets the time for the cookie to live in the browser, in milliseconds.  Defaults to null (session time-life - cookies are deleted when the browser is closed).
 
+#### Route Options
+You can also add these options on a route per route basis at `config.plugins.yar`:
+    - `skip` - a boolean value which, if true, means no session with be attached to the request (defaults to false).
+
 
 #### Methods
 
