@@ -10,7 +10,7 @@ Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
 ## Install
 
-    $ npm install yar
+    $ npm install yar --save
 
 ## Upgrading to 7.x.x and greater
 
