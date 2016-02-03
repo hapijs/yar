@@ -12,13 +12,17 @@ Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
     $ npm install yar
 
-## Upgrading to 4.x.x and greater
+## Upgrading to 7.x.x and greater
 
-Please note that version 4.x has a small breaking change.  This probably doesn't affect most people, but it's worth noting.  In version 3.x if a cookie was invalid, either due to corruption or change in encryption password, the server would respond with a HTTP 400 error.  Starting in 4.x the default settings avoid this and instead silently drop the invalid cookie.  This is probably the desired behavior, but since it's different you should be aware of it when upgrading.
+Starting with Hapi 13 and Statehood 4 the password requirement for Iron encrypted cookies is now a minimum of 32 characters.  The intention of increasing the size requirement is to make brute force guessing of your cookie password harder.  Please update your app configuration to include a longer password if it is not already 32 characters long, or your server will not start.
 
 ## Upgrading to 6.x.x and greater
 
 Starting with Hapi 12 the `request.session` placeholder was removed.  The guidance from Hapi maintainer Eran Hammer was for this and similar modules to move data storage away from request.session and use a more unique location.  So, starting in 6.x.x the yar storage has been moved to `request.yar`.  All the functionality remains the same, but it just lives in a different location.  I apologize in advance for the inconvenience this may cause but updating your code should be fairly straight forward.
+
+## Upgrading to 4.x.x and greater
+
+Please note that version 4.x has a small breaking change.  This probably doesn't affect most people, but it's worth noting.  In version 3.x if a cookie was invalid, either due to corruption or change in encryption password, the server would respond with a HTTP 400 error.  Starting in 4.x the default settings avoid this and instead silently drop the invalid cookie.  This is probably the desired behavior, but since it's different you should be aware of it when upgrading.
 
 ## Usage
 
@@ -42,12 +46,12 @@ var handler2 = function (request, reply) {
 };
 ```
 
-The plugin requires a password for encryption:
+The plugin requires a password for encryption that must be at least 32 characters long:
 ```javascript
 var options = {
     storeBlank: false,
     cookieOptions: {
-        password: 'password',
+        password: 'the-password-must-be-at-least-32-characters-long',
         isSecure: true
     }
 };
