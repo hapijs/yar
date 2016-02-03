@@ -17,12 +17,12 @@
   "dependencies": {
     "hoek": "3.x.x",
     "node-uuid": "1.4.x",
-    "statehood": "3.x.x"
+    "statehood": "4.x.x"
   },
   "devDependencies": {
     "boom": "3.x.x",
     "code": "2.x.x",
-    "hapi": "11.x.x",
+    "hapi": "13.x.x",
     "lab": "8.x.x"
   },
   "scripts": {

@@ -9,7 +9,9 @@ const Lab = require('lab');
 
 // Declare internals
 
-const internals = {};
+const internals = {
+    password: 'passwordmustbelongerthan32characterssowejustmakethislonger'
+};
 
 
 // Test shortcuts
@@ -20,12 +22,13 @@ const it = lab.it;
 const expect = Code.expect;
 
 
+
 it('sets session value then gets it back (store mode)', (done) => {
 
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -99,7 +102,7 @@ it('sets session value and wait till cache expires then fail to get it back', (d
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         },
         cache: {
@@ -159,7 +162,7 @@ it('sets session value then gets it back (cookie mode)', (done) => {
 
     const options = {
         cookieOptions: {
-            password: 'password'
+            password: internals.password
         }
     };
 
@@ -210,7 +213,7 @@ it('sets session value then gets it back (hybrid mode)', (done) => {
     const options = {
         maxCookieSize: 10,
         cookieOptions: {
-            password: 'password'
+            password: internals.password
         }
     };
 
@@ -260,7 +263,7 @@ it('sets session value then gets it back (lazy mode)', (done) => {
 
     const options = {
         cookieOptions: {
-            password: 'password'
+            password: internals.password
         }
     };
 
@@ -325,7 +328,7 @@ it('no keys when in session (lazy mode)', (done) => {
 
     const options = {
         cookieOptions: {
-            password: 'password'
+            password: internals.password
         }
     };
 
@@ -376,7 +379,7 @@ it('sets session value then gets it back (clear)', (done) => {
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -446,7 +449,7 @@ it('returns 500 when storing cookie in invalid cache by default', (done) => {
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password'
+            password: internals.password
         }
     };
 
@@ -495,7 +498,7 @@ it('fails setting session key/value because of bad key/value arguments', (done) 
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -543,7 +546,7 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -592,7 +595,7 @@ it('does not try to store session when cache not ready if errorOnCacheNotReady s
         maxCookieSize: 0,
         errorOnCacheNotReady: false,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -665,7 +668,7 @@ it('fails loading session from invalid cache and returns 500', { parallel: false
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -743,7 +746,7 @@ it('does not load from cache if cache is not ready and errorOnCacheNotReady set 
         maxCookieSize: 0,
         errorOnCacheNotReady: false,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -809,7 +812,7 @@ it('still loads from cache when errorOnCacheNotReady option set to false but cac
         maxCookieSize: 0,
         errorOnCacheNotReady: false,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -868,7 +871,7 @@ it('still saves session as cookie when cache is not ready if maxCookieSize is se
         maxCookieSize: 500,
         errorOnCacheNotReady: false,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -959,7 +962,7 @@ it('sends back a 400 if not ignoring errors on bad session cookie', (done) => {
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false,
             ignoreErrors: false
         }
@@ -999,7 +1002,7 @@ it('fails to store session because of state error', (done) => {
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -1039,7 +1042,7 @@ it('ignores requests when session is not set (error)', (done) => {
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -1079,7 +1082,7 @@ it('ignores requests when the skip route config value is true', (done) => {
 
     const options = {
         cookieOptions: {
-            password: 'password'
+            password: internals.password
         }
     };
     const server = new Hapi.Server();
@@ -1123,7 +1126,7 @@ describe('flash()', () => {
 
         const options = {
             cookieOptions: {
-                password: 'password'
+                password: internals.password
             }
         };
         const server = new Hapi.Server();
@@ -1188,7 +1191,7 @@ describe('flash()', () => {
 
         const options = {
             cookieOptions: {
-                password: 'password'
+                password: internals.password
             }
         };
         const server = new Hapi.Server();
@@ -1255,7 +1258,7 @@ it('stores blank sessions when storeBlank is not given', (done) => {
     const options = {
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
@@ -1302,7 +1305,7 @@ it('does not store blank sessions when storeBlank is false', (done) => {
         storeBlank: false,
         maxCookieSize: 0,
         cookieOptions: {
-            password: 'password',
+            password: internals.password,
             isSecure: false
         }
     };
