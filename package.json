@@ -23,11 +23,13 @@
     "boom": "3.x.x",
     "code": "2.x.x",
     "hapi": "13.x.x",
-    "lab": "10.x.x"
+    "lab": "10.x.x",
+    "npmignore": "0.2.x"
   },
   "scripts": {
     "test": "lab -a code -t 100 -L",
-    "test-cov-html": "lab -a code -r html -o coverage.html"
+    "test-cov-html": "lab -a code -r html -o coverage.html",
+    "update-npmignore": "npmignore"
   },
   "license": "BSD-3-Clause"
 }
