@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "boom": "3.x.x",
-    "code": "2.x.x",
+    "code": "3.x.x",
     "hapi": "13.x.x",
     "lab": "10.x.x",
     "npmignore": "0.2.x"
