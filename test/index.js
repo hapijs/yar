@@ -1169,8 +1169,8 @@ describe('flash()', () => {
 
                 server.inject({ method: 'GET', url: '/1' }, (res) => {
 
-                    expect(res.result._flash.error).to.deep.equal(['test error 1', 'test error 2']);
-                    expect(res.result._flash.test).to.deep.equal('test 2');
+                    expect(res.result._flash.error).to.equal(['test error 1', 'test error 2']);
+                    expect(res.result._flash.test).to.equal('test 2');
 
                     const header = res.headers['set-cookie'];
                     expect(header.length).to.equal(1);
