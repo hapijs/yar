@@ -15,7 +15,7 @@ const options = {
 
 server.register({
     register: Yar,
-    options: options
+    options
 }, (err) => {
 
     if (err) {

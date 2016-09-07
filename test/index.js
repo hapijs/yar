@@ -67,7 +67,7 @@ it('sets session value then gets it back (store mode)', (done) => {
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -132,7 +132,7 @@ it('sets session value and wait till cache expires then fail to get it back', (d
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -185,7 +185,7 @@ it('sets session value then gets it back (cookie mode)', (done) => {
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -236,7 +236,7 @@ it('sets session value then gets it back (hybrid mode)', (done) => {
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -294,7 +294,7 @@ it('sets session value then gets it back (lazy mode)', (done) => {
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -351,7 +351,7 @@ it('no keys when in session (lazy mode)', (done) => {
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -416,7 +416,7 @@ it('sets session value then gets it back (clear)', (done) => {
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -472,7 +472,7 @@ it('returns 500 when storing cookie in invalid cache by default', (done) => {
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -523,7 +523,7 @@ it('fails setting session key/value because of bad key/value arguments', (done) 
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -572,9 +572,9 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
         return reply();
     };
 
-    server.route({ method: 'GET', path: '/', handler: handler });
+    server.route({ method: 'GET', path: '/', handler });
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -642,11 +642,11 @@ it('does not try to store session when cache not ready if errorOnCacheNotReady s
             pre: [
                 { method: preHandler }
             ],
-            handler: handler
+            handler
         }
     });
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -702,7 +702,7 @@ it('fails loading session from invalid cache and returns 500', { parallel: false
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -778,7 +778,7 @@ it('does not load from cache if cache is not ready and errorOnCacheNotReady set 
         }
     }]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -844,7 +844,7 @@ it('still loads from cache when errorOnCacheNotReady option set to false but cac
         }
     }]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -902,7 +902,7 @@ it('still saves session as cookie when cache is not ready if maxCookieSize is se
         }
     }]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -983,12 +983,12 @@ it('sends back a 400 if not ignoring errors on bad session cookie', (done) => {
         }
     });
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
 
-            server.inject({ method: 'GET', url: '/1', headers: headers }, (res) => {
+            server.inject({ method: 'GET', url: '/1', headers }, (res) => {
 
                 expect(res.statusCode).to.equal(400);
                 done();
@@ -1023,12 +1023,12 @@ it('fails to store session because of state error', (done) => {
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
 
-            server.inject({ method: 'GET', url: '/1', headers: headers }, (res) => {
+            server.inject({ method: 'GET', url: '/1', headers }, (res) => {
 
                 expect(res.result).to.equal(0);
                 done();
@@ -1063,7 +1063,7 @@ it('ignores requests when session is not set (error)', (done) => {
         reply(Boom.badRequest('handler error'));
     });
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -1156,13 +1156,13 @@ describe('flash()', () => {
                     const flashes = request.yar.flash();
                     reply({
                         yar: request.yar._store,
-                        flashes: flashes
+                        flashes
                     });
                 }
             }
         });
 
-        server.register({ register: require('../'), options: options }, (err) => {
+        server.register({ register: require('../'), options }, (err) => {
 
             expect(err).to.not.exist();
             server.start(() => {
@@ -1219,14 +1219,14 @@ describe('flash()', () => {
                     const nomsg = request.yar.flash('nomsg');
                     reply({
                         yar: request.yar._store,
-                        errors: errors,
-                        nomsg: nomsg
+                        errors,
+                        nomsg
                     });
                 }
             }
         });
 
-        server.register({ register: require('../'), options: options }, (err) => {
+        server.register({ register: require('../'), options }, (err) => {
 
             expect(err).to.not.exist();
             server.start(() => {
@@ -1275,7 +1275,7 @@ it('stores blank sessions when storeBlank is not given', (done) => {
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
@@ -1329,7 +1329,7 @@ it('does not store blank sessions when storeBlank is false', (done) => {
         }
     ]);
 
-    server.register({ register: require('../'), options: options }, (err) => {
+    server.register({ register: require('../'), options }, (err) => {
 
         expect(err).to.not.exist();
         server.start(() => {
