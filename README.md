@@ -12,6 +12,10 @@ Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
     $ npm install yar --save
 
+## Hapi < 14.0.0
+
+If you are using an older version of Hapi then you'll want to use version 7.0.2 of yar.  Starting with version 8.0.0 of yar we only support later versions of Hapi due to a third party dependency issue.
+
 ## Upgrading to 7.x.x and greater
 
 Starting with Hapi 13 and Statehood 4 the password requirement for Iron encrypted cookies is now a minimum of 32 characters.  The intention of increasing the size requirement is to make brute force guessing of your cookie password harder.  Please update your app configuration to include a longer password if it is not already 32 characters long, or your server will not start.
