@@ -1357,3 +1357,317 @@ it('does not store blank sessions when storeBlank is false', (done) => {
         });
     });
 });
+
+it('allow custom session ID', (done) => {
+
+    let sessionIDExternalMemory = 0;
+
+    const options = {
+        maxCookieSize: 0,
+        cookieOptions: {
+            password: internals.password,
+            isSecure: false
+        },
+        customSessionIDGenerator: () => {
+
+            sessionIDExternalMemory += 1;
+            return `custom_id_${sessionIDExternalMemory}`;
+        }
+    };
+
+    const server = new Hapi.Server();
+    server.connection();
+
+    server.route([
+        {
+            method: 'GET', path: '/1', handler: (request, reply) => {
+
+                expect(request.yar.id).to.equal('custom_id_1');
+                return reply('custom_id_1');
+            }
+        },
+        {
+            method: 'GET', path: '/2', handler: (request, reply) => {
+
+                request.yar.reset();
+                request.yar.touch();
+                expect(request.yar.id).to.equal('custom_id_2');
+                return reply('custom_id_2');
+            }
+        },
+        {
+            method: 'GET', path: '/still_2', handler: (request, reply) => {
+
+                expect(request.yar.id).to.equal('custom_id_2');
+                return reply('custom_id_2');
+            }
+        }
+    ]);
+
+    server.register({ register: require('../'), options }, (err) => {
+
+        expect(err).to.not.exist();
+        server.start(() => {
+
+            server.inject({ method: 'GET', url: '/1' }, (res) => {
+
+                expect(res.result).to.equal('custom_id_1');
+                const header = res.headers['set-cookie'];
+                expect(header.length).to.equal(1);
+                const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } }, (res2) => {
+
+                    expect(res2.result).to.equal('custom_id_2');
+                    const header2 = res2.headers['set-cookie'];
+                    expect(header2.length).to.equal(1);
+                    const cookie2 = header2[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+
+                    server.inject({ method: 'GET', url: '/still_2', headers: { cookie: cookie2[1] } }, (res3) => {
+
+                        expect(res3.result).to.equal('custom_id_2');
+                        done();
+                    });
+                });
+            });
+        });
+    });
+});
+
+it('pass the resquest as parameter of customSessionIDGenerator', (done) => {
+
+    const options = {
+        maxCookieSize: 0,
+        cookieOptions: {
+            password: internals.password,
+            isSecure: false
+        },
+        customSessionIDGenerator: (request) => {
+
+            return request.path;
+        }
+    };
+
+    const server = new Hapi.Server();
+    server.connection();
+
+    server.route([
+        {
+            method: 'GET', path: '/request-based-session-id', handler: (request, reply) => {
+
+                expect(request.yar.id).to.equal('/request-based-session-id');
+                return reply('ok');
+            }
+        }
+    ]);
+
+    server.register({ register: require('../'), options }, (err) => {
+
+        expect(err).to.not.exist();
+        server.start(() => {
+
+            server.inject({ method: 'GET', url: '/request-based-session-id' }, (res) => {
+
+                expect(res.result).to.equal('ok');
+
+                done();
+            });
+        });
+    });
+});
+
+it('will set an session ID if no custom session ID generator function is provided', (done) => {
+
+    const options = {
+        maxCookieSize: 0,
+        cookieOptions: {
+            password: internals.password,
+            isSecure: false
+        }
+    };
+
+    const server = new Hapi.Server();
+    server.connection();
+
+    server.route([
+        {
+            method: 'GET', path: '/1', handler: (request, reply) => {
+
+                expect(request.yar.id).to.exist();
+                return reply(1);
+            }
+        }
+    ]);
+
+    server.register({ register: require('../'), options }, (err) => {
+
+        expect(err).to.not.exist();
+        server.start(() => {
+
+            server.inject({ method: 'GET', url: '/1' }, (res) => {
+
+                expect(res.result).to.equal(1);
+                const header = res.headers['set-cookie'];
+                expect(header.length).to.equal(1);
+                done();
+
+            });
+        });
+    });
+});
+
+it('will throw error if session ID generator function don\'t return a string', (done) => {
+
+    const options = {
+        maxCookieSize: 0,
+        cookieOptions: {
+            password: internals.password,
+            isSecure: false
+        },
+        customSessionIDGenerator: (request) => {
+
+            switch (request.path) {
+                case '/null':
+                    return null;
+                case '/number':
+                    return 1;
+                case '/object':
+                    return {};
+                case '/function':
+                    return (() => {});
+                case '/boolean':
+                    return true;
+                case '/array':
+                    return [];
+                case '/undefined':
+                    return undefined;
+                default:
+                    return 'abc';
+            }
+        }
+    };
+
+    const server = new Hapi.Server();
+    server.connection();
+
+    server.route([
+        {
+            method: 'GET', path: '/null', handler: (request, reply) => {
+
+                return reply('null');
+            }
+        },
+        {
+            method: 'GET', path: '/number', handler: (request, reply) => {
+
+                return reply('number');
+            }
+        },
+        {
+            method: 'GET', path: '/object', handler: (request, reply) => {
+
+                return reply('object');
+            }
+        },
+        {
+            method: 'GET', path: '/function', handler: (request, reply) => {
+
+                return reply('function');
+            }
+        },
+        {
+            method: 'GET', path: '/boolean', handler: (request, reply) => {
+
+                return reply('boolean');
+            }
+        },
+        {
+            method: 'GET', path: '/array', handler: (request, reply) => {
+
+                return reply('array');
+            }
+        },
+        {
+            method: 'GET', path: '/undefined', handler: (request, reply) => {
+
+                return reply('undefined');
+            }
+        }
+    ]);
+
+    server.register({ register: require('../'), options }, (err) => {
+
+        expect(err).to.not.exist();
+        server.start(() => {
+
+            const nullID = () => {
+
+                server.inject({ method: 'GET', url: '/null' }, (res) => {});
+            };
+
+            const numberID = () => {
+
+                server.inject({ method: 'GET', url: '/number' }, (res) => {});
+            };
+
+            const objectID = () => {
+
+                server.inject({ method: 'GET', url: '/object' }, (res) => {});
+            };
+
+            const functionID = () => {
+
+                server.inject({ method: 'GET', url: '/function' }, (res) => {});
+            };
+
+            const arrayID = () => {
+
+                server.inject({ method: 'GET', url: '/array' }, (res) => {});
+            };
+
+            const booleanID = () => {
+
+                server.inject({ method: 'GET', url: '/boolean' }, (res) => {});
+            };
+
+            const undefinedID = () => {
+
+                server.inject({ method: 'GET', url: '/undefined' }, (res) => {});
+            };
+
+            expect(nullID).to.throw('Session ID should be a string');
+            expect(numberID).to.throw('Session ID should be a string');
+            expect(objectID).to.throw('Session ID should be a string');
+            expect(functionID).to.throw('Session ID should be a string');
+            expect(arrayID).to.throw('Session ID should be a string');
+            expect(booleanID).to.throw('Session ID should be a string');
+            expect(undefinedID).to.throw('Session ID should be a string');
+
+            done();
+        });
+    });
+});
+
+it('will throw error if session ID generator function is defined but not typeof function', (done) => {
+
+    const options = {
+        maxCookieSize: 0,
+        cookieOptions: {
+            password: internals.password,
+            isSecure: false
+        },
+        customSessionIDGenerator: 'notAfunction'
+    };
+
+    const server = new Hapi.Server();
+    server.connection();
+
+    const register = () => {
+
+        server.register({ register: require('../'), options }, () => {});
+    };
+
+    expect(register).to.throw('customSessionIDGenerator should be a function');
+
+    done();
+});
