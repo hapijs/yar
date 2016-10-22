@@ -28,8 +28,8 @@ Starting with Hapi 12 the `request.session` placeholder was removed.  The guidan
 
 The ***yar*** [hapi](https://github.com/hapijs/hapi) plugin adds session support - a persistant state across multiple browser
 requests using an [iron](https://github.com/hueniverse/iron) encrypted cookie and server-side storage. **yar** tries to fit
-session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses local storage
-via the hapi plugin cache interface.
+session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses server storage
+via the [hapi plugin cache](http://hapijs.com/api#servercacheoptions) interface.
 
 For example, the first handler sets a session key and the second gets it:
 ```javascript
