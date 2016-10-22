@@ -8,7 +8,7 @@ server.connection({ port: process.env.PORT || 8080 });
 
 const options = {
     cookieOptions: {
-        password: 'password',   // Required
+        password: 'passwordmustbesomewhatlongerthanitis',   // Required
         isSecure: false // Required if using http
     }
 };
