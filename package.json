@@ -17,7 +17,7 @@
   "dependencies": {
     "hoek": "4.x.x",
     "statehood": "5.x.x",
-    "uuid": "^3.0.0"
+    "uuid": "3.x.x"
   },
   "devDependencies": {
     "boom": "4.x.x",
