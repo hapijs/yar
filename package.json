@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "hoek": "4.x.x",
-    "node-uuid": "^1.4.7",
-    "statehood": "5.x.x"
+    "statehood": "5.x.x",
+    "uuid": "3.x.x"
   },
   "devDependencies": {
     "boom": "4.x.x",
