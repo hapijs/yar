@@ -3,7 +3,7 @@
   "description": "Cookie jar plugin for Hapi",
   "version": "8.1.1",
   "repository": "git://github.com/hapijs/yar",
-  "main": "lib/index",
+  "main": "lib/index.js",
   "keywords": [
     "hapi",
     "plugin",
