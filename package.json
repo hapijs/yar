@@ -12,18 +12,18 @@
     "session"
   ],
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=9.0.0"
   },
   "dependencies": {
-    "hoek": "4.x.x",
-    "statehood": "5.x.x",
+    "hoek": "5.x.x",
+    "statehood": "6.x.x",
     "uuid": "3.x.x"
   },
   "devDependencies": {
-    "boom": "4.x.x",
-    "code": "4.x.x",
-    "hapi": "15.x.x",
-    "lab": "11.x.x",
+    "boom": "7.x.x",
+    "code": "5.x.x",
+    "hapi": "17.x.x",
+    "lab": "15.x.x",
     "npmignore": "0.2.x"
   },
   "scripts": {
