@@ -8,6 +8,14 @@ A [**hapi**](https://github.com/hapijs/hapi) session plugin and cookie jar
 
 Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
+The ***yar*** [hapi](https://github.com/hapijs/hapi) plugin adds session support - a persistant state across multiple browser
+requests using an [iron](https://github.com/hueniverse/iron) encrypted cookie and server-side storage. **yar** tries to fit
+session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses server storage via the [hapi plugin cache](http://hapijs.com/api#servercacheoptions) interface.
+
+## Hapi-Auth-Cookie
+
+There's a similar project called [Hapi-Auth-Cookie](https://github.com/hapijs/hapi-auth-cookie) that achieves similar ends to *yar*.  If you want some additional options around authentication then you should take a look there.  At this time Hapi-Auth-Cookie only provides a session for logged in users, and if you need to store larger amounts of data than will fit in a cookie you'll need to provide a separate data storage layer.
+
 ## Install
 
     $ npm install yar --save
@@ -25,11 +33,6 @@ Starting with Hapi 13 and Statehood 4 the password requirement for Iron encrypte
 Starting with Hapi 12 the `request.session` placeholder was removed.  The guidance from Hapi maintainer Eran Hammer was for this and similar modules to move data storage away from request.session and use a more unique location.  So, starting in 6.x.x the yar storage has been moved to `request.yar`.  All the functionality remains the same, but it just lives in a different location.  I apologize in advance for the inconvenience this may cause but updating your code should be fairly straight forward.
 
 ## Usage
-
-The ***yar*** [hapi](https://github.com/hapijs/hapi) plugin adds session support - a persistant state across multiple browser
-requests using an [iron](https://github.com/hueniverse/iron) encrypted cookie and server-side storage. **yar** tries to fit
-session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses server storage
-via the [hapi plugin cache](http://hapijs.com/api#servercacheoptions) interface.
 
 For example, the first handler sets a session key and the second gets it:
 ```javascript
@@ -103,10 +106,6 @@ You may turn this off, `false`, and try to use the Hapi route state config optio
 ### clearInvalid
 
 `clearInvalid` (default `true`) tells Hapi that if a session cookie is invalid for any reason, to clear it from the browser.  This prevents Hapi from having to reprocess the bad cookie on future requests.  In general you'll probably want this on, but if you'd prefer that session cookies be dealt with in some other way you may set this to `false`.
-
-## Hapi-Auth-Cookie
-
-There's a similar project called [Hapi-Auth-Cookie](https://github.com/hapijs/hapi-auth-cookie) that achieves similar ends to *yar*.  If you want some additional options around authentication then you should take a look there.
 
 ## API Reference
 
