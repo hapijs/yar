@@ -11,7 +11,7 @@ exports = module.exports = internals.Connection = function () {
 };
 
 
-internals.Connection.prototype.start = async() => {
+internals.Connection.prototype.start = () => {
 
     this.started = true;
     return;
@@ -44,27 +44,32 @@ internals.Connection.prototype.validateSegmentName = function (name) {
 };
 
 
-internals.Connection.prototype.insert = async (record) => {
+internals.Connection.prototype.insert = (record) => {
+
     return;
 };
 
 
-internals.Connection.prototype.replace = async (record) => {
+internals.Connection.prototype.replace = (record) => {
+
     return;
 };
 
 
-internals.Connection.prototype.get = async (key) => {
+internals.Connection.prototype.get = (key) => {
+
     return null;
 };
 
 
-internals.Connection.prototype.set = async (key, value, ttl) => {
+internals.Connection.prototype.set = (key, value, ttl) => {
+
     return undefined;
 };
 
 
-internals.Connection.prototype.drop = async (key) => {
+internals.Connection.prototype.drop = (key) => {
+
     return null;
 };
 
