@@ -1,79 +1,68 @@
 'use strict';
 
 const Hapi = require('hapi');
-const Yar = require('../');
 
-const server = new Hapi.Server();
-server.connection({ port: process.env.PORT || 8080 });
+(async () => {
 
-const options = {
-    cookieOptions: {
-        password: 'passwordmustbesomewhatlongerthanitis',   // Required
-        isSecure: false // Required if using http
-    }
-};
+    const server = new Hapi.Server({ port: process.env.PORT || 8080 });
 
-server.register({
-    register: Yar,
-    options
-}, (err) => {
+    await server.register({
+        plugin: require('../'),
+        options: {
+            cookieOptions: {
+                password: 'passwordmustbesomewhatlongerthanitis',   // Required
+                isSecure: false // Required if using http
+            }
+        }
+    });
 
-    if (err) {
-        console.log(err);
-        throw err;
-    }
-});
+    server.route({
+        method: 'GET',
+        path: '/',
+        handler: (request, reply) => {
 
-server.route({
-    method: 'GET',
-    path: '/',
-    config: {
-        handler: (request, reply) => reply(request.yar._store)
-    }
-});
+            return 'Yar store: ' + JSON.stringify(request.yar._store)
+                + '<p>Look in the examples/index.js source for more info.</p>'
+                ;
+        }
+    });
 
-server.route({
-    method: 'GET',
-    path: '/set',
-    config: {
+    server.route({
+        method: 'GET',
+        path: '/set',
         handler: (request, reply) => {
 
             request.yar.set('test', 1);
             return reply.redirect('/');
         }
-    }
-});
+    });
 
-server.route({
-    method: 'GET',
-    path: '/set/{key}/{value}',
-    config: {
+    server.route({
+        method: 'GET',
+        path: '/set/{key}/{value}',
         handler: (request, reply) => {
 
             request.yar.set(request.params.key, request.params.value);
             return reply.redirect('/');
         }
-    }
-});
+    });
 
-server.route({
-    method: 'GET',
-    path: '/clear',
-    config: {
+    server.route({
+        method: 'GET',
+        path: '/clear',
         handler: (request, reply) => {
 
             request.yar.reset();
             return reply.redirect('/');
         }
-    }
-});
+    });
 
-server.route({
-    method: 'GET',
-    path: '/control',
-    config: {
-        handler: (request, reply) => reply('ohai')
-    }
-});
+    server.route({
+        method: 'GET',
+        path: '/control',
+        handler: (request, reply) => 'ohai'
+    });
 
-server.start(() => console.log('server started on port: ', server.info.port));
+    await server.start();
+    console.log(`server started on http://localhost:${server.info.port}`);
+})();
