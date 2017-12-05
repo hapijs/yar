@@ -13,6 +13,8 @@ const internals = {
     password: 'passwordmustbelongerthan32characterssowejustmakethislonger'
 };
 
+const sessionRegex = /(session=[^\x00-\x20\"\,\;\\\x7F]*)/;
+
 
 // Test shortcuts
 
@@ -85,13 +87,13 @@ it('sets session value then gets it back (store mode)', async () => {
     const header = res.headers['set-cookie'];
     expect(header.length).to.equal(1);
     expect(header[0]).to.not.contain('Secure');
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
 
     expect(res2.result).to.equal('2');
     const header2 = res2.headers['set-cookie'];
-    const cookie2 = header2[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie2 = header2[0].match(sessionRegex);
 
     const res3 = await server.inject({ method: 'GET', url: '/3', headers: { cookie: cookie2[1] } });
 
@@ -142,7 +144,7 @@ it('sets session value and wait till cache expires then fail to get it back', as
     const header = res.headers['set-cookie'];
     expect(header.length).to.equal(1);
     expect(header[0]).to.not.contain('Secure');
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     await wait(10);
 
@@ -187,7 +189,7 @@ it('sets session value then gets it back (cookie mode)', async () => {
     const header = res.headers['set-cookie'];
     expect(header.length).to.equal(1);
     expect(header[0]).to.contain('Secure');
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
 
@@ -231,7 +233,7 @@ it('sets session value then gets it back (hybrid mode)', async () => {
     const header = res.headers['set-cookie'];
     expect(header.length).to.equal(1);
     expect(header[0]).to.contain('Secure');
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
 
@@ -283,13 +285,13 @@ it('sets session value then gets it back (lazy mode)', async () => {
     const header = res.headers['set-cookie'];
     expect(header.length).to.equal(1);
     expect(header[0]).to.contain('Secure');
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
 
     expect(res2.result).to.equal('2');
     const header2 = res2.headers['set-cookie'];
-    const cookie2 = header2[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie2 = header2[0].match(sessionRegex);
 
     const res3 = await server.inject({ method: 'GET', url: '/3', headers: { cookie: cookie2[1] } });
 
@@ -333,7 +335,7 @@ it('no keys when in session (lazy mode)', async () => {
     const header = res.headers['set-cookie'];
     expect(header.length).to.equal(1);
     expect(header[0]).to.contain('Secure');
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
 
@@ -389,13 +391,13 @@ it('sets session value then gets it back (clear)', async () => {
 
     expect(res.result).to.equal('1');
     const header = res.headers['set-cookie'];
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
 
     expect(res2.result).to.equal('2');
     const header2 = res2.headers['set-cookie'];
-    const cookie2 = header2[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie2 = header2[0].match(sessionRegex);
 
     const res3 = await server.inject({ method: 'GET', url: '/3', headers: { cookie: cookie2[1] } });
 
@@ -437,7 +439,7 @@ it('returns 500 when storing cookie in invalid cache by default', async () => {
     const res = await server.inject({ method: 'GET', url: '/1' });
 
     const header = res.headers['set-cookie'];
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     const cachesDefault = server._core.caches.get('_default');
     cachesDefault.client.stop();
@@ -529,9 +531,9 @@ it('fails setting session key/value because of failed cache set', { parallel: fa
     await server.start();
 
     const res = await server.inject({ method: 'GET', url: '/' });
-
-    expect(res.statusCode).to.equal(500);
     cache.prototype.set = setRestore;
+    expect(res.statusCode).to.equal(500);
+
     return true;
 });
 
@@ -594,12 +596,11 @@ it('does not try to store session when cache not ready if errorOnCacheNotReady s
     await server.start();
 
     const res = await server.inject({ method: 'GET', url: '/' });
+    cache.prototype.get = getRestore;
+    cache.prototype.isReady = isReadyRestore;
 
     expect(res.statusCode).to.equal(200);
     expect(res.result).to.equal('value');
-
-    cache.prototype.get = getRestore;
-    cache.prototype.isReady = isReadyRestore;
 
     return true;
 });
@@ -648,7 +649,7 @@ it('fails loading session from invalid cache and returns 500', { parallel: false
     const res = await server.inject({ method: 'GET', url: '/' });
 
     const header = res.headers['set-cookie'];
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     expect(res.statusCode).to.equal(200);
     expect(res.result).to.equal('1');
@@ -667,10 +668,10 @@ it('fails loading session from invalid cache and returns 500', { parallel: false
     };
 
     const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
-
-    expect(res2.statusCode).to.equal(500);
     cache.prototype.get = getRestore;
     cache.prototype.isReady = isReadyRestore;
+
+    expect(res2.statusCode).to.equal(500);
 
     return true;
 });
@@ -717,7 +718,7 @@ it('does not load from cache if cache is not ready and errorOnCacheNotReady set 
     const res = await server.inject({ method: 'GET', url: '/' });
 
     const header = res.headers['set-cookie'];
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
     const isReadyRestore = cache.prototype.isReady;
 
     cache.prototype.isReady = () => {
@@ -726,10 +727,10 @@ it('does not load from cache if cache is not ready and errorOnCacheNotReady set 
     };
 
     const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
+    cache.prototype.isReady = isReadyRestore;
 
     expect(res2.statusCode).to.equal(200);
     expect(res2.result).to.equal('2');
-    cache.prototype.isReady = isReadyRestore;
 
     return true;
 });
@@ -775,7 +776,7 @@ it('still loads from cache when errorOnCacheNotReady option set to false but cac
     const res = await server.inject({ method: 'GET', url: '/' });
 
     const header = res.headers['set-cookie'];
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
 
@@ -827,7 +828,7 @@ it('still saves session as cookie when cache is not ready if maxCookieSize is se
     const res = await server.inject({ method: 'GET', url: '/' });
 
     const header = res.headers['set-cookie'];
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
     const isReadyRestore = cache.prototype.isReady;
 
     cache.prototype.isReady = () => {
@@ -1064,7 +1065,7 @@ describe('flash()', () => {
 
         const header = res.headers['set-cookie'];
         expect(header.length).to.equal(1);
-        const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+        const cookie = header[0].match(sessionRegex);
 
         const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
 
@@ -1119,11 +1120,11 @@ describe('flash()', () => {
         const res = await server.inject({ method: 'GET', url: '/1' });
 
         expect(res.result._flash.error).to.exist();
-        expect(res.result._flash.error.length).to.be.above(0);
+        expect(res.result._flash.error.length).to.equal(1);
 
         const header = res.headers['set-cookie'];
         expect(header.length).to.equal(1);
-        const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+        const cookie = header[0].match(sessionRegex);
 
         const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
         expect(res2.result.yar._flash.error).to.not.exist();
@@ -1286,14 +1287,14 @@ it('allow custom session ID', async () => {
     expect(res.result).to.equal('custom_id_1');
     const header = res.headers['set-cookie'];
     expect(header.length).to.equal(1);
-    const cookie = header[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie = header[0].match(sessionRegex);
 
     const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
 
     expect(res2.result).to.equal('custom_id_2');
     const header2 = res2.headers['set-cookie'];
     expect(header2.length).to.equal(1);
-    const cookie2 = header2[0].match(/(session=[^\x00-\x20\"\,\;\\\x7F]*)/);
+    const cookie2 = header2[0].match(sessionRegex);
 
     const res3 = await server.inject({ method: 'GET', url: '/still_2', headers: { cookie: cookie2[1] } });
 
@@ -1346,6 +1347,7 @@ it('will set an session ID if no custom session ID generator function is provide
             method: 'GET', path: '/1', handler: (request, h) => {
 
                 expect(request.yar.id).to.exist();
+                expect(request.yar.id).to.not.equal('');
                 return 1;
             }
         }
@@ -1370,7 +1372,7 @@ it('will set an session ID if no custom session ID generator function is provide
     return true;
 });
 
-it('will throw error if session ID generator function don\'t return a string', async () => {
+it('will throw error if session ID generator function doesn\'t return a string', async () => {
 
     const server = new Hapi.Server({ debug: false });
 
