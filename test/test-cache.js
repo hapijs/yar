@@ -11,10 +11,10 @@ exports = module.exports = internals.Connection = function () {
 };
 
 
-internals.Connection.prototype.start = () => {
+internals.Connection.prototype.start = function () {
 
     this.started = true;
-    return;
+    return true;
 };
 
 
@@ -46,13 +46,13 @@ internals.Connection.prototype.validateSegmentName = function (name) {
 
 internals.Connection.prototype.insert = (record) => {
 
-    return;
+    return true;
 };
 
 
 internals.Connection.prototype.replace = (record) => {
 
-    return;
+    return true;
 };
 
 
@@ -64,7 +64,7 @@ internals.Connection.prototype.get = (key) => {
 
 internals.Connection.prototype.set = (key, value, ttl) => {
 
-    return undefined;
+    return true;
 };
 
 
