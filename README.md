@@ -11,7 +11,7 @@ The ***yar*** [Hapi](https://github.com/hapijs/hapi) plugin adds friendly sessio
 
 ## Hapi-Auth-Cookie
 
-There's a similar project called [Hapi-Auth-Cookie](https://github.com/hapijs/hapi-auth-cookie) that achieves similar ends to *yar*.  The approach of the two projects does differ in some regards, though.  
+There's another project called [Hapi-Auth-Cookie](https://github.com/hapijs/hapi-auth-cookie) that achieves similar ends to *yar*.  The approach of the two projects does differ in some regards, though.  
 1. Yar is laser focused on session support, and does not require that a user be logged in to have a session. Hapi-Auth-Cookie only provides session storage for logged in users.  If you need session handling for non-authenticated users, use Yar.
 1. Yar is capable of handling larger data sizes without any additional setup.  If your session data gets larger than cookies can handle Yar will push the data out to the server cache for you.  By default this is memory storage, but can be any [catbox](https://github.com/hapijs/catbox) supported cache storage, including mongo, redis, local disk, and more.  Hapi-Auth-Cookie can support larger session size as well, but requires you to handle connecting the cookie based session with your external data storage.
 
