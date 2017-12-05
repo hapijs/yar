@@ -1,10 +1,9 @@
-![yar Logo](https://raw.github.com/hapijs/yar/master/images/yar.png)
+# Yar
 
-A [**hapi**](https://github.com/hapijs/hapi) session plugin and cookie jar
+A [**hapi**](https://github.com/hapijs/hapi) session manager
 
 [![npm version](https://badge.fury.io/js/yar.svg)](http://badge.fury.io/js/yar)
 [![Build Status](https://secure.travis-ci.org/hapijs/yar.png)](http://travis-ci.org/hapijs/yar)
-[![Dependency Status](https://david-dm.org/hapijs/yar.svg)](https://david-dm.org/hapijs/yar)
 
 Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
 
