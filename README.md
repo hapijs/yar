@@ -36,22 +36,23 @@ Starting with Hapi 12 the `request.session` placeholder was removed.  The guidan
 
 For example, the first handler sets a session key and the second gets it:
 ```javascript
-var handler1 = function (request, reply) {
+let handler1 = (request, h) => {
 
     request.yar.set('example', { key: 'value' });
-    return reply();
+    
+    return null;
 };
 
-var handler2 = function (request, reply) {
+let handler2 = (request, h) => {
 
-    var example = request.yar.get('example');
-    reply(example.key);     // Will send back 'value'
+    let example = request.yar.get('example');
+    return example.key;     // Will send back 'value'
 };
 ```
 
 The plugin requires a password for encryption that must be at least 32 characters long:
 ```javascript
-var options = {
+let options = {
     storeBlank: false,
     cookieOptions: {
         password: 'the-password-must-be-at-least-32-characters-long',
@@ -64,12 +65,18 @@ Please look at the description of the cookie options below to make sure this is 
 what you expect.
 */
 
-var server = new Hapi.Server();
+const server = new Hapi.Server();
 
-server.register({
-    register: require('yar'),
-    options: options
-}, function (err) { });
+try {
+  await server.register({
+      plugin: require('yar'),
+      options: options
+  });
+} catch(err) {
+    console.error(err);
+}
+
+await server.start();
 ```
 
 ## Password considerations
@@ -89,7 +96,7 @@ You can read about more cookie options in the [Api](API.md).
 Set `isSecure` (default `true`) to `false` if you are using standard http. Take care to do this in development mode only though. You don't want to use cookies sent over insecure channels for session management.  One way to take care of this is to use the `NODE_ENV` environment variable like this:
 
 ```javascript
-var options = {
+let options = {
     cookieOptions: {
         isSecure: process.env.NODE_ENV !== 'development',
         ...

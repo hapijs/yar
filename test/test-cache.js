@@ -11,10 +11,10 @@ exports = module.exports = internals.Connection = function () {
 };
 
 
-internals.Connection.prototype.start = function (callback) {
+internals.Connection.prototype.start = function () {
 
     this.started = true;
-    callback();
+    return true;
 };
 
 
@@ -44,35 +44,33 @@ internals.Connection.prototype.validateSegmentName = function (name) {
 };
 
 
-internals.Connection.prototype.insert = function (record, callback) {
+internals.Connection.prototype.insert = (record) => {
 
-    return callback();
-
+    return true;
 };
 
 
-internals.Connection.prototype.replace = function (record, callback) {
+internals.Connection.prototype.replace = (record) => {
 
-    return callback();
-
+    return true;
 };
 
 
-internals.Connection.prototype.get = function (key, callback) {
+internals.Connection.prototype.get = (key) => {
 
-    return callback(null, null);
+    return null;
 };
 
 
-internals.Connection.prototype.set = function (key, value, ttl, callback) {
+internals.Connection.prototype.set = (key, value, ttl) => {
 
-    return callback();
+    return true;
 };
 
 
-internals.Connection.prototype.drop = function (key, callback) {
+internals.Connection.prototype.drop = (key) => {
 
-    return callback(null);
+    return null;
 };
 
 internals.Connection.prototype.generateKey = function (key) {
