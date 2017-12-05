@@ -23,7 +23,7 @@ const Hapi = require('hapi');
 
             return 'Yar store: ' + JSON.stringify(request.yar._store)
                 + '<p>Look in the examples/index.js source for more info.</p>'
-                ;
+            ;
         }
     });
 
