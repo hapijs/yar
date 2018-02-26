@@ -5,7 +5,7 @@ A [**hapi**](https://github.com/hapijs/hapi) session manager
 [![npm version](https://badge.fury.io/js/yar.svg)](http://badge.fury.io/js/yar)
 [![Build Status](https://secure.travis-ci.org/hapijs/yar.png)](http://travis-ci.org/hapijs/yar)
 
-Lead Maintainer: [Mark Bradshaw](https://github.com/mark-bradshaw)
+Lead Maintainer: [Eran Hammer](https://github.com/hueniverse)
 
 The ***yar*** [Hapi](https://github.com/hapijs/hapi) plugin adds friendly session support to Hapi - a persistent state across multiple browser requests using an [iron](https://github.com/hueniverse/iron) encrypted cookie and server-side storage. **yar** tries to fit session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses server storage via the [hapi plugin cache](http://hapijs.com/api#servercacheoptions) interface.
 
