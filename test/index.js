@@ -1447,3 +1447,49 @@ it('will throw error if session ID generator function is defined but not typeof 
 
     return true;
 });
+
+it('will not eat falsy values', async () => {
+
+    const server = new Hapi.Server();
+
+    await server.register({
+        plugin: require('../'), options: {
+            maxCookieSize: 0,
+            cookieOptions: {
+                password: internals.password,
+                isSecure: false
+            }
+        }
+    });
+
+    server.route([
+        {
+            method: 'GET', path: '/1', handler: (request, h) => {
+
+                request.yar.set('boolean', false);
+                request.yar.set('number', 0);
+                request.yar.set('string', '');
+                request.yar.set('array', []);
+                return {
+                    boolean: request.yar.get('boolean'),
+                    number: request.yar.get('number'),
+                    string: request.yar.get('string'),
+                    array: request.yar.get('array')
+                };
+            }
+        }
+    ]);
+
+    await server.start();
+
+    const res = await server.inject({ method: 'GET', url: '/1' });
+
+    expect(res.result).to.equal({
+        boolean: false,
+        number: 0,
+        string: '',
+        array: []
+    });
+
+    return true;
+});
