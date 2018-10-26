@@ -1530,7 +1530,5 @@ describe('yar', () => {
         const res3 = await server.inject({ method: 'GET', url: '/increment', headers: { cookie: cookie[1] } });
         expect(res2.result.value).to.equal(1);
         expect(res3.result.value).to.equal(2);
-
-        return true;
     });
 });
