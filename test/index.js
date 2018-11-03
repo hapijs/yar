@@ -1486,4 +1486,48 @@ describe('yar', () => {
 
         return true;
     });
+
+    it('should allow to revoke session on the server side', async () => {
+
+        const server = new Hapi.Server();
+
+        server.route([
+            {
+                method: 'GET', path: '/increment', handler: (request) => {
+
+                    const value = request.yar.get('value');
+                    const result = value ? value + 1 : 1;
+                    request.yar.set('value', result);
+
+                    return {
+                        sessionId: request.yar.id,
+                        value: result
+                    };
+                }
+            }
+        ]);
+
+        await server.register({
+            plugin: Yar, options: {
+                maxCookieSize: 0,
+                cookieOptions: {
+                    password: internals.password
+                }
+            }
+        });
+
+        await server.start();
+
+        const res = await server.inject({ method: 'GET', url: '/increment' });
+        expect(res.result.value).to.equal(1);
+        const header = res.headers['set-cookie'];
+        const cookie = header[0].match(internals.sessionRegex);
+
+        await server.yar.revoke(res.result.sessionId);
+
+        const res2 = await server.inject({ method: 'GET', url: '/increment', headers: { cookie: cookie[1] } });
+        const res3 = await server.inject({ method: 'GET', url: '/increment', headers: { cookie: cookie[1] } });
+        expect(res2.result.value).to.equal(1);
+        expect(res3.result.value).to.equal(2);
+    });
 });
