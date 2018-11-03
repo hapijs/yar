@@ -11,9 +11,6 @@
     "jar",
     "session"
   ],
-  "files": [
-    "lib"
-  ],
   "dependencies": {
     "hoek": "6.x.x",
     "statehood": "6.x.x",
