@@ -1,26 +1,26 @@
 'use strict';
 
-// Load modules
-
-const Boom = require('boom');
-const Code = require('code');
-const Hapi = require('hapi');
-const Hoek = require('hoek');
-const Lab = require('lab');
+const Boom = require('@hapi/boom');
+const Code = require('@hapi/code');
+const Hapi = require('@hapi/hapi');
+const Hoek = require('@hapi/hoek');
+const Lab = require('@hapi/lab');
 const Yar = require('..');
 
 const Cache = require('./test-cache.js');
 
 
-// Declare internals
-
 const internals = {
     password: 'passwordmustbelongerthan32characterssowejustmakethislonger',
-    sessionRegex: /(session=[^\x00-\x20\"\,\;\\\x7F]*)/
+    sessionRegex: /(session=[^\x00-\x20\"\,\;\\\x7F]*)/,
+    config: {
+        cache: {
+            [require('@hapi/hapi/package.json').version[1] === '7' ? 'engine' : 'provider']: Cache
+        },
+        debug: false
+    }
 };
 
-
-// Test shortcuts
 
 const lab = exports.lab = Lab.script();
 const { describe, it } = lab;
@@ -56,6 +56,11 @@ describe('yar', () => {
                     request.yar.clear('one');
 
                     return Object.keys(request.yar._store).length;
+                },
+                config: {
+                    plugins: {
+                        yar: {}
+                    }
                 }
             },
             {
@@ -255,6 +260,7 @@ describe('yar', () => {
 
                     request.yar.lazy(true);
                     request.yar.some = { value: '2' };
+                    request.yar.ignore = () => { };
                     request.yar._test = { value: '3' };
                     return '1';
                 }
@@ -300,6 +306,48 @@ describe('yar', () => {
 
         expect(res3.result).to.be.null();
 
+        return true;
+    });
+
+    it('ignores initial invalid cookie', async () => {
+
+        const server = new Hapi.Server();
+
+        server.route([
+            {
+                method: 'GET', path: '/1', handler: (request, h) => {
+
+                    request.yar.set('some', { value: '2' });
+                    return '1';
+                }
+            },
+            {
+                method: 'GET', path: '/2', handler: (request, h) => {
+
+                    return request.yar.get('some');
+                }
+            }
+        ]);
+
+        await server.register({
+            plugin: Yar, options: {
+                cookieOptions: {
+                    password: internals.password
+                }
+            }
+        });
+        await server.start();
+
+        const res = await server.inject({ method: 'GET', url: '/1' });
+
+        expect(res.result).to.equal('1');
+        const header = res.headers['set-cookie'];
+        expect(header.length).to.equal(1);
+        expect(header[0]).to.contain('Secure');
+        const cookie = header[0].match(internals.sessionRegex);
+
+        const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] + ';' + cookie[1] } });
+        expect(res2.result).to.equal(null);
         return true;
     });
 
@@ -503,13 +551,7 @@ describe('yar', () => {
             throw new Error('Error setting cache');
         };
 
-        const hapiOptions = {
-            cache: {
-                engine: Cache
-            },
-            debug: false
-        };
-        const server = new Hapi.Server(hapiOptions);
+        const server = new Hapi.Server(internals.config);
 
         server.route({
             method: 'GET', path: '/', handler: (request, h) => {
@@ -554,13 +596,7 @@ describe('yar', () => {
             return false;
         };
 
-        const hapiOptions = {
-            cache: {
-                engine: Cache
-            },
-            debug: false
-        };
-        const server = new Hapi.Server(hapiOptions);
+        const server = new Hapi.Server(internals.config);
 
         const preHandler = (request, h) => {
 
@@ -608,13 +644,7 @@ describe('yar', () => {
 
     it('fails loading session from invalid cache and returns 500', { parallel: false }, async () => {
 
-        const hapiOptions = {
-            cache: {
-                engine: Cache
-            },
-            debug: false
-        };
-        const server = new Hapi.Server(hapiOptions);
+        const server = new Hapi.Server(internals.config);
 
         server.route([
             {
@@ -677,13 +707,7 @@ describe('yar', () => {
 
     it('does not load from cache if cache is not ready and errorOnCacheNotReady set to false', { parallel: false }, async () => {
 
-        const hapiOptions = {
-            cache: {
-                engine: Cache
-            },
-            debug: false
-        };
-        const server = new Hapi.Server(hapiOptions);
+        const server = new Hapi.Server(internals.config);
 
 
         server.route([{
@@ -732,15 +756,9 @@ describe('yar', () => {
         return true;
     });
 
-    it('still loads from cache when errorOnCacheNotReady option set to false but cache is ready', { parallel: false }, async () => {
+    it('loads from cache when errorOnCacheNotReady option set to false but cache is ready', { parallel: false }, async () => {
 
-        const hapiOptions = {
-            cache: {
-                engine: Cache
-            },
-            debug: false
-        };
-        const server = new Hapi.Server(hapiOptions);
+        const server = new Hapi.Server(internals.config);
 
         server.route([{
             method: 'GET', path: '/', handler: (request, h) => {
@@ -781,16 +799,9 @@ describe('yar', () => {
         return true;
     });
 
-    it('still saves session as cookie when cache is not ready if maxCookieSize is set and big enough', { parallel: false }, async () => {
+    it('saves session as cookie when cache is not ready if maxCookieSize is set and big enough', { parallel: false }, async () => {
 
-        const hapiOptions = {
-            cache: {
-                engine: Cache
-            },
-            debug: false
-        };
-
-        const server = new Hapi.Server(hapiOptions);
+        const server = new Hapi.Server(internals.config);
 
         server.route([{
             method: 'GET', path: '/', handler: (request, h) => {
@@ -996,6 +1007,7 @@ describe('yar', () => {
                 }
             }
         });
+
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/' });

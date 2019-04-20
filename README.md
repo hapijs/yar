@@ -1,28 +1,23 @@
-# Yar
+<a href="http://hapijs.com"><img src="https://github.com/hapijs/assets/blob/master/images/family.svg" width="180px" align="right" /></a>
+
+# yar
 
 A [**hapi**](https://github.com/hapijs/hapi) session manager
 
-[![npm version](https://badge.fury.io/js/yar.svg)](http://badge.fury.io/js/yar)
-[![Build Status](https://secure.travis-ci.org/hapijs/yar.png)](http://travis-ci.org/hapijs/yar)
+[![Build Status](https://secure.travis-ci.org/hapijs/yar.svg?branch=master)](http://travis-ci.org/hapijs/yar)
 
-Lead Maintainer: [Eran Hammer](https://github.com/hueniverse)
+**yar** add session support to hapi - a persistent state across multiple browser requests using an [iron](https://github.com/hapijs/iron) encrypted cookie and server-side storage. **yar** tries to fit session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses server storage via the [hapi plugin cache](http://hapijs.com/api#servercacheoptions) interface.
 
-The ***yar*** [Hapi](https://github.com/hapijs/hapi) plugin adds friendly session support to Hapi - a persistent state across multiple browser requests using an [iron](https://github.com/hueniverse/iron) encrypted cookie and server-side storage. **yar** tries to fit session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses server storage via the [hapi plugin cache](http://hapijs.com/api#servercacheoptions) interface.
+## Differences from @hapi/cookie
 
-## Hapi-Auth-Cookie
-
-There's another project called [Hapi-Auth-Cookie](https://github.com/hapijs/hapi-auth-cookie) that achieves similar ends to *yar*.  The approach of the two projects does differ in some regards, though.  
-1. Yar is laser focused on session support, and does not require that a user be logged in to have a session. Hapi-Auth-Cookie only provides session storage for logged in users.  If you need session handling for non-authenticated users, use Yar.
-1. Yar is capable of handling larger data sizes without any additional setup.  If your session data gets larger than cookies can handle Yar will push the data out to the server cache for you.  By default this is memory storage, but can be any [catbox](https://github.com/hapijs/catbox) supported cache storage, including mongo, redis, local disk, and more.  Hapi-Auth-Cookie can support larger session size as well, but requires you to handle connecting the cookie based session with your external data storage.
-
-## Install
-
-    $ npm install yar --save
+The **@hapi/cookie** plugin provides similar facilities to **yar**. The approach of the two projects does differ in some regards, though.  
+1. **yar** is focused on session support, and does not require that a user be logged in to have a session. **@hapi/cookie** only provides session storage for logged in users.  If you need session handling for non-authenticated users, use **yar**.
+1. **yar** is capable of handling larger data sizes without any additional setup.  If your session data gets larger than cookies can handle **yar** will push the data out to the server cache for you.  By default this is memory storage, but can be any [catbox](https://github.com/hapijs/catbox) supported cache storage, including mongo, redis, local disk, and more.  **@hapi/cookie** can support larger session size as well, but requires you to handle connecting the cookie based session with your external data storage.
 
 ## Usage
 
 For example, the first handler sets a session key and the second gets it:
-```javascript
+```js
 let handler1 = (request, reply) => {
 
     request.yar.set('example', { key: 'value' });
@@ -38,7 +33,7 @@ let handler2 = (request, reply) => {
 ```
 
 The plugin requires a password for encryption that must be at least 32 characters long:
-```javascript
+```js
 let options = {
     storeBlank: false,
     cookieOptions: {
@@ -56,7 +51,7 @@ const server = new Hapi.Server();
 
 try {
   await server.register({
-      plugin: require('yar'),
+      plugin: require('@hapi/yar'),
       options: options
   });
 } catch(err) {
@@ -82,7 +77,7 @@ You can read about more cookie options in the [Api](API.md).
 
 Set `isSecure` (default `true`) to `false` if you are using standard http. Take care to do this in development mode only though. You don't want to use cookies sent over insecure channels for session management.  One way to take care of this is to use the `NODE_ENV` environment variable like this:
 
-```javascript
+```js
 let options = {
     cookieOptions: {
         isSecure: process.env.NODE_ENV !== 'development',

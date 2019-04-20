@@ -1,7 +1,5 @@
 # API Reference
 
-## Yar
-
 - [`options`](#options)
   - [`route options`](#route-options)
   - [`methods`](#methods)
