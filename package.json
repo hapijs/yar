@@ -12,15 +12,15 @@
     "session"
   ],
   "dependencies": {
-    "@hapi/hoek": "6.x.x",
+    "@hapi/hoek": "8.x.x",
     "@hapi/statehood": "6.x.x",
     "uuid": "3.x.x"
   },
   "devDependencies": {
     "@hapi/boom": "7.x.x",
-    "@hapi/code": "5.x.x",
+    "@hapi/code": "6.x.x",
     "@hapi/hapi": "18.x.x",
-    "@hapi/lab": "18.x.x"
+    "@hapi/lab": "20.x.x"
   },
   "scripts": {
     "test": "lab -a @hapi/code -t 100 -L",
