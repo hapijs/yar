@@ -1,4 +1,4 @@
-# API Reference
+## yar
 
 - [`options`](#options)
   - [`route options`](#route-options)
