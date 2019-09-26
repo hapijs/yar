@@ -1,8 +1,3 @@
-## yar
-
-- [`options`](#options)
-  - [`route options`](#route-options)
-  - [`methods`](#methods)
 
 ### Options
 
