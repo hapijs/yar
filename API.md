@@ -103,10 +103,13 @@ You may turn this off, `false`, and try to use the hapi route state config optio
 - `cookieOptions` - the configuration for cookie-specific features:
     - `password` - (Required) used to encrypt and sign the cookie data.
     - `path` - determines the cookie path. Defaults to _'/'_.
-    - `isSameSite` - enables the `same-site` cookie parameter.  Default to 'Lax'.  Can be `'Strict'|'Lax'|false`.
+    - `isSameSite` - enables the `same-site` cookie parameter.  Default to 'Lax'.  Can be `'Strict'|'Lax'|'None'|false`.
     - `isSecure` - determines whether or not to transfer using TLS/SSL. Defaults to _true_.
     - `isHttpOnly` - determines whether or not to set HttpOnly option in cookie. Defaults to _false_.
     - `ttl` - sets the time for the cookie to live in the browser, in milliseconds.  Defaults to null (session time-life - cookies are deleted when the browser is closed).
+    - `contextualize` - a function using the signature `async function(definition, request)` used to override a request-specific cookie settings where:
+        - `definition` - a copy of the `options` to be used for formatting the cookie that can be manipulated by the function to customize the request cookie header. Note that changing the `definition.contextualize` property will be ignored.
+        - `request` - the current request object.
 - `customSessionIDGenerator` - an optional function to create custom session IDs. Must retun a string and have the signature `function (request)` where:
     - `request` - (optional) is the original **request** received from the client.
 
