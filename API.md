@@ -66,7 +66,7 @@ Keep in mind some things in regard to your password:
 
 ## Cookie Options
 
-You can read about more cookie options in the [Api](API.md).
+You can read about more cookie options in the [cookie options](#options) section.
 
 ### isSecure
 
