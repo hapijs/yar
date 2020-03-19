@@ -17,7 +17,7 @@
   "dependencies": {
     "@hapi/hoek": "9.x.x",
     "@hapi/statehood": "7.x.x",
-    "uuid": "3.x.x"
+    "uuid": "7.x.x"
   },
   "devDependencies": {
     "@hapi/boom": "9.x.x",

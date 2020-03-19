@@ -105,8 +105,6 @@ describe('yar', () => {
         const res3 = await server.inject({ method: 'GET', url: '/3', headers: { cookie: cookie2[1] } });
 
         expect(res3.result).to.equal('access');
-
-        return true;
     });
 
     it('sets session value and wait till cache expires then fail to get it back', async () => {
@@ -157,9 +155,7 @@ describe('yar', () => {
         await Hoek.wait(10);
 
         const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
-
         expect(res2.result).to.equal(null);
-        return true;
     });
 
     it('sets session value then gets it back (cookie mode)', async () => {
@@ -200,9 +196,7 @@ describe('yar', () => {
         const cookie = header[0].match(internals.sessionRegex);
 
         const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
-
         expect(res2.result).to.equal('2');
-        return true;
     });
 
     it('sets session value then gets it back (hybrid mode)', async () => {
@@ -244,10 +238,7 @@ describe('yar', () => {
         const cookie = header[0].match(internals.sessionRegex);
 
         const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
-
         expect(res2.result).to.equal('12345678901234567890');
-
-        return true;
     });
 
     it('sets session value then gets it back (lazy mode)', async () => {
@@ -289,7 +280,6 @@ describe('yar', () => {
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/1' });
-
         expect(res.result).to.equal('1');
         const header = res.headers['set-cookie'];
         expect(header.length).to.equal(1);
@@ -297,16 +287,12 @@ describe('yar', () => {
         const cookie = header[0].match(internals.sessionRegex);
 
         const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
-
         expect(res2.result).to.equal('2');
         const header2 = res2.headers['set-cookie'];
         const cookie2 = header2[0].match(internals.sessionRegex);
 
         const res3 = await server.inject({ method: 'GET', url: '/3', headers: { cookie: cookie2[1] } });
-
         expect(res3.result).to.be.null();
-
-        return true;
     });
 
     it('ignores initial invalid cookie', async () => {
@@ -339,7 +325,6 @@ describe('yar', () => {
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/1' });
-
         expect(res.result).to.equal('1');
         const header = res.headers['set-cookie'];
         expect(header.length).to.equal(1);
@@ -348,7 +333,6 @@ describe('yar', () => {
 
         const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] + ';' + cookie[1] } });
         expect(res2.result).to.equal(null);
-        return true;
     });
 
     it('no keys when in session (lazy mode)', async () => {
@@ -378,10 +362,10 @@ describe('yar', () => {
                 }
             }
         });
+
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/1' });
-
         expect(res.result).to.equal('1');
         const header = res.headers['set-cookie'];
         expect(header.length).to.equal(1);
@@ -389,9 +373,7 @@ describe('yar', () => {
         const cookie = header[0].match(internals.sessionRegex);
 
         const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
-
         expect(res2.result).to.be.empty();
-        return true;
     });
 
     it('sets session value then gets it back (clear)', async () => {
@@ -436,25 +418,21 @@ describe('yar', () => {
                 }
             }
         });
+
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/1' });
-
         expect(res.result).to.equal('1');
         const header = res.headers['set-cookie'];
         const cookie = header[0].match(internals.sessionRegex);
 
         const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
-
         expect(res2.result).to.equal('2');
         const header2 = res2.headers['set-cookie'];
         const cookie2 = header2[0].match(internals.sessionRegex);
 
         const res3 = await server.inject({ method: 'GET', url: '/3', headers: { cookie: cookie2[1] } });
-
         expect(res3.result).to.equal('3');
-
-        return true;
     });
 
     it('returns 500 when storing cookie in invalid cache by default', async () => {
@@ -485,10 +463,10 @@ describe('yar', () => {
                 }
             }
         });
+
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/1' });
-
         const header = res.headers['set-cookie'];
         const cookie = header[0].match(internals.sessionRegex);
 
@@ -496,9 +474,7 @@ describe('yar', () => {
         cachesDefault.client.stop();
 
         const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
-
         expect(res2.statusCode).to.equal(500);
-        return true;
     });
 
     it('fails setting session key/value because of bad key/value arguments', async () => {
@@ -531,6 +507,7 @@ describe('yar', () => {
                 }
             }
         });
+
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/1' });
@@ -538,8 +515,6 @@ describe('yar', () => {
 
         const res2 = await server.inject({ method: 'GET', url: '/2' });
         expect(res2.statusCode).to.equal(500);
-
-        return true;
     });
 
     it('fails setting session key/value because of failed cache set', { parallel: false }, async () => {
@@ -577,8 +552,6 @@ describe('yar', () => {
         const res = await server.inject({ method: 'GET', url: '/' });
         Cache.prototype.set = setRestore;
         expect(res.statusCode).to.equal(500);
-
-        return true;
     });
 
     it('does not try to store session when cache not ready if errorOnCacheNotReady set to false', { parallel: false }, async () => {
@@ -638,8 +611,6 @@ describe('yar', () => {
 
         expect(res.statusCode).to.equal(200);
         expect(res.result).to.equal('value');
-
-        return true;
     });
 
     it('fails loading session from invalid cache and returns 500', { parallel: false }, async () => {
@@ -701,8 +672,6 @@ describe('yar', () => {
         Cache.prototype.isReady = isReadyRestore;
 
         expect(res2.statusCode).to.equal(500);
-
-        return true;
     });
 
     it('does not load from cache if cache is not ready and errorOnCacheNotReady set to false', { parallel: false }, async () => {
@@ -752,8 +721,6 @@ describe('yar', () => {
 
         expect(res2.statusCode).to.equal(200);
         expect(res2.result).to.equal('2');
-
-        return true;
     });
 
     it('loads from cache when errorOnCacheNotReady option set to false but cache is ready', { parallel: false }, async () => {
@@ -795,8 +762,6 @@ describe('yar', () => {
 
         expect(res2.statusCode).to.equal(200);
         expect(res2.result).to.equal('2');
-
-        return true;
     });
 
     it('saves session as cookie when cache is not ready if maxCookieSize is set and big enough', { parallel: false }, async () => {
@@ -845,9 +810,6 @@ describe('yar', () => {
         expect(res2.statusCode).to.equal(200);
         expect(res2.result).to.equal('value');
         Cache.prototype.isReady = isReadyRestore;
-
-        return true;
-
     });
 
     it('fails generating session cookie header value (missing password)', async () => {
@@ -866,10 +828,7 @@ describe('yar', () => {
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/1' });
-
         expect(res.statusCode).to.equal(500);
-
-        return true;
     });
 
     it('sends back a 400 if not ignoring errors on bad session cookie', async () => {
@@ -898,12 +857,11 @@ describe('yar', () => {
                 }
             }
         });
+
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/1', headers });
-
         expect(res.statusCode).to.equal(400);
-        return true;
     });
 
     it('fails to store session because of state error', async () => {
@@ -932,12 +890,11 @@ describe('yar', () => {
                 }
             }
         });
+
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/1', headers });
         expect(res.result).to.equal(0);
-
-        return true;
     });
 
     it('ignores requests when session is not set (error)', async () => {
@@ -970,13 +927,12 @@ describe('yar', () => {
                 }
             }
         });
+
         await server.start();
 
         const res = await server.inject('/');
-
         expect(res.statusCode).to.equal(400);
         expect(res.result.message).to.equal('handler error');
-        return true;
     });
 
     it('ignores requests when the skip route config value is true', async () => {
@@ -1011,133 +967,8 @@ describe('yar', () => {
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/' });
-
         const header = res.headers['set-cookie'];
         expect(header).to.be.undefined();
-
-        return true;
-    });
-
-    describe('flash()', () => {
-
-        it('should get all flash messages when given no arguments', async () => {
-
-            const server = new Hapi.Server();
-
-            server.route({
-                method: 'GET',
-                path: '/1',
-                config: {
-                    handler: (request, h) => {
-
-                        request.yar.flash('error', 'test error 1');
-                        request.yar.flash('error', 'test error 2');
-                        request.yar.flash('test', 'test 1', true);
-                        request.yar.flash('test', 'test 2', true);
-                        return request.yar._store;
-                    }
-                }
-            });
-
-            server.route({
-                method: 'GET',
-                path: '/2',
-                config: {
-                    handler: (request, h) => {
-
-                        const flashes = request.yar.flash();
-                        return {
-                            yar: request.yar._store,
-                            flashes
-                        };
-                    }
-                }
-            });
-
-            await server.register({
-                plugin: Yar, options: {
-                    cookieOptions: {
-                        password: internals.password
-                    }
-                }
-            });
-            await server.start();
-
-            const res = await server.inject({ method: 'GET', url: '/1' });
-
-            expect(res.result._flash.error).to.equal(['test error 1', 'test error 2']);
-            expect(res.result._flash.test).to.equal('test 2');
-
-            const header = res.headers['set-cookie'];
-            expect(header.length).to.equal(1);
-            const cookie = header[0].match(internals.sessionRegex);
-
-            const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
-
-            expect(res2.result.yar._flash.error).to.not.exist();
-            expect(res2.result.flashes).to.exist();
-
-            return true;
-        });
-
-        it('should delete on read', async () => {
-
-            const server = new Hapi.Server();
-
-            server.route({
-                method: 'GET',
-                path: '/1',
-                config: {
-                    handler: (request, h) => {
-
-                        request.yar.flash('error', 'test error');
-                        return request.yar._store;
-                    }
-                }
-            });
-
-            server.route({
-                method: 'GET',
-                path: '/2',
-                config: {
-                    handler: (request, h) => {
-
-                        const errors = request.yar.flash('error');
-                        const nomsg = request.yar.flash('nomsg');
-                        return {
-                            yar: request.yar._store,
-                            errors,
-                            nomsg
-                        };
-                    }
-                }
-            });
-
-            await server.register({
-                plugin: Yar, options: {
-                    cookieOptions: {
-                        password: internals.password
-                    }
-                }
-            });
-            await server.start();
-
-            const res = await server.inject({ method: 'GET', url: '/1' });
-
-            expect(res.result._flash.error).to.exist();
-            expect(res.result._flash.error.length).to.equal(1);
-
-            const header = res.headers['set-cookie'];
-            expect(header.length).to.equal(1);
-            const cookie = header[0].match(internals.sessionRegex);
-
-            const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
-            expect(res2.result.yar._flash.error).to.not.exist();
-            expect(res2.result.errors).to.exist();
-            expect(res2.result.nomsg).to.exist();
-
-            return true;
-        });
     });
 
     it('stores blank sessions when storeBlank is not given', async () => {
@@ -1178,8 +1009,6 @@ describe('yar', () => {
         const res = await server.inject({ method: 'GET', url: '/1' });
         expect(stores).to.equal(1);
         expect(res.headers['set-cookie'].length).to.equal(1);
-
-        return true;
     });
 
     it('does not store blank sessions when storeBlank is false', async () => {
@@ -1226,16 +1055,12 @@ describe('yar', () => {
         };
 
         const res = await server.inject({ method: 'GET', url: '/1' });
-
         expect(stores).to.equal(0);
         expect(res.headers['set-cookie']).to.be.undefined();
 
         const res2 = await server.inject({ method: 'GET', url: '/2' });
-
         expect(stores).to.equal(1);
         expect(res2.headers['set-cookie'].length).to.equal(1);
-
-        return true;
     });
 
     it('allow custom session ID', async () => {
@@ -1302,10 +1127,7 @@ describe('yar', () => {
         const cookie2 = header2[0].match(internals.sessionRegex);
 
         const res3 = await server.inject({ method: 'GET', url: '/still_2', headers: { cookie: cookie2[1] } });
-
         expect(res3.result).to.equal('custom_id_2');
-
-        return true;
     });
 
     it('pass the resquest as parameter of customSessionIDGenerator', async () => {
@@ -1335,15 +1157,14 @@ describe('yar', () => {
                 }
             }
         });
+
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/request-based-session-id' });
         expect(res.result).to.equal('ok');
-
-        return true;
     });
 
-    it('will set an session ID if no custom session ID generator function is provided', async () => {
+    it('sets an session ID if no custom session ID generator function is provided', async () => {
 
         const server = new Hapi.Server();
 
@@ -1367,17 +1188,16 @@ describe('yar', () => {
                 }
             }
         });
+
         await server.start();
 
         const res = await server.inject({ method: 'GET', url: '/1' });
-
         expect(res.result).to.equal(1);
         const header = res.headers['set-cookie'];
         expect(header.length).to.equal(1);
-        return true;
     });
 
-    it('will throw error if session ID generator function doesn\'t return a string', async () => {
+    it('throws error if session ID generator function doesn\'t return a string', async () => {
 
         const server = new Hapi.Server({ debug: false });
 
@@ -1426,11 +1246,9 @@ describe('yar', () => {
                 expect(err.message).to.be('Session ID should be a string');
             }
         }
-
-        return true;
     });
 
-    it('will throw error if session ID generator function is defined but not typeof function', async () => {
+    it('throws error if session ID generator function is defined but not typeof function', async () => {
 
         const server = new Hapi.Server();
 
@@ -1449,11 +1267,9 @@ describe('yar', () => {
         catch (err) {
             expect(err.message).to.equal('customSessionIDGenerator should be a function');
         }
-
-        return true;
     });
 
-    it('will not eat falsy values', async () => {
+    it('keeps falsy values', async () => {
 
         const server = new Hapi.Server();
 
@@ -1495,11 +1311,9 @@ describe('yar', () => {
             string: '',
             array: []
         });
-
-        return true;
     });
 
-    it('should allow to revoke session on the server side', async () => {
+    it('allows to revoke session on the server side', async () => {
 
         const server = new Hapi.Server();
 
@@ -1541,5 +1355,176 @@ describe('yar', () => {
         const res3 = await server.inject({ method: 'GET', url: '/increment', headers: { cookie: cookie[1] } });
         expect(res2.result.value).to.equal(1);
         expect(res3.result.value).to.equal(2);
+    });
+
+    it('retains state in onPreResponse redirect', async () => {
+
+        const server = new Hapi.Server();
+
+        server.route([
+            {
+                method: 'GET',
+                path: '/',
+                handler: (request, h) => {
+
+                    request.yar.set({ x: 'a' });
+                    return 'ok';
+                }
+            },
+            {
+                method: 'GET',
+                path: '/read',
+                handler: (request, h) => request.yar.get('x') + request.yar.get('y')
+            }
+        ]);
+
+        await server.register({
+            plugin: Yar, options: {
+                maxCookieSize: 0,
+                cookieOptions: {
+                    password: internals.password,
+                    isSecure: false
+                }
+            }
+        });
+
+        server.ext('onPreResponse', (request, h) => {
+
+            if (request.path === '/read') {
+                return h.continue;
+            }
+
+            request.yar.set('y', 'b');
+            request.yar.commit(h);
+            return h.response('redirected...').takeover().redirect('/');
+        });
+
+        await server.start();
+
+        const res = await server.inject({ method: 'GET', url: '/' });
+
+        expect(res.result).to.equal('redirected...');
+        const header = res.headers['set-cookie'];
+        const cookie = header[0].match(internals.sessionRegex);
+
+        const res2 = await server.inject({ method: 'GET', url: '/read', headers: { cookie: cookie[1] } });
+        expect(res2.result).to.equal('ab');
+    });
+
+    describe('flash()', () => {
+
+        it('should get all flash messages when given no arguments', async () => {
+
+            const server = new Hapi.Server();
+
+            server.route({
+                method: 'GET',
+                path: '/1',
+                config: {
+                    handler: (request, h) => {
+
+                        request.yar.flash('error', 'test error 1');
+                        request.yar.flash('error', 'test error 2');
+                        request.yar.flash('test', 'test 1', true);
+                        request.yar.flash('test', 'test 2', true);
+                        return request.yar._store;
+                    }
+                }
+            });
+
+            server.route({
+                method: 'GET',
+                path: '/2',
+                config: {
+                    handler: (request, h) => {
+
+                        const flashes = request.yar.flash();
+                        return {
+                            yar: request.yar._store,
+                            flashes
+                        };
+                    }
+                }
+            });
+
+            await server.register({
+                plugin: Yar, options: {
+                    cookieOptions: {
+                        password: internals.password
+                    }
+                }
+            });
+            await server.start();
+
+            const res = await server.inject({ method: 'GET', url: '/1' });
+
+            expect(res.result._flash.error).to.equal(['test error 1', 'test error 2']);
+            expect(res.result._flash.test).to.equal('test 2');
+
+            const header = res.headers['set-cookie'];
+            expect(header.length).to.equal(1);
+            const cookie = header[0].match(internals.sessionRegex);
+
+            const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
+            expect(res2.result.yar._flash.error).to.not.exist();
+            expect(res2.result.flashes).to.exist();
+        });
+
+        it('should delete on read', async () => {
+
+            const server = new Hapi.Server();
+
+            server.route({
+                method: 'GET',
+                path: '/1',
+                config: {
+                    handler: (request, h) => {
+
+                        request.yar.flash('error', 'test error');
+                        return request.yar._store;
+                    }
+                }
+            });
+
+            server.route({
+                method: 'GET',
+                path: '/2',
+                config: {
+                    handler: (request, h) => {
+
+                        const errors = request.yar.flash('error');
+                        const nomsg = request.yar.flash('nomsg');
+                        return {
+                            yar: request.yar._store,
+                            errors,
+                            nomsg
+                        };
+                    }
+                }
+            });
+
+            await server.register({
+                plugin: Yar, options: {
+                    cookieOptions: {
+                        password: internals.password
+                    }
+                }
+            });
+            await server.start();
+
+            const res = await server.inject({ method: 'GET', url: '/1' });
+
+            expect(res.result._flash.error).to.exist();
+            expect(res.result._flash.error.length).to.equal(1);
+
+            const header = res.headers['set-cookie'];
+            expect(header.length).to.equal(1);
+            const cookie = header[0].match(internals.sessionRegex);
+
+            const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
+            expect(res2.result.yar._flash.error).to.not.exist();
+            expect(res2.result.errors).to.exist();
+            expect(res2.result.nomsg).to.exist();
+        });
     });
 });
