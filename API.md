@@ -110,7 +110,7 @@ You may turn this off, `false`, and try to use the hapi route state config optio
     - `contextualize` - a function using the signature `async function(definition, request)` used to override a request-specific cookie settings where:
         - `definition` - a copy of the `options` to be used for formatting the cookie that can be manipulated by the function to customize the request cookie header. Note that changing the `definition.contextualize` property will be ignored.
         - `request` - the current request object.
-- `customSessionIDGenerator` - an optional function to create custom session IDs. Must retun a string and have the signature `function (request)` where:
+- `customSessionIDGenerator` - an optional function to create custom session IDs. Must return a string and have the signature `function (request)` where:
     - `request` - (optional) is the original **request** received from the client.
 
 ### Route Options
