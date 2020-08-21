@@ -17,13 +17,13 @@
   "dependencies": {
     "@hapi/hoek": "9.x.x",
     "@hapi/statehood": "7.x.x",
-    "uuid": "7.x.x"
+    "uuid": "^8.3.0"
   },
   "devDependencies": {
     "@hapi/boom": "9.x.x",
     "@hapi/code": "8.x.x",
     "@hapi/hapi": "19.x.x",
-    "@hapi/lab": "22.x.x"
+    "@hapi/lab": "23.x.x"
   },
   "scripts": {
     "test": "lab -a @hapi/code -t 100 -L",
