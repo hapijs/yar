@@ -116,7 +116,7 @@ You may turn this off, `false`, and try to use the hapi route state config optio
 ### Route Options
 You can also add these options on a route per route basis at `config.plugins.yar`:
 
-- `skip` - a boolean value which, if true, means no session with be attached to the request (defaults to false).
+- `skip` - a boolean value which, if true, means no session will be attached to the request (defaults to false).
 
 
 ### Methods
