@@ -14,6 +14,11 @@
     "jar",
     "session"
   ],
+  "eslintConfig": {
+    "extends": [
+      "plugin:@hapi/module"
+    ]
+  },
   "dependencies": {
     "@hapi/hoek": "9.x.x",
     "@hapi/statehood": "7.x.x",
@@ -22,6 +27,7 @@
   "devDependencies": {
     "@hapi/boom": "9.x.x",
     "@hapi/code": "8.x.x",
+    "@hapi/eslint-plugin": "*",
     "@hapi/hapi": "20.x.x",
     "@hapi/lab": "24.x.x"
   },
