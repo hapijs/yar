@@ -1,13 +1,13 @@
 
 ## Introduction
 
-**yar** add session support to hapi - a persistent state across multiple browser requests using an [iron](https://github.com/hapijs/iron) encrypted cookie and server-side storage. **yar** tries to fit session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses server storage via the [hapi plugin cache](http://hapi.dev/api#servercacheoptions) interface.
+**yar** add session support to hapi - a persistent state across multiple browser requests using an [iron](https://hapi.dev/module/iron) encrypted cookie and server-side storage. **yar** tries to fit session data into a session cookie based  on a configured maximum size. If the content is too big to fit, it uses server storage via the [hapi plugin cache](https://hapi.dev/api#server.cache()) interface.
 
 ### Differences from @hapi/cookie
 
 The **@hapi/cookie** plugin provides similar facilities to **yar**. The approach of the two projects does differ in some regards, though.  
 1. **yar** is focused on session support, and does not require that a user be logged in to have a session. **@hapi/cookie** only provides session storage for logged in users.  If you need session handling for non-authenticated users, use **yar**.
-1. **yar** is capable of handling larger data sizes without any additional setup.  If your session data gets larger than cookies can handle **yar** will push the data out to the server cache for you.  By default this is memory storage, but can be any [catbox](https://github.com/hapijs/catbox) supported cache storage, including mongo, redis, local disk, and more.  **@hapi/cookie** can support larger session size as well, but requires you to handle connecting the cookie based session with your external data storage.
+1. **yar** is capable of handling larger data sizes without any additional setup.  If your session data gets larger than cookies can handle **yar** will push the data out to the server cache for you.  By default this is memory storage, but can be any [catbox](https://hapi.dev/module/catbox) supported cache storage, including mongo, redis, local disk, and more.  **@hapi/cookie** can support larger session size as well, but requires you to handle connecting the cookie based session with your external data storage.
 
 ## Example
 
@@ -85,7 +85,7 @@ let options = {
 
 `ignoreErrors` (default `true`) tells hapi that it should not respond with a HTTP 400 error if the session cookie cannot decrypt.  This could happen if the cookie is changed on the client, or more likely, if you change the cookie password in your settings.  If you want to make this condition send an error like it did in prior versions, change this to `false`, but be aware that if you change your cookie password you will cause 400 errors to be returned to end users.  In that case you should probably change this back to true for a short time to allow session cookies to get reset for the best user experience.
 
-You may turn this off, `false`, and try to use the hapi route state config option of `failAction` to instead get an event whenever a bad session cookie is encountered.  This can allow more sophisticated handling strategies or even allow for mitigation of brute force attacks on your cookie password.  See [server.state](http://hapi.dev/api#serverstatename-options) documentation for more details.
+You may turn this off, `false`, and try to use the hapi route state config option of `failAction` to instead get an event whenever a bad session cookie is encountered.  This can allow more sophisticated handling strategies or even allow for mitigation of brute force attacks on your cookie password.  See [server.state()](https://hapi.dev/api#server.state()) documentation for more details.
 
 ### clearInvalid
 
@@ -97,7 +97,7 @@ You may turn this off, `false`, and try to use the hapi route state config optio
 - `maxCookieSize` - maximum cookie size before using server-side storage. Defaults to 1K. Set to zero to always use server-side storage.
 - `storeBlank` - determines whether to store empty session before they've been modified. Defaults to _true_.
 - `errorOnCacheNotReady` - will cause yar to throw an exception if trying to persist to cache when the cache is unavailable. Setting this to false will allow applications using yar to run uninterrupted if the cache is not ready (however sessions will not be saving). Defaults to _true_.
-- `cache` - **hapi** [cache options](https://hapi.dev/api#servercacheoptions) which includes
+- `cache` - **hapi** [cache options](https://hapi.dev/api#server.cache()) which includes
   (among other options):
     - `expiresIn` - server-side storage expiration (defaults to 1 day).
 - `cookieOptions` - the configuration for cookie-specific features:
