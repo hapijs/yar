@@ -1,6 +1,6 @@
-Copyright (c) 2013-2020, Sideway Inc, and project contributors  
-Copyright (c) 2015-2016, Mark Bradshaw  
-Copyright (c) 2013-2014, Walmart.  
+Copyright (c) 2013-2022, Sideway Inc, and project contributors
+Copyright (c) 2015-2016, Mark Bradshaw
+Copyright (c) 2013-2014, Walmart.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
