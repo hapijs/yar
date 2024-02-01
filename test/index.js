@@ -1527,4 +1527,66 @@ describe('yar', () => {
             expect(res2.result.nomsg).to.exist();
         });
     });
+
+    describe('pop(key)', () => {
+
+        it('gets value from session and removes it', async () => {
+
+            const server = new Hapi.Server();
+
+            server.route([
+                {
+                    method: 'GET', path: '/1', handler: (request, h) => {
+
+                        const returnValue = request.yar.set({
+                            some: '2',
+                            and: 'thensome'
+                        });
+                        expect(returnValue.some).to.equal('2');
+                        expect(returnValue.and).to.equal('thensome');
+                        return '1';
+                    }
+                },
+                {
+                    method: 'GET', path: '/2', handler: (request, h) => {
+
+                        const some = request.yar.pop('some');
+                        return some;
+                    }
+                },
+                {
+                    method: 'GET', path: '/3', handler: (request, h) => {
+
+                        const some = request.yar.pop('some');
+                        return some || '3';
+                    }
+                }
+            ]);
+
+            await server.register({
+                plugin: Yar, options: {
+                    maxCookieSize: 0,
+                    cookieOptions: {
+                        password: internals.password,
+                        isSecure: false
+                    }
+                }
+            });
+
+            await server.start();
+
+            const res = await server.inject({ method: 'GET', url: '/1' });
+            expect(res.result).to.equal('1');
+            const header = res.headers['set-cookie'];
+            const cookie = header[0].match(internals.sessionRegex);
+
+            const res2 = await server.inject({ method: 'GET', url: '/2', headers: { cookie: cookie[1] } });
+            expect(res2.result).to.equal('2');
+            const header2 = res2.headers['set-cookie'];
+            const cookie2 = header2[0].match(internals.sessionRegex);
+
+            const res3 = await server.inject({ method: 'GET', url: '/3', headers: { cookie: cookie2[1] } });
+            expect(res3.result).to.equal('3');
+        });
+    });
 });
