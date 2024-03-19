@@ -4,6 +4,7 @@
   "version": "11.0.1",
   "repository": "git://github.com/hapijs/yar",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "files": [
     "lib"
   ],
@@ -28,10 +29,13 @@
     "@hapi/code": "^9.0.3",
     "@hapi/eslint-plugin": "*",
     "@hapi/hapi": "^21.2.1",
-    "@hapi/lab": "^25.1.2"
+    "@hapi/lab": "^25.1.2",
+    "@types/node": "^20.11.30",
+    "joi": "^17.12.2",
+    "typescript": "^5.4.2"
   },
   "scripts": {
-    "test": "lab -a @hapi/code -t 100 -L",
+    "test": "lab -a @hapi/code -t 100 -L -Y",
     "test-cov-html": "lab -a @hapi/code -r html -o coverage.html"
   },
   "license": "BSD-3-Clause"
