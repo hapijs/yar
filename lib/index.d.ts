@@ -117,20 +117,26 @@ declare namespace yar {
         /**
          * - assigns a value (string, object, etc) to a given key which will persist across requests. Returns the value.
          */
-        set<T extends YarValKeys>(key: T, value: YarValues[T]): T;
+        set<T extends YarValKeys>(key: T, value: YarValues[T]): YarValues[T];
+        set<T = unknown>(key: string, value: T): T;
+
+
         /**
          *  assigns values to multiple keys using each 'keysObject' top-level property. Returns the keysObject.
          */
-        set<T extends YarValues>(keysObject: Partial<T>): T;
+        set<T extends Partial<YarValues>>(keysObject: T): T;
+        set<T = Record<string, unknown>>(keysObject: T): T;
 
         /**
          * retrieve value using a key. If 'clear' is 'true', key is cleared on return.
          */
         get <T extends YarValKeys>(key: T, clear?: boolean): YarValues[T] | null;
+        get <T = unknown>(key: string, clear?: boolean): T | null;
         /**
          * clears key.
          */
         clear <T extends YarValKeys>(key: T): void;
+        clear (key: string): void;
         /**
          * Manually notify the session of changes (when using get()
          * and changing the content of the returned reference directly without calling set()).
@@ -144,7 +150,10 @@ declare namespace yar {
          * 'isOverride' used to indicate that the message provided should replace
          * any existing value instead of being appended to it (defaults to false).
          */
-        flash <T extends YarFlashKeys>(type?: T, message?: YarFlashes[T], isOverride?: boolean): any[];
+        flash <T extends YarFlashKeys>(type: T, message: YarFlashes[T], isOverride?: boolean): YarFlashes[T][];
+        flash <T = unknown>(type: string, message: T, isOverride?: boolean): T[];
+        flash <T extends YarFlashKeys>(type: T): YarFlashes[T][];
+        flash <T = YarFlashes>(): { [key in keyof T]: T[key][] };
 
         /**
          * if set to 'true', enables lazy mode.

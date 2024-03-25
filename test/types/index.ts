@@ -21,8 +21,8 @@ declare module '../..' {
 
     interface YarFlashes {
 
-        success: { title: string; message: string; };
-        error: { title: string; message: string; };
+        success: { title: string; message: string; type: 'success' };
+        error: { title: string; message: string; type: 'error' };
     }
 }
 
@@ -47,20 +47,32 @@ async function boot() {
         method: 'get',
         handler(request: Request) {
 
+            /** Typed YarValues */
             const example = request.yar.get('example');
-
-            expect.error(request.yar.get('testX'));
 
             expect.error(
                 request.yar.get('test1') === 123
             );
-
 
             const test1 = request.yar.get('test1');
             const test2 = request.yar.get('test2');
 
             test1 === '1233';
             test2?.a === true;
+
+            expect.type<string | null>(test1);
+            expect.type<{ a: true; b: string } | null>(test2);
+
+
+            /** Untyped YarValues */
+            const test3 = request.yar.get <{ something: 'else' }>('test3');
+
+            expect.type<{ something: 'else' } | null>(test3);
+
+            expect.error(
+                request.yar.get <boolean>('test4') === 123
+            );
+
 
             return {
                 id: request.yar.id,
@@ -75,65 +87,103 @@ async function boot() {
         method: 'post',
         handler(request: Request) {
 
+            /** Typed YarValues */
+            expect.type<string>(
+                request.yar.set('test1', '123')
+            );
 
-            request.yar.set('test1', '123');
-            request.yar.set('test2', {
-                a: true,
-                b: '123',
-            });
+            expect.error<string>(
+                request.yar.set('test1', 123)
+            );
 
-            request.yar.set({
+            expect.type<yar.YarValues['test2']>(
+                request.yar.set('test2', {
+                    a: true,
+                    b: '123',
+                })
+            );
+
+            const partialYarObj = {
                 test1: '123',
-            });
-
-            request.yar.flash('error', {
-                title: 'Error',
-                message: 'This is an error'
-            });
-
-            request.yar.flash('success', {
-                title: 'Success',
-                message: 'This is a success'
-            });
-
-
-            return {
-                id: request.yar.id,
             };
-        },
-    });
 
-    server.route({
+            expect.type<Partial<yar.YarValues>>(request.yar.set(partialYarObj));
 
-        path: '/test',
-        method: 'post',
-        handler(request: Request) {
+            expect.error<Partial<yar.YarValues>>(
+                request.yar.set({ bad: 'type' })
+            );
 
 
-            expect.error(request.yar.set('abc123', true));
+            /** Untyped YarValues */
 
-            request.yar.set('test1', '123');
-            request.yar.set('test2', {
-                a: true,
-                b: '123',
-            });
+            expect.type<{ good: 'type' }>(
+                request.yar.set({ good: 'type' })
+            );
 
-            expect.error(request.yar.set('test1', 123))
-            expect.error(request.yar.set('test2', 123))
+            expect.type<boolean>(
+                request.yar.set('anything', true)
+            );
 
-            request.yar.set({
-                test1: '123',
-            });
 
-            request.yar.flash('error', { title: 'Error', message: 'This is an error' });
-            request.yar.flash('success', { title: 'Success', message: 'This is a success' });
+            /** Typed YarFlashes */
+            expect.type<yar.YarFlashes['error'][]>(
 
-            expect.error(
-                request.yar.flash('test', { title: 'Success', message: 'This is a success' })
+                request.yar.flash('error', {
+                    title: 'Error',
+                    message: 'This is an error',
+                    type: 'error'
+                })
+            );
+
+            expect.type<yar.YarFlashes['success'][]>(
+                request.yar.flash('success', {
+                    title: 'Success',
+                    message: 'This is a success',
+                    type: 'success'
+                })
+            );
+
+            expect.error<yar.YarFlashes[yar.YarFlashKeys][]>(
+                request.yar.flash('info', 'message')
             )
 
-            expect.error(request.yar.flash('success', 'message'));
+            expect.type<yar.YarFlashes['error'][]>(
+                request.yar.flash('error')
+            )
 
+            expect.type<yar.YarFlashes['success'][]>(
+                request.yar.flash('success')
+            )
+
+            expect.error<yar.YarFlashes['success'][]>(
+                request.yar.flash('error')
+            )
+
+            expect.type<{ [k in keyof yar.YarFlashes]: yar.YarFlashes[k][] }>(
+                request.yar.flash()
+            );
+
+            /** Untyped YarFlashes */
+
+            expect.type<string[]>(
+                request.yar.flash('info', 'message')
+            )
+
+
+            type OtherFlash = {
+                name: string;
+                text: string;
+            }
+
+            type CustomFlashes = {
+
+                info: OtherFlash
+                warning: OtherFlash
+            };
+
+            expect.type<{ [key in keyof CustomFlashes]: OtherFlash[] }>(
+                request.yar.flash <CustomFlashes>()
+            );
 
             return {
                 id: request.yar.id,
