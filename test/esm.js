@@ -19,7 +19,7 @@ describe('import()', () => {
 
     it('exposes all methods and classes as named imports', () => {
 
-        expect(Object.keys(Yar)).to.equal([
+        expect(Object.keys(Yar).filter((k) => k !== 'module.exports')).to.equal([
             'default',
             'plugin'
         ]);
